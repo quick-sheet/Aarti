@@ -17,6 +17,9 @@ Aarti relies on a few names in Daily Drift's page: `function openFaith(`, the ba
 ### Welcome
 The first time Aarti opens on a phone (after the PIN or the share link), a card rises: Happy Diwali, what Aarti is for, three steps (the diya, the words, the song or casting) and how to keep Aarti as an app: an Install app button when Chrome offers it, Chrome's menu when it doesn't, Share → Add to Home Screen on iPhone, nothing if it's already installed. Settings → How to use Aarti shows it again. The install banner on the opening screen stays as a second chance.
 
+### Reflections
+A small glowing tilak sits at the top centre of the opening screen and of each aarti. Tap it for a short reflection, signed g.s: on Diwali itself on the opening screen, and on Ganesh, Lakshmi and Jagdish on their pages, each quoting lines from its own aarti. The card takes the colours of the page, follows the text size setting, and closes with the ✕, a tap outside, Escape or a drag down. The three page dots now sit small, just above the music and words bar.
+
 ### Lakshmi Puja times
 Under the title on the opening screen: the Lakshmi Puja muhurat for your place on Sunday 8 November 2026, in that place's own time. It starts on a best guess from the phone's time zone (nothing is looked up and no location is asked for); tap the place to choose from 45 places in 20 countries, or change it in Settings. Through the evening it reads "today", "now, until…", then "Pradosh Kaal continues until…". After a minute on the opening screen, the time glides up into a small chip beside Settings (tap it to change place); coming back from an aarti it's already there, and each fresh open shows the full line again for a minute. The **i** explains Lakshmi Puja, Muhurat, Pradosh Kaal, Vrishabha and Amavasya in plain English, with the times for your place.
 

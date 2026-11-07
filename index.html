@@ -77,11 +77,20 @@ a{color:inherit;-webkit-tap-highlight-color:transparent}
 #settingsBtn:not(.gone){opacity:.45}
 #settingsBtn:not(.gone):active,#settingsBtn:not(.gone):focus-visible{opacity:.9}
 #settingsBtn svg{width:19px;height:19px}
-.dots{display:flex;align-items:center;border-radius:22px;background:var(--glass);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);transition:opacity .4s}
-.dots.gone{opacity:0;visibility:hidden}
-.dot{width:36px;height:44px;display:grid;place-items:center}
-.dot::before{content:"";width:7px;height:7px;border-radius:4px;background:var(--ink-3);transition:width .4s cubic-bezier(.2,.8,.2,1),background .4s}
-.dot[aria-current="true"]::before{width:22px;background:var(--sun)}
+.dots{position:absolute;left:50%;bottom:calc(100% + 6px);transform:translateX(-50%);display:flex;align-items:center;padding:0 3px;border-radius:9px;
+  background:var(--glass);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+.dot{width:24px;height:20px;display:grid;place-items:center}
+.dot::before{content:"";width:5px;height:5px;border-radius:3px;background:var(--ink-3);transition:width .4s cubic-bezier(.2,.8,.2,1),background .4s}
+.dot[aria-current="true"]::before{width:14px;background:var(--sun)}
+/* the tilak, top centre: a soft gold mark that glows gently; it opens a reflection */
+.tilak{position:absolute;left:50%;top:calc(10px + env(safe-area-inset-top));width:48px;height:44px;margin-left:-24px;display:grid;place-items:center;
+  color:var(--sun);transition:opacity .4s;-webkit-tap-highlight-color:transparent}
+.tilak.gone{opacity:0;visibility:hidden}
+.tilak svg{position:relative;width:25px;height:25px;filter:drop-shadow(0 0 2px var(--sun-soft)) drop-shadow(0 1px 3px rgba(0,0,0,.55))}
+.tilak::before{content:"";position:absolute;left:50%;top:50%;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;
+  background:radial-gradient(closest-side,var(--sun-soft),transparent 72%);opacity:.55;animation:tilak-glow 4.8s ease-in-out infinite}
+@keyframes tilak-glow{50%{opacity:1;transform:scale(1.12)}}
+.tilak:active svg{transform:scale(.92)}
 
 .top-left{width:44px;height:44px;flex:none}
 .top-left .orb.gone{display:none}
@@ -222,6 +231,36 @@ dialog.welcome.closing::backdrop{animation:w-fade .44s ease reverse both}
 .w-install strong{font-weight:500;color:var(--ink)}
 .w-actions{display:flex;gap:10px;margin-top:18px}
 .w-actions .btn{flex:1}
+
+/* A reflection: the same frosted card as the welcome, in the colours of the moment, for reading */
+dialog.reflect{position:fixed;inset:auto 0 calc(10px + env(safe-area-inset-bottom)) 0;margin:0 auto;width:calc(100% - 20px);max-width:31rem;
+  max-height:calc(100svh - 78px - env(safe-area-inset-top) - env(safe-area-inset-bottom));padding:0;border:0;border-radius:26px;color:var(--ink);overflow:hidden;
+  background:var(--raise);background:linear-gradient(180deg,color-mix(in srgb,var(--raise-2) 92%,transparent),color-mix(in srgb,var(--bg) 96%,transparent));
+  -webkit-backdrop-filter:blur(26px) saturate(1.15);backdrop-filter:blur(26px) saturate(1.15);
+  box-shadow:inset 0 0 0 1px var(--line),inset 0 1px 0 rgba(255,255,255,.06),0 34px 90px rgba(0,0,0,.62)}
+dialog.reflect[open]{display:flex;flex-direction:column;animation:w-rise .8s cubic-bezier(.16,1,.3,1) both}
+dialog.reflect::backdrop{background:radial-gradient(130% 80% at 50% 100%,rgba(0,0,0,.78),rgba(0,0,0,.42));-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);animation:w-fade .6s ease both}
+dialog.reflect.closing{animation:w-sink .44s cubic-bezier(.5,0,.75,0) both}
+dialog.reflect.closing::backdrop{animation:w-fade .44s ease reverse both}
+dialog.reflect.dragging{animation:none}
+dialog.reflect.dragged{animation:none;transition:transform .26s cubic-bezier(.2,.8,.2,1)}
+.r-grab{position:absolute;left:50%;top:8px;width:38px;height:4px;margin-left:-19px;border-radius:2px;background:var(--line);z-index:2}
+.r-x{position:absolute;top:8px;right:8px;z-index:2;width:44px;height:44px;display:grid;place-items:center;color:var(--ink-3);border-radius:12px}
+.r-x svg{width:20px;height:20px}
+.r-scroll{overflow:auto;overscroll-behavior:contain;padding:50px 28px 30px;text-align:center;
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0,transparent 20px,#000 54px,#000 calc(100% - 30px),transparent);mask-image:linear-gradient(to bottom,transparent 0,transparent 20px,#000 54px,#000 calc(100% - 30px),transparent)}
+.r-mark{position:relative;width:52px;height:52px;margin:0 auto 10px;display:grid;place-items:center;color:var(--sun)}
+.r-mark::before{content:"";position:absolute;inset:-4px;border-radius:50%;background:radial-gradient(closest-side,var(--sun-soft),transparent 72%);animation:tilak-glow 4.8s ease-in-out infinite}
+.r-mark svg{position:relative;width:30px;height:30px;filter:drop-shadow(0 0 3px var(--sun-soft))}
+.r-kicker{margin:0;font:500 11.5px var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3)}
+.reflect h2{margin:8px auto 0;max-width:14em;font:400 30px/1.15 var(--serif);letter-spacing:-.005em;outline:none;text-wrap:balance}
+.r-body{margin:22px auto 0;max-width:31em;text-align:left;font:400 calc(var(--ls,20px) * .88)/1.72 var(--serif);
+  color:var(--ink);color:color-mix(in srgb,var(--ink) 88%,var(--ink-2))}
+.r-body p{margin:0 0 .95em;text-wrap:pretty}
+.r-body em{font-style:italic;color:var(--sun);color:color-mix(in srgb,var(--sun) 72%,var(--ink))}
+.r-sign{margin:20px 0 0;text-align:right;font:italic 400 20px var(--serif);color:var(--ink-2);letter-spacing:.02em}
+.r-sign::before{content:"";display:inline-block;width:26px;height:1px;margin:0 10px 6px 0;vertical-align:middle;background:var(--sun);opacity:.55}
+.reflect .w-in{animation:rise-in .8s cubic-bezier(.16,1,.3,1) both;animation-delay:calc(min(var(--i), 6) * 70ms + 160ms)}
 
 /* Lakshmi Puja: the time for your place, an "i" for what the words mean, and the place to tap to change it */
 .puja{margin:12px auto 0;display:flex;flex-direction:column;align-items:center}
@@ -471,7 +510,7 @@ dialog.sheet::backdrop{background:rgba(4,4,8,.6)}
     <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M235.32,180l-36.24-36.25L162.62,23.46A21.76,21.76,0,0,0,128,12.93,21.76,21.76,0,0,0,93.38,23.46L56.92,143.76,20.68,180a16,16,0,0,0,0,22.62l32.69,32.69a16,16,0,0,0,22.63,0L124.28,187a40.68,40.68,0,0,0,3.72-4.29,40.68,40.68,0,0,0,3.72,4.29L180,235.32a16,16,0,0,0,22.63,0l32.69-32.69A16,16,0,0,0,235.32,180ZM64.68,224,32,191.32l12.69-12.69,32.69,32.69ZM120,158.75a23.85,23.85,0,0,1-7,17L88.68,200,56,167.32l13.65-13.66a8,8,0,0,0,2-3.34l37-122.22A5.78,5.78,0,0,1,120,29.78Zm23,17a23.85,23.85,0,0,1-7-17v-129a5.78,5.78,0,0,1,11.31-1.68l37,122.22a8,8,0,0,0,2,3.34l14.49,14.49-33.4,32ZM191.32,224l-12.56-12.57,33.39-32L224,191.32Z"/></svg>
   </button>
   </div>
-  <nav class="dots gone" id="dots" aria-label="The three aartis"></nav>
+  <button class="tilak gone" id="tilakBtn" type="button" data-act="reflect" aria-label="A reflection"></button>
   <div class="top-right">
   <button class="time-chip gone" id="pujaChip" type="button" data-act="place"></button>
   <button class="orb gone" id="settingsBtn" type="button" aria-label="Settings" title="Settings">
@@ -485,19 +524,20 @@ dialog.sheet::backdrop{background:rgba(4,4,8,.6)}
 <div class="swipe-arrow" id="swipeArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></div>
 <dialog class="sheet" id="sheet" aria-labelledby="sheetTitle"><div class="sheet-in" id="sheetBody"></div></dialog>
 <dialog class="welcome" id="welcome" aria-labelledby="wTitle"></dialog>
+<dialog class="reflect" id="reflect" aria-labelledby="rTitle"></dialog>
 <div class="toast" id="toast" role="status" popover="manual"></div>
 <audio id="player" preload="none"></audio>
 
-<script src="core.js?v=10"></script>
-<script src="aartis.js?v=10"></script>
-<script src="bell.js?v=10"></script>
-<script src="puja-times.js?v=10"></script>
+<script src="core.js?v=11"></script>
+<script src="aartis.js?v=11"></script>
+<script src="bell.js?v=11"></script>
+<script src="puja-times.js?v=11"></script>
 <script>
 (() => {
 'use strict';
 /* ---------- Settings you may change ---------- */
 const PIN = '1008';                    // the PIN friends type in; the shared link carries it
-const RELEASE = 10;
+const RELEASE = 11;
 
 const C = window.Core;
 const AARTIS = window.AartiData.AARTIS;
@@ -836,7 +876,7 @@ window.addEventListener('popstate', (e) => {
 
 /* ---------- Screens ---------- */
 function render(newScreen) {
-  const back = $('#backBtn'), dots = $('#dots'), settings = $('#settingsBtn'), hands = $('#faithBtn');
+  const back = $('#backBtn'), settings = $('#settingsBtn'), hands = $('#faithBtn'), tilak = $('#tilakBtn');
   settings.classList.toggle('gone', !S.unlocked);
   const r = S.route;
   hands.classList.toggle('gone', !(S.unlocked && ['home', 'done'].includes(r.r) && Drift.ready()));
@@ -845,17 +885,18 @@ function render(newScreen) {
   const chip = $('#pujaChip');
   chip.classList.toggle('gone', !(S.unlocked && r.r === 'home' && S.pujaTucked && PT));
   if (!chip.classList.contains('gone')) updateChip();
+  if (!tilak.innerHTML) tilak.innerHTML = TILAK;
+  tilak.classList.toggle('gone', !(S.unlocked && (r.r === 'home' || (r.r === 'aarti' && byId(r.id)))));
+  tilak.setAttribute('aria-label', r.r === 'aarti' && byId(r.id) ? `A reflection: ${REFLECT[r.id].title}` : `A reflection: ${REFLECT.diwali.title}`);
   if (!S.unlocked) {
-    back.classList.add('gone'); dots.classList.add('gone'); setRoom('night');
+    back.classList.add('gone'); setRoom('night');
     $('#screen').innerHTML = lockHtml(); FX.mood(.5, false); return;
   }
   const a = r.r === 'aarti' && byId(r.id);
   back.classList.toggle('gone', !a);
-  dots.classList.toggle('gone', !a);
   if (a) {
     const i = AARTIS.indexOf(a);
     setRoom(a.id);
-    dots.innerHTML = AARTIS.map((x, j) => `<button class="dot" type="button" data-jump="${x.id}" aria-label="${esc(x.title)}, ${j + 1} of ${AARTIS.length}" aria-current="${j === i}"></button>`).join('');
     $('#screen').innerHTML = roomHtml(a, i);
     const img = $('.art-img');
     const ready = () => img.classList.add('ready');
@@ -974,7 +1015,10 @@ function dockHtml(a) {
   let play;
   if (s.kind === 'file') play = playerHtml('a:' + a.id, s.url, a.title, a.artist, a.art, true);
   else play = `<a class="dock-play" ${spotifyAttrs(C.openTarget(s.src, platform))} data-spotify="${a.id}" aria-label="Play ${esc(a.title)} in Spotify" title="Play in Spotify">${ICON.play}</a>`;
-  return `<nav class="dock" id="dock" aria-label="Music and words">${play}
+  const i = AARTIS.indexOf(a);
+  const dots = `<div class="dots" id="dots" role="navigation" aria-label="The three aartis">${AARTIS.map((x, j) =>
+    `<button class="dot" type="button" data-jump="${x.id}" aria-label="${esc(x.title)}, ${j + 1} of ${AARTIS.length}" aria-current="${j === i}"></button>`).join('')}</div>`;
+  return `<nav class="dock" id="dock" aria-label="Music and words">${dots}${play}
     <div class="seg" role="group" aria-label="Show the words in">
       <button type="button" data-mode="dev" aria-pressed="${m === 'dev'}" aria-label="Hindi, in Devanagari"><span lang="hi">हिन्दी</span></button>
       <button type="button" data-mode="rom" aria-pressed="${m === 'rom'}" aria-label="Hindi, in Roman letters">Roman</button>
@@ -1232,7 +1276,7 @@ const Tuck = (() => {
     timer = setTimeout(tuck, AFTER);
   }
   function stop() { clearTimeout(timer); timer = 0; }
-  function busy() { return $('#sheet').open || $('#welcome').open || Drift.isOpen(); }
+  function busy() { return $('#sheet').open || $('#welcome').open || $('#reflect').open || Drift.isOpen(); }
   function tuck() {
     timer = 0;
     if (S.route.r !== 'home' || S.pujaTucked) return;
@@ -1290,6 +1334,100 @@ function updateChip() {
   chip.classList.toggle('lit', c.st === 'now');
   chip.setAttribute('aria-label', c.label);
 }
+
+/* ---------- Reflections: the tilak at the top opens a few words for the moment, signed g.s ---------- */
+const REFLECT = {
+  diwali: { kicker: 'Diwali', title: 'The real festival of lights', paras: [
+    'Diwali is more than a festival of lights. It is a reminder of an eternal victory: divine consciousness over ignorance, truth over illusion, devotion over attachment.',
+    'When Lord Rama returned to Ayodhya, the people lit every home to welcome him. The deeper invitation is to welcome the Lord into the temple of our own hearts.',
+    'This world on its own is dark, *tamas*. The Upanishads give one clear instruction: *tamaso mā jyotir gamaya*. Do not stay in the darkness; go to the light.',
+    'We are eternal souls, but held by what is temporary, we forget who we are and to whom we belong. That forgetting is *maya*, illusion, and it is the deepest darkness. It is not the dark around us, but the dark that makes us forget Krishna, the source of all light, knowledge and happiness.',
+    'One small lamp is enough to clear a dark room. Sincere devotion clears the heart in the same way, and that lamp is lit simply: by chanting the holy names, with humility, compassion, gratitude and loving service.',
+    'So tonight, light your home, and light your heart too. Where Krishna is present, there can be no darkness. That is the real festival of lights: the awakening of our eternal love for God.'] },
+  ganesh: { kicker: 'Shri Ganesh', title: 'Clearing the way', paras: [
+    'Every puja begins with Ganesh. Before the lamps and the prayers, we bow to the one who removes obstacles.',
+    'Yet the hardest obstacles are not outside us. They are pride, distraction, and a restless mind that will not stay still long enough to remember God.',
+    'The aarti calls him *Ekadant dayavant*, one-tusked and kind. Legend says he broke his own tusk to write down the Mahabharata: even what is broken can be offered in service. He rides a tiny mouse, the restless mind held gently in check. *Maathe sindoor sohe*: the mark on his forehead glows, the sign of a mind turned towards God.',
+    '*Andhan ko aankh det*: he gives sight to the blind. The sight we ask for tonight is inner sight, to see what really matters.',
+    'As you sing to him, set down one thing that stands between you and the Lord. Clearing the way is the first lamp of Diwali.'] },
+  lakshmi: { kicker: 'Shri Lakshmi', title: 'True wealth', paras: [
+    'On Diwali night homes are cleaned, doors are opened and lamps are lit, so that Lakshmi will come in.',
+    'Yet Lakshmi never comes alone. She is the eternal companion of Narayana, forever devoted to his service. Chase her for herself and she slips away; welcome the Lord, and she comes with him.',
+    'Her aarti says *jis ghar mein tum rahati, sab sadgun aata*: every virtue comes to the home where she lives. Her wealth is not only money. It is contentment, generosity and gratitude, and a mind that, in the aarti’s words, *nahi ghabraata*, knows no fear.',
+    'She stands on a lotus that grows from muddy water, yet no mud clings to it. We too can work, earn and care for our families without letting the world cover the heart. Wealth kept for ourselves becomes a weight; wealth offered in service becomes a blessing.',
+    'Clean the home, yes. Clean the heart too, of envy, greed and complaint, and she will feel at home there.'] },
+  jagdish: { kicker: 'Jagdish', title: 'At Your door', paras: [
+    '*Om Jai Jagdish Hare* closes many a puja. *Jagdish* means Lord of the universe: Vishnu, Krishna, the one from whom everything comes, even the light of the lamp in our hands.',
+    'Its words are simple and honest. *Main sevak tum swami*: I am your servant, and you are my master. *Tum antaryami*: you know every heart. And then, *dwaar pada tere*: I lie at your door.',
+    'This is the heart of Diwali. We do not light the lamp to show the Lord anything; we light it to remember that all light is his. We are not owners here, only caretakers, and real freedom is in offering everything back to him with love.',
+    'So the aarti asks: *vishay vikaar mitao*, wipe away our cravings; *shraddha bhakti badhao*, deepen our faith and devotion.',
+    'When we sing it together, the flame passes from hand to hand. Let it pass into the heart too. For when Krishna is present within the heart, there can be no darkness.'] },
+};
+const TILAK = '<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8.6 2.6v8.2a3.4 3.4 0 0 0 6.8 0V2.6" stroke="currentColor" stroke-width="1.55" stroke-linecap="round"/><path d="M12 15.1c2 0 2.8 1.2 2.8 2.4 0 1.6-1.4 3.2-2.8 5-1.4-1.8-2.8-3.4-2.8-5 0-1.2.8-2.4 2.8-2.4Z" fill="currentColor"/></svg>';
+function reflectKey() { return S.route.r === 'aarti' && REFLECT[S.route.id] ? S.route.id : S.route.r === 'home' ? 'diwali' : null; }
+function reflectHtml(k) {
+  const r = REFLECT[k];
+  const md = (t) => esc(t).replace(/\*([^*]+)\*/g, '<em>$1</em>');
+  let i = 0;
+  return `<div class="r-grab" aria-hidden="true"></div>
+    <button class="x r-x" type="button" data-act="reflectClose" aria-label="Close">${ICON.x}</button>
+    <div class="r-scroll" id="rScroll">
+      <div class="r-mark w-in" style="--i:0">${TILAK}</div>
+      <p class="r-kicker w-in" style="--i:1">${esc(r.kicker)}</p>
+      <h2 id="rTitle" class="w-in" style="--i:2" tabindex="-1">${esc(r.title)}</h2>
+      <div class="r-body">${r.paras.map((t) => `<p class="w-in" style="--i:${3 + i++}">${md(t)}</p>`).join('')}</div>
+      <p class="r-sign w-in" style="--i:${3 + i}">g.s</p>
+    </div>`;
+}
+function openReflect() {
+  const k = reflectKey(), d = $('#reflect');
+  if (!k || !d || d.open) return;
+  if ($('#sheet').open) closeSheet();
+  d.innerHTML = reflectHtml(k);
+  d.dataset.k = k;
+  d.classList.remove('closing');
+  d.style.transform = '';
+  d.showModal();
+  $('#rTitle').focus({ preventScroll: true });
+}
+function closeReflect(far) {
+  const d = $('#reflect');
+  if (!d || !d.open || d.classList.contains('closing')) return;
+  const done = () => { d.close(); d.classList.remove('closing', 'dragged'); d.style.transform = ''; const t = $('#tilakBtn'); if (t && !t.classList.contains('gone')) t.focus({ preventScroll: true }); };
+  if (reduced()) return done();
+  if (far) { d.classList.add('dragged'); d.style.transform = 'translateY(110%)'; setTimeout(done, 260); return; }
+  d.classList.add('closing'); setTimeout(done, 440);
+}
+(function reflectGestures() {
+  const d = $('#reflect');
+  d.addEventListener('cancel', (e) => { e.preventDefault(); closeReflect(); });
+  d.addEventListener('click', (e) => {
+    const r = d.getBoundingClientRect();
+    if (e.target === d && (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom)) closeReflect();
+  });
+  // drag it down to let it go (from the top of the words)
+  let g = null;
+  d.addEventListener('touchstart', (e) => {
+    const sc = $('#rScroll');
+    g = e.touches.length === 1 && (!sc || sc.scrollTop <= 0) ? { y0: e.touches[0].clientY, x0: e.touches[0].clientX, dy: 0, on: false, s: [] } : null;
+  }, { passive: true });
+  d.addEventListener('touchmove', (e) => {
+    if (!g) return;
+    const dy = e.touches[0].clientY - g.y0, dx = e.touches[0].clientX - g.x0;
+    if (!g.on) { if (Math.hypot(dx, dy) < 8) return; if (dy > 0 && dy > Math.abs(dx)) g.on = true; else { g = null; return; } }
+    e.preventDefault();
+    g.dy = dy; const now = performance.now(); g.s.push([now, dy]); while (g.s.length > 2 && now - g.s[0][0] > 120) g.s.shift();
+    if (!reduced()) { d.classList.add('dragging'); d.style.transform = `translateY(${Math.max(0, dy)}px)`; }
+  }, { passive: false });
+  const end = () => {
+    if (!g || !g.on) { g = null; return; }
+    const G = g; g = null; d.classList.remove('dragging');
+    const a = G.s[0], b = G.s[G.s.length - 1], v = a && b && b[0] > a[0] ? (b[1] - a[1]) / (b[0] - a[0]) : 0;
+    if (G.dy > d.offsetHeight / 4 || v > .5) closeReflect(true);
+    else { d.classList.add('dragged'); d.style.transform = ''; setTimeout(() => d.classList.remove('dragged'), 300); }
+  };
+  d.addEventListener('touchend', end); d.addEventListener('touchcancel', end);
+})();
 
 /* ---------- Sheets ---------- */
 const sheet = $('#sheet');
@@ -1879,6 +2017,8 @@ document.addEventListener('click', async (e) => {
     case 'install': installApp(); break;
     case 'welcomeDone': closeWelcome(); break;
     case 'welcome': openWelcome(); break;
+    case 'reflect': openReflect(); break;
+    case 'reflectClose': closeReflect(); break;
     case 'share': shareApp(); break;
     case 'bell':
       S.set.bell = S.set.bell === false; saveSet();
@@ -1953,6 +2093,7 @@ $('#backBtn').addEventListener('click', () => up());
     if (e.touches.length !== 1) return;
     const t = e.touches[0], el = e.target;
     if (el.closest('input, textarea, select, [contenteditable], .seek') || sideScroller(el) || selecting()) return;
+    if ($('#reflect').open || $('#welcome').open) return;
     if (sheet.open) {
       if (!sheet.contains(el)) return;
       g = { kind: 'sheet', x0: t.clientX, y0: t.clientY, t0: performance.now(), dir: null, grab: !!el.closest('[data-grab]') };

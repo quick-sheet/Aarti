@@ -42,13 +42,13 @@
     --sun-soft 1.2s ease,--on-sun 1.2s ease,--tint 1.2s ease,--glass 1.2s ease,--line 1.2s ease;
 }
 /* Ganesh: saffron and marigold, with vermilion */
-:root[data-room="ganesh"]{--bg:#1B0F05;--raise:#2A180A;--raise-2:#38210F;--ink:#FCEEDC;--ink-2:#DABC97;--ink-3:#9A7B5B;
+:root[data-room="ganesh"],.peek[data-room="ganesh"]{--bg:#1B0F05;--raise:#2A180A;--raise-2:#38210F;--ink:#FCEEDC;--ink-2:#DABC97;--ink-3:#9A7B5B;
   --sun:#F7AB3C;--sun-soft:rgba(247,171,60,.2);--on-sun:#241302;--tint:#E0532F;--glass:rgba(33,18,6,.6);--line:rgba(252,238,220,.13)}
 /* Lakshmi: deep crimson and gold, with lotus pink */
-:root[data-room="lakshmi"]{--bg:#1E070D;--raise:#2D0E16;--raise-2:#3B1520;--ink:#FDEDE8;--ink-2:#E2B7B2;--ink-3:#A0716F;
+:root[data-room="lakshmi"],.peek[data-room="lakshmi"]{--bg:#1E070D;--raise:#2D0E16;--raise-2:#3B1520;--ink:#FDEDE8;--ink-2:#E2B7B2;--ink-3:#A0716F;
   --sun:#EEC566;--sun-soft:rgba(238,197,102,.2);--on-sun:#2A1704;--tint:#F09DB1;--glass:rgba(36,9,16,.6);--line:rgba(253,237,232,.13)}
 /* Jagdish: night-sky blue, with pitambar yellow */
-:root[data-room="jagdish"]{--bg:#08122B;--raise:#0F1D3D;--raise-2:#17284E;--ink:#EEF2FB;--ink-2:#AEBBD8;--ink-3:#71809F;
+:root[data-room="jagdish"],.peek[data-room="jagdish"]{--bg:#08122B;--raise:#0F1D3D;--raise-2:#17284E;--ink:#EEF2FB;--ink-2:#AEBBD8;--ink-3:#71809F;
   --sun:#F5CA52;--sun-soft:rgba(245,202,82,.2);--on-sun:#201802;--tint:#52B8B4;--glass:rgba(9,20,46,.6);--line:rgba(238,242,251,.13)}
 :root[data-size="large"]{--ls:24px} :root[data-size="largest"]{--ls:28px}
 
@@ -108,14 +108,12 @@ a{color:inherit;-webkit-tap-highlight-color:transparent}
 .spot.on .spot-say{opacity:1;transform:none}
 
 .top-left{min-width:44px;height:44px;flex:none;display:flex;align-items:center}
-.top-left .orb.gone,.top-left .back-chip.gone{display:none}
-/* back to the start: a quiet glass tab with a gold arrow, in the app's own lettering */
-.back-chip{height:38px;display:inline-flex;align-items:center;gap:8px;padding:0 14px 0 11px;border-radius:12px;
-  background:var(--glass);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:inset 0 0 0 1px var(--line),0 6px 18px rgba(0,0,0,.18);
-  color:var(--ink);font:500 11.5px/1 var(--sans);letter-spacing:.18em;text-transform:uppercase}
-.back-chip svg{width:19px;height:19px;color:var(--sun);transition:transform .25s cubic-bezier(.2,.8,.2,1)}
-.back-chip:active{background:var(--sun-soft)}
-.back-chip:active svg{transform:translateX(-3px)}
+.top-left .orb.gone{display:none}
+/* back to the start: a round glass button with a gold arrow, no words */
+.orb.back{color:var(--sun);box-shadow:inset 0 0 0 1px var(--line),0 6px 18px rgba(0,0,0,.2)}
+.orb.back svg{width:22px;height:22px;filter:drop-shadow(0 0 6px var(--sun-soft));transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+.orb.back:active{background:var(--sun-soft)}
+.orb.back:active svg{transform:translateX(-3px)}
 .orb.faith svg{width:23px;height:23px}
 .orb.faith[aria-pressed="true"]{color:var(--sun);box-shadow:0 0 22px var(--sun-soft)}
 
@@ -162,7 +160,8 @@ html.drifting,html.drifting body{overflow:hidden}
 /* The opening, PIN and closing screens: G's diya photo. Touch it and the light spreads from the wick;
    the flames sway and flicker, the water ripples, the mandala breathes, and it all fades into the page. */
 @property --r{syntax:'<percentage>';inherits:false;initial-value:0%}
-:root{--hero-h:min(118vw,64svh,700px)}
+/* the whole photo across the screen, lotuses and all, with room above it for the top bar */
+:root{--img-w:min(100vw,960px);--img-h:calc(var(--img-w) * .5625);--hero-top:calc(52px + env(safe-area-inset-top));--hero-h:calc(var(--hero-top) + var(--img-h))}
 .stage{min-height:100svh;display:flex;flex-direction:column;align-items:center;text-align:center;
   padding:0 24px calc(36px + env(safe-area-inset-bottom));position:relative}
 .stage > :not(.hero){position:relative;z-index:2}
@@ -170,14 +169,24 @@ html.drifting,html.drifting body{overflow:hidden}
   background:radial-gradient(60% 46% at 50% 18%,var(--sun-soft),transparent 74%);opacity:0;transition:opacity 2.2s ease}
 .stage.is-lit::before{opacity:1}
 .hero{position:relative;z-index:0;display:block;flex:none;width:100vw;height:var(--hero-h);overflow:hidden;cursor:default;touch-action:manipulation;
-  -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 13%,#000 72%,transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 13%,#000 72%,transparent 100%)}
+  -webkit-mask-image:linear-gradient(to bottom,#000 calc(100% - var(--img-h) * .17),transparent 100%);mask-image:linear-gradient(to bottom,#000 calc(100% - var(--img-h) * .17),transparent 100%)}
 button.hero{cursor:pointer;border-radius:0}
 button.hero:focus-visible{outline:none}
 button.hero:focus-visible .wick{opacity:.8}
 .hero-move{position:absolute;inset:0}
-/* the photo keeps its shape: as tall as the hero, centred on the diya, its sides fading out on wide screens */
-.hero-frame{position:absolute;top:0;left:50%;height:100%;aspect-ratio:16/9;transform:translateX(-50%);
-  -webkit-mask-image:linear-gradient(to right,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(to right,transparent,#000 12%,#000 88%,transparent)}
+/* the photo keeps its shape: full width, centred, its top softening into the page (and its sides too on wide screens) */
+.hero-frame{position:absolute;bottom:0;left:50%;width:var(--img-w);aspect-ratio:16/9;transform:translateX(-50%);
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 4%);mask-image:linear-gradient(to bottom,transparent 0,#000 4%)}
+/* above the photo, its own top edge mirrored and softly blurred, fading up into the dark behind the top bar */
+.hero-ext{position:absolute;left:50%;top:0;width:var(--img-w);height:calc(var(--hero-top) + 14px);transform:translateX(-50%);overflow:hidden;pointer-events:none;
+  -webkit-mask-image:linear-gradient(to top,#000 18%,transparent);mask-image:linear-gradient(to top,#000 18%,transparent)}
+.hero-ext span{position:absolute;inset:-12px -12px 0;background:url('diya-dark.jpg') 50% 0/calc(100% - 24px) auto no-repeat;transform:scaleY(-1);filter:blur(9px)}
+.hero-ext .ext-lit{background-image:url('diya.jpg');opacity:0;transition:opacity 2.4s ease .35s}
+.stage.is-lit .ext-lit{opacity:1}
+@media (min-width:961px){
+  .hero-frame{-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 7%),linear-gradient(to right,transparent,#000 12%,#000 88%,transparent);
+    -webkit-mask-composite:source-in;mask-image:linear-gradient(to bottom,transparent 0,#000 7%),linear-gradient(to right,transparent,#000 12%,#000 88%,transparent);mask-composite:intersect}
+}
 .hero-dark,.hero-lit{position:absolute;inset:0}
 .scene{position:absolute;inset:0;width:100%;height:100%;display:block;-webkit-user-select:none;user-select:none;-webkit-user-drag:none}
 .water{position:absolute;left:0;top:65.926%;width:100%;height:34.074%;display:block;pointer-events:none}
@@ -217,7 +226,7 @@ button.hero:focus-visible .wick{opacity:.8}
   64%{transform:skewX(-.9deg) scaleY(1.03)}82%{transform:skewX(2.4deg) scaleY(.99)}}
 @keyframes flick{0%,100%{transform:none;opacity:1}9%{transform:scale(.985,1.03)}17%{transform:scale(1.01,.975);opacity:.93}31%{transform:scale(.99,1.045)}
   38%{transform:scale(1.015,.985);opacity:1}52%{transform:scale(.995,1.02)}61%{transform:scale(1.005,.97);opacity:.91}74%{transform:scale(.985,1.035)}88%{transform:scale(1.01,.99);opacity:1}}
-.stage-title{margin:-34px 0 0;font:400 36px/1.12 var(--serif);letter-spacing:-.01em;text-shadow:0 2px 22px rgba(0,0,0,.55)}
+.stage-title{margin:-6px 0 0;font:400 36px/1.12 var(--serif);letter-spacing:-.01em;text-shadow:0 2px 22px rgba(0,0,0,.55)}
 .stage-lead{margin:12px auto 0;max-width:21em;font:300 18px/1.55 var(--sans);color:var(--ink-2)}
 .stage .notices{margin-top:26px;width:100%}
 .more{display:grid;justify-items:center;gap:20px;margin-top:24px;width:100%}
@@ -251,18 +260,18 @@ dialog.welcome.closing::backdrop{animation:w-fade .44s ease reverse both}
 .w-credit{margin:30px 0 0;font:400 12.5px var(--sans);letter-spacing:.06em;color:var(--ink-3);opacity:.75}
 
 /* A reflection: the same frosted card as the welcome, in the colours of the moment, for reading */
-dialog.reflect{position:fixed;inset:auto 0 calc(10px + env(safe-area-inset-bottom)) 0;margin:0 auto;width:calc(100% - 20px);max-width:31rem;
-  max-height:calc(100svh - 78px - env(safe-area-inset-top) - env(safe-area-inset-bottom));padding:0;border:0;border-radius:26px;color:var(--ink);overflow:hidden;
+dialog.reflect{position:fixed;inset:0;margin:auto;width:calc(100% - 28px);max-width:31rem;height:fit-content;
+  max-height:min(calc(100svh - 124px - env(safe-area-inset-top) - env(safe-area-inset-bottom)),720px);padding:0;border:0;border-radius:26px;color:var(--ink);overflow:hidden;
   background:var(--raise);background:linear-gradient(180deg,color-mix(in srgb,var(--raise-2) 92%,transparent),color-mix(in srgb,var(--bg) 96%,transparent));
   -webkit-backdrop-filter:blur(26px) saturate(1.15);backdrop-filter:blur(26px) saturate(1.15);
   box-shadow:inset 0 0 0 1px var(--line),inset 0 1px 0 rgba(255,255,255,.06),0 34px 90px rgba(0,0,0,.62)}
-dialog.reflect[open]{display:flex;flex-direction:column;animation:w-rise .8s cubic-bezier(.16,1,.3,1) both}
-dialog.reflect::backdrop{background:radial-gradient(130% 80% at 50% 100%,rgba(0,0,0,.78),rgba(0,0,0,.42));-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);animation:w-fade .6s ease both}
+dialog.reflect[open]{display:flex;flex-direction:column;animation:r-in .7s cubic-bezier(.16,1,.3,1) both}
+@keyframes r-in{from{opacity:0;transform:translateY(18px) scale(.95)}to{opacity:1;transform:none}}
+dialog.reflect::backdrop{background:radial-gradient(120% 80% at 50% 50%,rgba(0,0,0,.74),rgba(0,0,0,.5));-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);animation:w-fade .6s ease both}
 dialog.reflect.closing{animation:w-sink .44s cubic-bezier(.5,0,.75,0) both}
 dialog.reflect.closing::backdrop{animation:w-fade .44s ease reverse both}
 dialog.reflect.dragging{animation:none}
 dialog.reflect.dragged{animation:none;transition:transform .26s cubic-bezier(.2,.8,.2,1)}
-.r-grab{position:absolute;left:50%;top:8px;width:38px;height:4px;margin-left:-19px;border-radius:2px;background:var(--line);z-index:2}
 .r-x{position:absolute;top:8px;right:8px;z-index:2;width:44px;height:44px;display:grid;place-items:center;color:var(--ink-3);border-radius:12px}
 .r-x svg{width:20px;height:20px}
 .r-scroll{overflow:auto;overscroll-behavior:contain;padding:50px 28px 30px;text-align:center;
@@ -294,7 +303,7 @@ dialog.reflect.dragged{animation:none;transition:transform .26s cubic-bezier(.2,
 .place-btn svg{width:14px;height:14px;opacity:.7}
 /* the time, tucked in the corner: tap it to change place */
 .top-right{position:relative;display:flex;align-items:center}
-.title-wrap{margin-top:-34px}
+.title-wrap{align-self:stretch;margin-top:-6px}
 .title-wrap .stage-title{margin:0}
 .time-chip{position:absolute;right:0;bottom:calc(100% + 2px);height:26px;padding:0 9px 0 7px;border-radius:9px;display:inline-flex;align-items:center;gap:5px;white-space:nowrap;
   background:var(--glass);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:inset 0 0 0 1px var(--line);
@@ -383,7 +392,13 @@ dialog.reflect.dragged{animation:none;transition:transform .26s cubic-bezier(.2,
 .art-blur{position:absolute;inset:-40px;background-size:cover;background-position:50% 22%;filter:blur(22px) saturate(1.15);opacity:var(--dim,0)}
 .art-shade{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.32) 0%,transparent 16%,transparent 46%,var(--bg) 94%)}
 .art-dim{position:absolute;inset:0;background:var(--bg);opacity:calc(var(--dim,0) * .74)}
-.room{position:relative;z-index:2}
+.room{position:relative;z-index:2;touch-action:pan-y}
+/* Swiping between aartis: the neighbour slides in beside the page, its painting a little slower, as through a window */
+.peek{position:fixed;inset:0;z-index:4;overflow:hidden;background:var(--bg);color:var(--ink);pointer-events:none;--dim:0;--hint:0;
+  box-shadow:0 0 70px rgba(0,0,0,.6);will-change:transform}
+.peek.leaving{opacity:0;transition:opacity .22s ease}
+.swipe-on .art,.swipe-on .art-move,.swipe-on #screen .room{will-change:transform}
+:root.swiping{transition-duration:.42s}
 .room-top{min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 22px calc(96px + env(safe-area-inset-bottom));max-width:34rem;margin:0 auto}
 .eyebrow{margin:0;font:500 13px var(--sans);color:var(--ink-2);letter-spacing:.02em}
 .room-title{margin:6px 0 0;font:400 40px/1.06 var(--serif);letter-spacing:-.015em;text-wrap:balance;text-shadow:0 2px 24px rgba(0,0,0,.35)}
@@ -430,7 +445,7 @@ dialog.reflect.dragged{animation:none;transition:transform .26s cubic-bezier(.2,
 .next-text span{display:block;margin-top:3px;font:300 14px var(--sans);color:rgba(255,255,255,.82)}
 .finish-card{display:flex;align-items:center;gap:14px;width:100%;margin-top:40px;padding:18px;text-align:left}
 .mini-diya{position:relative;width:62px;height:62px;flex:none;border-radius:50%;overflow:hidden;box-shadow:0 0 0 1px var(--line),0 0 26px var(--sun-soft)}
-.mini-diya .hero-frame{left:-121px;top:-94px;height:171px;transform:none;-webkit-mask-image:none;mask-image:none}
+.mini-diya .hero-frame{left:-121px;top:-94px;bottom:auto;width:304px;height:171px;transform:none;-webkit-mask-image:none;mask-image:none}
 .mini-diya .flame{opacity:1;animation:sway var(--sw) ease-in-out var(--sd) infinite}
 .mini-diya .flame img{animation:flick var(--fl) ease-in-out var(--fd) infinite}
 .finish-card strong{display:block;font:400 24px var(--serif)}
@@ -536,8 +551,8 @@ dialog.sheet::backdrop{background:rgba(4,4,8,.6)}
 <body>
 <div class="top" id="top">
   <div class="top-left">
-  <button class="back-chip gone" id="backBtn" type="button" aria-label="Back to the start" title="Back to the start">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12H5M10.5 6.5 5 12l5.5 5.5"/></svg><span>Home</span>
+  <button class="orb back gone" id="backBtn" type="button" aria-label="Back to the start" title="Back to the start">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5.5M11 6 5 12l6 6"/></svg>
   </button>
   <button class="orb faith gone" id="faithBtn" type="button" data-act="verse" aria-label="A verse from the Bhagavad Gita, in Daily Drift" title="A verse">
     <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M235.32,180l-36.24-36.25L162.62,23.46A21.76,21.76,0,0,0,128,12.93,21.76,21.76,0,0,0,93.38,23.46L56.92,143.76,20.68,180a16,16,0,0,0,0,22.62l32.69,32.69a16,16,0,0,0,22.63,0L124.28,187a40.68,40.68,0,0,0,3.72-4.29,40.68,40.68,0,0,0,3.72,4.29L180,235.32a16,16,0,0,0,22.63,0l32.69-32.69A16,16,0,0,0,235.32,180ZM64.68,224,32,191.32l12.69-12.69,32.69,32.69ZM120,158.75a23.85,23.85,0,0,1-7,17L88.68,200,56,167.32l13.65-13.66a8,8,0,0,0,2-3.34l37-122.22A5.78,5.78,0,0,1,120,29.78Zm23,17a23.85,23.85,0,0,1-7-17v-129a5.78,5.78,0,0,1,11.31-1.68l37,122.22a8,8,0,0,0,2,3.34l14.49,14.49-33.4,32ZM191.32,224l-12.56-12.57,33.39-32L224,191.32Z"/></svg>
@@ -559,10 +574,10 @@ dialog.sheet::backdrop{background:rgba(4,4,8,.6)}
 <div class="toast" id="toast" role="status" popover="manual"></div>
 <audio id="player" preload="none"></audio>
 
-<script src="core.js?v=13"></script>
-<script src="aartis.js?v=13"></script>
-<script src="bell.js?v=13"></script>
-<script src="puja-times.js?v=13"></script>
+<script src="core.js?v=14"></script>
+<script src="aartis.js?v=14"></script>
+<script src="bell.js?v=14"></script>
+<script src="puja-times.js?v=14"></script>
 <script>
 (() => {
 'use strict';
@@ -574,7 +589,7 @@ document.addEventListener('touchmove', (e) => { if (e.touches.length > 1) e.prev
 addEventListener('wheel', (e) => { if (e.ctrlKey) e.preventDefault(); }, { passive: false });
 /* ---------- Settings you may change ---------- */
 const PIN = '1008';                    // the PIN friends type in; the shared link carries it
-const RELEASE = 13;
+const RELEASE = 14;
 
 const C = window.Core;
 const AARTIS = window.AartiData.AARTIS;
@@ -637,7 +652,7 @@ const ICON = {
 function sceneHtml(mini) {
   const flames = ['l', 'r', 'c'].map((k) => `<span class="flame f${k}"><img src="flame-${k}.png" alt="" decoding="async" draggable="false"></span>`).join('');
   if (mini) return `<span class="hero-frame"><img class="scene" src="diya.jpg" alt="" decoding="async" draggable="false"><span class="flame fc"><img src="flame-c.png" alt="" decoding="async" draggable="false"></span></span>`;
-  return `<span class="hero-move"><span class="hero-frame">
+  return `<span class="hero-ext" aria-hidden="true"><span class="ext-dark"></span><span class="ext-lit"></span></span><span class="hero-move"><span class="hero-frame">
       <span class="hero-dark"><img class="scene" src="diya-dark.jpg" alt="" decoding="async" fetchpriority="high" draggable="false"><canvas class="water"></canvas><i class="wick"></i></span>
       <span class="hero-lit"><img class="scene" src="diya.jpg" alt="" decoding="async" draggable="false"><canvas class="water"></canvas><i class="mandala"></i><i class="halo"></i>${flames}</span>
     </span></span>`;
@@ -904,6 +919,7 @@ function render(newScreen) {
   hands.classList.toggle('gone', !(S.unlocked && ['home', 'done'].includes(r.r) && Drift.ready()));
   if (r.r !== 'home' && S.pujaSeen) S.pujaTucked = true;          // back from an aarti, the time waits in the corner
   if (r.r !== 'home') Tuck.stop();
+  Swipe.drop();
 
   if (!tilak.innerHTML) tilak.innerHTML = TILAK;
   tilak.classList.toggle('gone', !(S.unlocked && (r.r === 'home' || (r.r === 'aarti' && byId(r.id)))));
@@ -921,7 +937,7 @@ function render(newScreen) {
     const img = $('.art-img');
     const ready = () => img.classList.add('ready');
     if (img.complete && img.naturalWidth) ready(); else img.addEventListener('load', ready, { once: true });
-    const nx = AARTIS[i + 1]; if (nx) { const pre = new Image(); pre.src = nx.art; }
+    for (const nb of [AARTIS[i + 1], AARTIS[i - 1]]) if (nb) { const pre = new Image(); pre.src = nb.art; }
     prepPlayer(a);
     FX.mood(.6, false);
   } else if (r.r === 'done') {
@@ -944,6 +960,7 @@ function render(newScreen) {
   keepAwake();
   Water.scan();
   Spot.schedule();
+  Swipe.tease();
   if (newScreen) { window.scrollTo(0, 0); S.lastY = 0; }
   onScroll();
 }
@@ -1420,7 +1437,7 @@ function reflectHtml(k) {
   const r = REFLECT[k];
   const md = (t) => esc(t).replace(/\*([^*]+)\*/g, '<em>$1</em>');
   let i = 0;
-  return `<div class="r-grab" aria-hidden="true"></div>
+  return `
     <button class="x r-x" type="button" data-act="reflectClose" aria-label="Close">${ICON.x}</button>
     <div class="r-scroll" id="rScroll">
       <div class="r-mark w-in" style="--i:0">${TILAK}</div>
@@ -1446,7 +1463,7 @@ function closeReflect(far) {
   if (!d || !d.open || d.classList.contains('closing')) return;
   const done = () => { d.close(); d.classList.remove('closing', 'dragged'); d.style.transform = ''; const t = $('#tilakBtn'); if (t && !t.classList.contains('gone')) t.focus({ preventScroll: true }); };
   if (reduced()) return done();
-  if (far) { d.classList.add('dragged'); d.style.transform = 'translateY(110%)'; setTimeout(done, 260); return; }
+  if (far) { d.classList.add('dragged'); d.style.transform = `translateY(${Math.round(innerHeight / 2 + d.offsetHeight / 2 + 20)}px)`; setTimeout(done, 260); return; }
   d.classList.add('closing'); setTimeout(done, 440);
 }
 (function reflectGestures() {
@@ -2278,7 +2295,197 @@ document.addEventListener('pointerup', () => { S.seeking = null; });
 $('#settingsBtn').addEventListener('click', () => openSettings());
 $('#backBtn').addEventListener('click', () => up());
 
-/* ---------- Gestures: drag a sheet down (or aside) to close it. The pages themselves don't swipe. ---------- */
+/* ---------- Swipe between the aartis ----------
+   Drag an aarti sideways and the next one (or the one before) slides in beside it, its painting moving a little slower than
+   the page, as through a window, its words arriving just behind. Let go past a third of the way, or with a flick, and it
+   carries on at the finger's own speed into the next room, colours and all; otherwise it settles back. It can be caught
+   mid-way. The first and last aartis give a little and spring back. The arrow keys do the same; the dots still jump.
+   The first time an aarti opens, the page leans aside once to show the next painting is there. */
+const Swipe = (() => {
+  const PAR = .38, WORDS = .14;                 // the painting runs this much slower than the page; the words trail by this much
+  let g = null, x = 0, dir = 0, peek = null, pk = null, cur = null, raf = 0, landing = false, teaseT = 0, wantNeighbour = 0;
+  const i0 = () => AARTIS.findIndex((a) => a.id === S.route.id);
+  const on = () => S.unlocked && S.route.r === 'aarti' && i0() >= 0;
+  const W = () => innerWidth;
+  const anyOpen = () => !!document.querySelector('dialog[open], .dd-layer, .spot');
+  // the page's own pieces, found once per page
+  function pieces() {
+    if (cur && cur.room && cur.room.isConnected) return cur;
+    const art = $('#art');
+    cur = { art, move: art && art.querySelector('.art-move'), room: $('#screen .room'), fade: $('#screen .topfade') };
+    return cur;
+  }
+  function peekHtml(a, i) {
+    return `<div class="art"><div class="art-move"><div class="art-blur" style="background-image:url('${a.blur}')"></div>
+      <img class="art-img ready" src="${esc(a.art)}" alt="" decoding="async"></div><div class="art-shade"></div></div>
+      <div class="room"><header class="room-top">
+        <p class="eyebrow">${esc(a.deity)} · ${i + 1} of ${AARTIS.length}</p>
+        <p class="room-title">${esc(a.title)}</p>
+        <p class="room-dev" lang="hi">${esc(a.titleD)}</p>
+        <p class="room-tag">${esc(a.tagline)}</p>
+        <span class="hint">${ICON.chevDown}Scroll for the words</span>
+      </header></div>`;
+  }
+  function makePeek(d) {
+    const i = i0() + d, a = AARTIS[i];
+    if (!a) return;
+    peek = document.createElement('div');
+    peek.className = 'peek'; peek.dataset.room = a.id; peek.setAttribute('aria-hidden', 'true');
+    peek.innerHTML = peekHtml(a, i);
+    document.body.append(peek);
+    pk = { move: peek.querySelector('.art-move'), room: peek.querySelector('.room'), id: a.id };
+  }
+  function dropPeek() { if (peek) peek.remove(); peek = pk = null; }
+  // a little give past the first and last aartis
+  const rubber = (d) => { const L = W() * .32; return Math.sign(d) * (1 - 1 / (Math.abs(d) * .55 / L + 1)) * L; };
+  function apply(nx) {
+    x = nx;
+    const P = pieces(); if (!P.room) return;
+    const want = x < -.5 ? 1 : x > .5 ? -1 : 0;
+    if (want !== dir) { dropPeek(); dir = want; if (want && AARTIS[i0() + want]) makePeek(want); }
+    const w = W(), p = Math.min(1, Math.abs(x) / w);
+    document.documentElement.classList.toggle('swipe-on', !!x);
+    if (P.art) P.art.style.transform = x ? `translate3d(${x}px,0,0)` : '';
+    if (P.move) P.move.style.transform = x ? `translate3d(${-x * PAR}px,0,0)` : '';
+    P.room.style.transform = x ? `translate3d(${x * (1 + WORDS * .6)}px,0,0)` : '';
+    P.room.style.opacity = x ? String(1 - p * .55) : '';
+    if (P.fade) P.fade.style.transform = x ? `translate3d(${x}px,0,0)` : '';
+    if (peek) {
+      const px = x + (dir > 0 ? w : -w), q = Math.min(1, Math.abs(px) / w);
+      peek.style.transform = `translate3d(${px}px,0,0)`;
+      pk.move.style.transform = `translate3d(${-px * PAR}px,0,0)`;
+      pk.room.style.transform = `translate3d(${px * WORDS}px,0,0)`;
+      pk.room.style.opacity = String(1 - q * .7);
+    }
+  }
+  function clear() {
+    cancelAnimationFrame(raf); raf = 0;
+    dropPeek(); dir = 0; x = 0;
+    const P = cur && cur.room && cur.room.isConnected ? cur : null;
+    if (P) { for (const el of [P.art, P.move, P.room, P.fade]) if (el) el.style.transform = ''; P.room.style.opacity = ''; }
+    cur = null;
+    document.documentElement.classList.remove('swipe-on');
+  }
+  // a spring with the finger's speed in it; critically damped, and it never runs past where it's going
+  function spring(to, v0, done, k = 240) {
+    cancelAnimationFrame(raf);
+    const c = 2 * Math.sqrt(k);
+    let v = v0 * 1000, last = performance.now(), from = x;
+    const tick = (now) => {
+      const dt = Math.min(.05, (now - last) / 1000); last = now;
+      const n = Math.max(1, Math.ceil(dt / .004)), h = dt / n;
+      let nx = x;
+      for (let j = 0; j < n; j++) { v += (-k * (nx - to) - c * v) * h; nx += v * h; }
+      if ((from - to) * (nx - to) < 0) { nx = to; v = 0; }        // no overshoot: the other edge never shows
+      apply(nx);
+      if (Math.abs(nx - to) < .5 && Math.abs(v) < 25) { raf = 0; apply(to); done(); return; }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+  }
+  // carry on into the neighbour
+  function commit(d, v0) {
+    const i = i0() + d, a = AARTIS[i];
+    if (!a) return settle(v0);
+    landing = true;
+    document.documentElement.classList.add('swiping'); setRoom(a.id);       // the colours flow over as it slides
+    const ds = document.querySelectorAll('#dots .dot');
+    ds.forEach((b, j) => b.setAttribute('aria-current', String(j === i)));
+    spring(-d * W(), v0, () => {
+      const keep = peek; peek = pk = null; dir = 0; x = 0; cur = null;
+      const prev = (history.state && history.state.prev) || 'home';
+      history.replaceState({ r: 'aarti', id: a.id, prev }, '');
+      S.route = { r: 'aarti', id: a.id };
+      render(true);
+      landing = false;
+      document.documentElement.classList.remove('swiping', 'swipe-on');
+      const img = $('.art-img');
+      let gone = false;
+      const go2 = () => { if (gone || !keep) return; gone = true; requestAnimationFrame(() => { keep.classList.add('leaving'); setTimeout(() => keep.remove(), 260); }); };
+      if (!img || img.classList.contains('ready')) go2(); else { img.addEventListener('load', go2, { once: true }); setTimeout(go2, 900); }
+    }, 260);
+  }
+  function settle(v0) { spring(0, v0 || 0, clear, 300); }
+
+  // ----- the finger -----
+  const selecting = () => { const t = window.getSelection && window.getSelection(); return !!(t && String(t).length); };
+  document.addEventListener('touchstart', (e) => {
+    g = null;
+    clearTimeout(teaseT);
+    if (!on() || landing || navigating || e.touches.length !== 1 || anyOpen() || selecting()) return;
+    const el = e.target;
+    if (!el.closest || !el.closest('#screen') || el.closest('#dock, input, textarea, select, .seek, [contenteditable]')) return;
+    const t = e.touches[0];
+    // caught mid-way (settling back, or leaning aside): carry on from where it is
+    if (raf) { cancelAnimationFrame(raf); raf = 0; }
+    const caught = Math.abs(x) > .5;
+    g = { x0: t.clientX - (caught ? rawFor(x) : 0), y0: t.clientY, lock: caught ? 'x' : null, s: [] };
+  }, { passive: true });
+  // the finger distance that gives this offset (undoing the give at the ends)
+  function rawFor(off) {
+    const d = off < 0 ? 1 : -1;
+    if (AARTIS[i0() + d]) return off;
+    const L = W() * .32, r = Math.min(.95, Math.abs(off) / L);
+    return Math.sign(off) * (1 / (1 - r) - 1) * L / .55;
+  }
+  function offsetFor(dx) { const d = dx < 0 ? 1 : -1; return AARTIS[i0() + d] ? dx : rubber(dx); }
+  document.addEventListener('touchmove', (e) => {
+    if (!g || e.touches.length !== 1) { if (g && g.lock === 'x') { settle(0); } g = null; return; }
+    const t = e.touches[0], dx = t.clientX - g.x0, dy = t.clientY - g.y0;
+    if (!g.lock) {
+      if (Math.hypot(dx, dy) < 10) return;
+      if (Math.abs(dx) > Math.abs(dy) * 1.15) { g.lock = 'x'; g.x0 += Math.sign(dx) * 10; Spot.hide(); }
+      else { g = null; return; }                       // scrolling the words: let it be
+    }
+    if (e.cancelable) e.preventDefault();
+    const now = performance.now(), ddx = t.clientX - g.x0;
+    g.s.push([now, ddx]); while (g.s.length > 2 && now - g.s[0][0] > 100) g.s.shift();
+    if (reduced()) { g.dx = ddx; return; }
+    apply(offsetFor(ddx));
+  }, { passive: false });
+  const end = (e) => {
+    if (!g) return;
+    const G = g; g = null;
+    if (G.lock !== 'x') return;
+    const a = G.s[0], b = G.s[G.s.length - 1];
+    const v = a && b && b[0] > a[0] && performance.now() - b[0] < 80 ? (b[1] - a[1]) / (b[0] - a[0]) : 0;   // px per ms
+    const off = reduced() ? (G.dx || 0) : x, w = W();
+    const d = off < 0 ? 1 : -1;
+    const pass = !!AARTIS[i0() + d] && (Math.abs(off) > w * .3 || (Math.abs(v) > .35 && Math.sign(v) === Math.sign(off) && Math.abs(off) > 14));
+    if (reduced()) { if (pass) { clear(); go({ r: 'aarti', id: AARTIS[i0() + d].id }, true); } return; }
+    if (pass) commit(d, v); else settle(v);
+  };
+  document.addEventListener('touchend', end);
+  document.addEventListener('touchcancel', end);
+
+  // ----- the keyboard: arrows move between the aartis -----
+  document.addEventListener('keydown', (e) => {
+    if (!on() || landing || navigating || raf || anyOpen() || e.altKey || e.metaKey || e.ctrlKey) return;
+    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+    if (e.target.closest && e.target.closest('input, textarea, select, .seek, [contenteditable], .seg')) return;
+    const d = e.key === 'ArrowRight' ? 1 : -1;
+    e.preventDefault();
+    if (!AARTIS[i0() + d]) { if (reduced()) return; apply(-d * 1); spring(-d * 26, -d * .5, () => settle(0), 420); return; }
+    if (reduced()) { go({ r: 'aarti', id: AARTIS[i0() + d].id }, true); return; }
+    apply(-d * 1); commit(d, -d * .9);
+  });
+
+  // ----- once, the page leans aside to show there's another painting beside it -----
+  function tease() {
+    clearTimeout(teaseT);
+    if (!on() || get('swipeHinted', false) || reduced()) return;
+    teaseT = setTimeout(() => {
+      if (!on() || g || raf || x || landing || anyOpen() || scrollY > 40 || document.visibilityState !== 'visible') return;
+      put('swipeHinted', true);
+      const d = AARTIS[i0() + 1] ? 1 : -1;
+      apply(-d * 1);
+      spring(-d * Math.min(72, W() * .18), 0, () => { teaseT = setTimeout(() => { if (!g && x) settle(0); }, 320); }, 120);
+    }, 1700);
+  }
+  return { drop() { if (!landing) { clearTimeout(teaseT); if (g) g = null; clear(); } }, tease, get busy() { return !!raf || landing; } };
+})();
+
+/* ---------- Gestures: drag a sheet down (or aside) to close it. ---------- */
 (function gestures() {
   let g = null;
   const sideScroller = (el) => {

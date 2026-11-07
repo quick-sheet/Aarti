@@ -231,6 +231,7 @@ dialog.welcome.closing::backdrop{animation:w-fade .44s ease reverse both}
 .w-install strong{font-weight:500;color:var(--ink)}
 .w-actions{display:flex;gap:10px;margin-top:18px}
 .w-actions .btn{flex:1}
+.w-credit{margin:30px 0 0;font:400 12.5px var(--sans);letter-spacing:.06em;color:var(--ink-3);opacity:.75}
 
 /* A reflection: the same frosted card as the welcome, in the colours of the moment, for reading */
 dialog.reflect{position:fixed;inset:auto 0 calc(10px + env(safe-area-inset-bottom)) 0;margin:0 auto;width:calc(100% - 20px);max-width:31rem;
@@ -257,9 +258,8 @@ dialog.reflect.dragged{animation:none;transition:transform .26s cubic-bezier(.2,
 .r-body{margin:22px auto 0;max-width:31em;text-align:left;font:400 calc(var(--ls,20px) * .88)/1.72 var(--serif);
   color:var(--ink);color:color-mix(in srgb,var(--ink) 88%,var(--ink-2))}
 .r-body p{margin:0 0 .95em;text-wrap:pretty}
+.r-body p:last-child{margin-bottom:.4em}
 .r-body em{font-style:italic;color:var(--sun);color:color-mix(in srgb,var(--sun) 72%,var(--ink))}
-.r-sign{margin:20px 0 0;text-align:right;font:italic 400 20px var(--serif);color:var(--ink-2);letter-spacing:.02em}
-.r-sign::before{content:"";display:inline-block;width:26px;height:1px;margin:0 10px 6px 0;vertical-align:middle;background:var(--sun);opacity:.55}
 .reflect .w-in{animation:rise-in .8s cubic-bezier(.16,1,.3,1) both;animation-delay:calc(min(var(--i), 6) * 70ms + 160ms)}
 
 /* Lakshmi Puja: the time for your place, an "i" for what the words mean, and the place to tap to change it */
@@ -290,6 +290,22 @@ dialog.reflect.dragged{animation:none;transition:transform .26s cubic-bezier(.2,
 .puja-fly{position:fixed;z-index:30;margin:0;transform-origin:0 0;pointer-events:none;white-space:nowrap;text-align:center}
 .meaning-link{display:inline-flex;align-items:center;gap:8px;min-height:40px;margin:6px 0 2px;color:var(--ink-2);font-size:14.5px}
 .meaning-link svg{width:18px;height:18px;color:var(--sun)}
+.place-now{margin:14px 0 0;border-radius:14px;box-shadow:inset 0 0 0 1px var(--line);background:rgba(255,255,255,.025)}
+.pn-row{display:flex;align-items:center;gap:12px;width:100%;min-height:64px;padding:10px 12px 10px 16px;text-align:left}
+.pn-text{flex:1;display:flex;flex-direction:column;gap:1px}
+.pn-city{font-size:17px;color:var(--sun)}
+.pn-text small{font-size:13px;color:var(--ink-3)}
+.pn-time{font-size:15px;color:var(--ink-2);white-space:nowrap}
+.pn-edit{width:40px;height:40px;display:grid;place-items:center;border-radius:12px;color:var(--ink-2);box-shadow:inset 0 0 0 1px var(--line)}
+.pn-edit svg{width:18px;height:18px;grid-area:1/1;transition:opacity .25s,transform .35s cubic-bezier(.2,.8,.2,1)}
+.pn-edit svg + svg{opacity:0;transform:rotate(-90deg)}
+.place-now.open .pn-edit svg:first-child{opacity:0;transform:rotate(90deg)}
+.place-now.open .pn-edit svg + svg{opacity:1;transform:none}
+.place-list{display:grid;grid-template-rows:0fr;transition:grid-template-rows .42s cubic-bezier(.2,.8,.2,1)}
+.place-now.open .place-list{grid-template-rows:1fr}
+.place-list-in{overflow:hidden;min-height:0;padding:0 16px;opacity:0;transition:opacity .3s ease}
+.place-now.open .place-list-in{opacity:1;padding-bottom:8px;border-top:1px solid var(--line)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .place-country{margin:20px 0 2px!important;font-size:12.5px!important;font-weight:500!important;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3)}
 .places li{min-height:0}
 .place-row{display:flex;align-items:center;gap:10px;width:100%;min-height:50px;text-align:left}
@@ -528,16 +544,16 @@ dialog.sheet::backdrop{background:rgba(4,4,8,.6)}
 <div class="toast" id="toast" role="status" popover="manual"></div>
 <audio id="player" preload="none"></audio>
 
-<script src="core.js?v=11"></script>
-<script src="aartis.js?v=11"></script>
-<script src="bell.js?v=11"></script>
-<script src="puja-times.js?v=11"></script>
+<script src="core.js?v=12"></script>
+<script src="aartis.js?v=12"></script>
+<script src="bell.js?v=12"></script>
+<script src="puja-times.js?v=12"></script>
 <script>
 (() => {
 'use strict';
 /* ---------- Settings you may change ---------- */
 const PIN = '1008';                    // the PIN friends type in; the shared link carries it
-const RELEASE = 11;
+const RELEASE = 12;
 
 const C = window.Core;
 const AARTIS = window.AartiData.AARTIS;
@@ -590,6 +606,8 @@ const ICON = {
   chevDown: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>',
   info: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><circle cx="12" cy="7.8" r=".4" fill="currentColor"/></svg>',
   words: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 6.5h16M4 11h16M4 15.5h10M4 20h7"/></svg>',
+  pencil: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 5.5l4 4M4 20l1-4.6L15.6 4.8a1.6 1.6 0 0 1 2.3 0l1.3 1.3a1.6 1.6 0 0 1 0 2.3L8.6 19 4 20Z"/></svg>',
+  chevUp: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg>',
   tick: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
 };
 
@@ -917,6 +935,7 @@ function render(newScreen) {
     FX.mood(isLit() ? .8 : .35, false);
     maybeWelcome();
     Tuck.start();
+    Flames.wake();
   }
   syncPlayers();
   keepAwake();
@@ -1167,17 +1186,33 @@ function updatePuja() {
 setInterval(updatePuja, 20000);
 document.addEventListener('visibilitychange', () => { if (!document.hidden) updatePuja(); });
 
-function openPlaces() {
+function openPlaces(open) {
   const cur = myPlace();
   let last = '', rows = '';
   for (const p of PT.places) {
     if (p.country !== last) { rows += `${last ? '</ul>' : ''}<h3 class="place-country">${esc(p.country)}</h3><ul class="list places">`; last = p.country; }
     rows += `<li><button class="place-row" type="button" data-place="${p.id}" aria-pressed="${p === cur}"><span>${esc(p.city)}</span><small class="num">${esc(p.muhurat)}</small>${ICON.tick}</button></li>`;
   }
-  openSheet(head('Where are you celebrating?') + `<p>The Lakshmi Puja muhurat on ${esc(PT.day)}, in each place’s own time. Choose the nearest.</p>
-    <button class="meaning-link" type="button" data-act="pujaInfo">${ICON.info}<span>What the times mean</span></button>${rows}</ul>`);
-  const on = $('#sheetBody [aria-pressed="true"]');
-  if (on) on.scrollIntoView({ block: 'center' });
+  openSheet(head('Where are you celebrating?') + `<p>The Lakshmi Puja muhurat on ${esc(PT.day)}, in each place’s own time.</p>
+    <button class="meaning-link" type="button" data-act="pujaInfo">${ICON.info}<span>What the times mean</span></button>
+    <div class="place-now${open ? ' open' : ''}" id="placeNow">
+      <button class="pn-row" type="button" data-act="placeEdit" aria-expanded="${!!open}" aria-controls="placeList">
+        <span class="pn-text"><span class="pn-city">${esc(cur.city)}</span><small>${esc(cur.country)}</small></span>
+        <span class="pn-time num">${esc(cur.muhurat)}</span>
+        <span class="pn-edit" aria-hidden="true">${ICON.pencil}${ICON.chevUp}</span>
+        <span class="sr">Change place</span>
+      </button>
+      <div class="place-list" id="placeList"><div class="place-list-in">${rows}</ul></div></div>
+    </div>`);
+  if (open) { const on = $('#placeList [aria-pressed="true"]'); if (on) on.scrollIntoView({ block: 'center' }); }
+}
+function togglePlaces() {
+  const box = $('#placeNow');
+  if (!box) return;
+  const open = !box.classList.contains('open');
+  box.classList.toggle('open', open);
+  box.querySelector('.pn-row').setAttribute('aria-expanded', String(open));
+  if (open) setTimeout(() => { const on = $('#placeList [aria-pressed="true"]'); if (on) on.scrollIntoView({ block: 'nearest', behavior: reduced() ? 'auto' : 'smooth' }); }, reduced() ? 0 : 420);
 }
 function choosePlace(id) {
   const p = placeById(id);
@@ -1198,7 +1233,7 @@ function openPujaInfo() {
       <dt>Amavasya</dt><dd>The new moon. Diwali is the Amavasya night of the month of Kartik. In ${esc(p.city)} it runs from ${esc(p.amavasya[0])} to ${esc(p.amavasya[1])}.</dd>
     </dl>
     <p class="small">Times for ${esc(p.city)}, worked out the way Drik Panchang does. If your temple or family keeps a slightly different time, go with theirs.</p>
-    <div class="actions"><button class="btn" type="button" data-act="place">Change place</button></div>`);
+    <div class="actions"><button class="btn" type="button" data-act="placeList">Change place</button></div>`);
 }
 
 /* ---------- Welcome: once per phone, after the PIN; Settings can show it again ---------- */
@@ -1222,7 +1257,8 @@ function welcomeHtml() {
     <div class="w-actions w-in" id="wActions" style="--i:7">
       ${!standalone && S.installEvt ? '<button class="btn primary" type="button" data-act="install">Install app</button><button class="btn" type="button" data-act="welcomeDone">Begin</button>'
         : '<button class="btn primary" type="button" data-act="welcomeDone">Begin</button>'}
-    </div>`;
+    </div>
+    <p class="w-credit w-in" style="--i:8">All artwork and content by g.s</p>`;
 }
 function openWelcome() {
   const d = $('#welcome');
@@ -1269,11 +1305,18 @@ async function installApp() {
 
 /* ---------- The puja time tucks into the corner after a minute on the opening ---------- */
 const Tuck = (() => {
-  const AFTER = 60000;
-  let timer = 0;
+  const AFTER = 60000, SOONEST = 6000;
+  let timer = 0, shown = 0;
   function start() {
     if (S.pujaTucked || S.route.r !== 'home' || !S.unlocked || !get('welcomed', false) || !PT || timer) return;
+    shown = Date.now();
     timer = setTimeout(tuck, AFTER);
+  }
+  // they've started to move about the page: tuck it now, or as soon as it has been seen for 6 seconds
+  function nudge() {
+    if (!timer || S.pujaTucked || S.route.r !== 'home') return;
+    clearTimeout(timer);
+    timer = setTimeout(tuck, Math.max(0, shown + SOONEST - Date.now()));
   }
   function stop() { clearTimeout(timer); timer = 0; }
   function busy() { return $('#sheet').open || $('#welcome').open || $('#reflect').open || Drift.isOpen(); }
@@ -1319,7 +1362,10 @@ const Tuck = (() => {
     chip.classList.remove('arriving');
     setTimeout(finish, 1000);
   }
-  return { start, stop, tuck };
+  addEventListener('scroll', () => { if (window.scrollY > 4) nudge(); }, { passive: true });
+  addEventListener('wheel', nudge, { passive: true });
+  document.addEventListener('touchmove', (e) => { if (!e.target.closest || !e.target.closest('dialog')) nudge(); }, { passive: true });
+  return { start, stop, tuck, nudge };
 })();
 function chipInner(p) {
   const st = pujaState(p, Date.now());
@@ -1376,7 +1422,6 @@ function reflectHtml(k) {
       <p class="r-kicker w-in" style="--i:1">${esc(r.kicker)}</p>
       <h2 id="rTitle" class="w-in" style="--i:2" tabindex="-1">${esc(r.title)}</h2>
       <div class="r-body">${r.paras.map((t) => `<p class="w-in" style="--i:${3 + i++}">${md(t)}</p>`).join('')}</div>
-      <p class="r-sign w-in" style="--i:${3 + i}">g.s</p>
     </div>`;
 }
 function openReflect() {
@@ -1429,6 +1474,102 @@ function closeReflect(far) {
   d.addEventListener('touchend', end); d.addEventListener('touchcancel', end);
 })();
 
+/* ---------- The flames answer the phone's movement ----------
+   As Daily Drift lets you move through its stars, the three flames here feel the phone: tilt it and they stay upright,
+   as real flames do; move it suddenly and they lean into the movement, flutter and settle again, each in its own time.
+   The light shifts with them and the scene moves a little, like a window. iPhone asks once, on the first tap. */
+const Flames = (() => {
+  const OK = 'DeviceMotionEvent' in window;
+  const ASK = isIOS && OK && typeof DeviceMotionEvent.requestPermission === 'function';
+  // each flame: how quickly it answers (rad/s) and how lively it is; the small ones are quicker
+  const SPEC = { c: { w: 8.5, z: .3, n: 1 }, l: { w: 11, z: .26, n: .8 }, r: { w: 10.2, z: .28, n: .85 } };
+  const st = {};
+  for (const k in SPEC) st[k] = { a: 0, v: 0, ph: Math.random() * 100 };
+  let on = false, asked = false, raf = 0, last = 0, heard = 0, sign = isIOS ? -1 : 1, signN = 0;
+  let fx = 0, fy = 9.81, fz = 0, spin = 0, agit = 0, base = null, px = 0, py = 0, lastF = null;
+  function onMotion(e) {
+    const g = e.accelerationIncludingGravity;
+    if (!g || g.x == null || g.y == null) return;
+    let x = +g.x || 0, y = +g.y || 0, z = +g.z || 0;
+    // which way is up differs between phones: learn it from how the phone is held (upright, more or less)
+    if (signN < 12 && Math.abs(y) > 3) { signN++; if (signN === 12 || signN === 1) sign = y > 0 ? 1 : -1; }
+    x *= sign; y *= sign; z *= sign;
+    const ang = (screen.orientation && screen.orientation.angle) || 0;
+    if (ang) { const r = ang * Math.PI / 180, c = Math.cos(r), s = Math.sin(r); [x, y] = [x * c + y * s, -x * s + y * c]; }
+    // a little smoothing for the sensor's own noise
+    fx += (x - fx) * .35; fy += (y - fy) * .35; fz += (z - fz) * .2;
+    const r = e.rotationRate || {};
+    const rate = Math.hypot(+r.alpha || 0, +r.beta || 0, +r.gamma || 0);
+    const jolt = lastF ? Math.hypot(x - lastF[0], y - lastF[1]) : 0; lastF = [x, y];
+    spin = Math.max(spin * .9, Math.min(1, rate / 200 + jolt / 5));
+    heard = performance.now();
+    wake();
+  }
+  function start() { if (on || !OK) return; addEventListener('devicemotion', onMotion); on = true; }
+  async function ask() {
+    if (!ASK) { start(); return; }
+    try { const res = await DeviceMotionEvent.requestPermission(); put('motionPerm', res); if (res === 'granted') start(); } catch {}
+  }
+  function tap(e) {
+    if (!e.isTrusted || on || asked || !ASK || get('motionPerm', '') === 'denied') return;
+    asked = true; ask();
+  }
+  document.addEventListener('touchend', tap, true);
+  document.addEventListener('click', tap, true);
+  if (OK && !ASK) start();
+  function live() {
+    return on && S.route.r === 'home' && !reduced() && !document.hidden && !document.documentElement.classList.contains('drifting')
+      && !!document.querySelector('#opening.is-lit .hero');
+  }
+  function wake() { if (!raf && live()) { last = 0; raf = requestAnimationFrame(step); } }
+  // smooth, unrepeating movement for the flutter
+  const noise = (t, p) => Math.sin(t * 7.1 + p) * .5 + Math.sin(t * 11.3 + p * 1.7) * .3 + Math.sin(t * 17.9 + p * 2.3) * .2;
+  function step(now) {
+    raf = 0;
+    if (!live()) { rest(); return; }
+    const dt = last ? Math.min(.05, (now - last) / 1000) : .016; last = now;
+    const t = now / 1000;
+    // where "up" is, on the screen: the flames point there, softly limited
+    const inPlane = Math.hypot(fx, fy), w = Math.max(0, Math.min(1, (inPlane - 2) / 5));
+    const raw = Math.atan2(fx, fy);
+    const target = .62 * Math.tanh(raw / .62) * w;
+    agit += ((spin > agit ? spin : spin * .6) - agit) * (spin > agit ? .5 : .04);
+    let moving = Math.abs(agit) > .01;
+    for (const k in SPEC) {
+      const s = st[k], p = SPEC[k];
+      // a spring that overshoots a little, as a flame does when it's moved
+      const acc = p.w * p.w * (target - s.a) - 2 * p.z * p.w * s.v;
+      s.v += acc * dt; s.a += s.v * dt;
+      if (Math.abs(s.v) > .002 || Math.abs(target - s.a) > .002) moving = true;
+      const flutter = agit * p.n;
+      const lean = s.a + flutter * .14 * noise(t, s.ph);
+      const tall = 1 + flutter * (.09 * noise(t * 1.3, s.ph + 4) - .03);
+      const el = document.querySelector(`#opening .hero .f${k}`);
+      if (el) { el.style.rotate = `${(lean * 57.3).toFixed(2)}deg`; el.style.scale = `${(1 - flutter * .03).toFixed(3)} ${tall.toFixed(3)}`; }
+    }
+    // the light follows the centre flame; the scene shifts a touch, like looking through a window
+    const halo = document.querySelector('#opening .halo');
+    if (halo) { halo.style.translate = `${(st.c.a * 22).toFixed(1)}px ${(-Math.abs(st.c.a) * 6).toFixed(1)}px`; halo.style.scale = (1 + agit * .06 * noise(t * .8, 9)).toFixed(3); }
+    if (base == null) base = fz;
+    base += (fz - base) * dt / 4;                 // whatever angle the phone rests at becomes the middle again
+    px += (Math.max(-10, Math.min(10, -target * 16)) - px) * .08;
+    py += (Math.max(-8, Math.min(8, (fz - base) * 2.2)) - py) * .08;
+    const mv = document.querySelector('#opening .hero-move');
+    if (mv) mv.style.translate = `${px.toFixed(2)}px ${py.toFixed(2)}px`;
+    if (Math.abs(px) > .05 || Math.abs(py) > .05) moving = true;
+    if (moving || now - heard < 1500) raf = requestAnimationFrame(step);
+  }
+  function rest() {
+    document.querySelectorAll('#opening .hero .flame').forEach((el) => { el.style.rotate = ''; el.style.scale = ''; });
+    const halo = document.querySelector('#opening .halo'); if (halo) { halo.style.translate = ''; halo.style.scale = ''; }
+    const mv = document.querySelector('#opening .hero-move'); if (mv) mv.style.translate = '';
+    for (const k in st) { st[k].a = 0; st[k].v = 0; }
+    px = py = 0; agit = 0;
+  }
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) wake(); });
+  return { wake, ask, active: () => on };
+})();
+
 /* ---------- Sheets ---------- */
 const sheet = $('#sheet');
 const head = (title) => `<div class="grab-zone" data-grab><div class="grabber"></div><div class="sheet-head"><h2 id="sheetTitle">${title}</h2><button class="icon-btn" type="button" data-act="close" aria-label="Close">${ICON.x}</button></div></div>`;
@@ -1473,7 +1614,7 @@ function openSettings() {
       `<button class="chip" type="button" data-size="${k}" aria-pressed="${S.set.size === k}">${n}</button>`).join('')}</div>
 
     ${PT ? `<h3>Lakshmi Puja times</h3>
-    <div class="toggle-row"><p>For ${esc(myPlace().city)}, ${esc(myPlace().country)}</p><button class="link-btn" type="button" data-act="place">Change</button></div>` : ''}
+    <div class="toggle-row"><p>For ${esc(myPlace().city)}, ${esc(myPlace().country)}</p><button class="link-btn" type="button" data-act="placeList">Change</button></div>` : ''}
 
     <h3>Sound</h3>
     <div class="toggle-row"><p>A soft bell when you light the diya</p>
@@ -1905,7 +2046,7 @@ const Drift = (() => {
     setTimeout(() => {
       l.remove();
       document.documentElement.classList.remove('drifting');
-      FX.hold(false); Water.start();
+      FX.hold(false); Water.start(); Flames.wake();
       setRoom(S.route.r === 'aarti' ? S.route.id : 'night');
       const h = $('#faithBtn'); if (h && !h.classList.contains('gone')) h.focus({ preventScroll: true });
     }, reduced() ? 0 : 460);
@@ -1947,6 +2088,8 @@ function lightDiya(btn) {
     return;
   }
   S.litAt = Date.now(); put('litAt', S.litAt);
+  Tuck.nudge();
+  Flames.wake();
   st.classList.add('is-lit', 'lighting');
   clearTimeout(lightDiya.t); lightDiya.t = setTimeout(() => st.classList.remove('lighting'), reduced() ? 0 : 2800);
   btn.setAttribute('aria-label', 'The diya is lit');
@@ -2012,7 +2155,9 @@ document.addEventListener('click', async (e) => {
     case 'verse': Drift.open(); break;
     case 'vback': up(); break;
     case 'home': up(); break;
-    case 'place': openPlaces(); break;
+    case 'place': openPlaces(false); break;
+    case 'placeList': openPlaces(true); break;
+    case 'placeEdit': togglePlaces(); break;
     case 'pujaInfo': openPujaInfo(); break;
     case 'install': installApp(); break;
     case 'welcomeDone': closeWelcome(); break;

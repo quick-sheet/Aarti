@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#F7C46A" stop-opacity=".42"/>
+      <stop offset=".45" stop-color="#F2A54A" stop-opacity=".14"/>
+      <stop offset="1" stop-color="#F2A54A" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="clay" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#DE8C45"/>
+      <stop offset="1" stop-color="#8A4120"/>
+    </linearGradient>
+    <linearGradient id="flame" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFC75A"/>
+      <stop offset=".7" stop-color="#F59A36"/>
+      <stop offset="1" stop-color="#E8702A"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="#0F1528"/>
+  <g transform="translate(56 40) scale(2)">
+    <circle cx="100" cy="94" r="78" fill="url(#glow)"/>
+    <path d="M100 48 C113 70 122 91 115 106 C110 116 90 116 85 106 C78 91 87 70 100 48 Z" fill="url(#flame)"/>
+    <path d="M100 72 C107 86 110 98 106 106 C103 111 97 111 94 106 C90 98 93 86 100 72 Z" fill="#FFF1C9"/>
+    <path d="M38 120 C42 150 70 162 100 162 C130 162 158 150 162 120 Z" fill="url(#clay)"/>
+    <ellipse cx="100" cy="120" rx="62" ry="9" fill="#5C2812"/>
+    <ellipse cx="100" cy="120" rx="62" ry="9" fill="none" stroke="#EDA35C" stroke-width="2.4"/>
+    <g fill="#F2B172" opacity=".85">
+      <circle cx="64" cy="139" r="2.6"/><circle cx="82" cy="145" r="2.6"/><circle cx="100" cy="147" r="2.6"/><circle cx="118" cy="145" r="2.6"/><circle cx="136" cy="139" r="2.6"/>
+    </g>
+    <path d="M100 119 V110" stroke="#2A1206" stroke-width="3" stroke-linecap="round"/>
+  </g>
+</svg>

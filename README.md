@@ -1,0 +1,49 @@
+# Aarti
+
+Diwali aartis to sing together, with words, meaning and casting.
+
+Live at **https://quick-sheet.github.io/Aarti/**
+
+Three aartis in the order they're sung: Jai Ganesh Deva, Om Jai Lakshmi Mata and Om Jai Jagdish Hare. Each one has a short note on what it means and what to do, then the words in Hindi (Devanagari), Roman letters or English. There's also a printable A4 sheet of all three. The app opens with a PIN (1008).
+
+## Host
+GitHub Pages, from the `main` branch, root folder. No server, no build step.
+
+## Install
+- **Android (Chrome):** open the live link and tap **Install** on the banner, or use Chrome ⋮ → **Install app**.
+- **iPhone (Safari):** open the live link, tap **Share** (on iOS 26 it's under the ⋯ beside the address bar), then **Add to Home Screen**. Keep **Open as Web App** on. Always open Aarti from its icon.
+
+## Share
+In the app, open Settings and tap **Share Aarti**. The link it sends opens Aarti without the PIN:
+`https://quick-sheet.github.io/Aarti/#pin=1008`
+On iPhone, the home-screen app has its own storage, so it may ask for the PIN once more.
+
+## Music
+- **For now:** each aarti's **Play in Spotify** button opens the song in the Spotify app. You can cast from there with Spotify's own Connect button.
+- **Your own version:** anyone can paste a Spotify link to a different recording of any aarti (on the aarti, tap **Use your own version**, or go to Settings). It's saved on their phone only.
+- **Adding your recordings:** upload the MP3 files to the repo's main folder, next to `index.html`. Then, in `aartis.js`, set each aarti's `audio:` line, for example `audio: 'ganesh.mp3?v=1'`, and update its `artist`. The app then plays the recording itself, with a cast button (Chromecast from Chrome on Android, AirPlay on iPhone) and lock-screen controls. Each recording is saved on the phone after its first play, so it works offline too. If you replace a recording later, change `?v=1` to `?v=2`.
+- If the words in your recordings differ (more verses, different repeats), the words in `aartis.js` and the PDF need updating to match.
+
+## Update
+1. On GitHub, go to **Add file → Upload files**, choose the changed files (files with the same name replace the old ones) and tap **Commit changes**.
+2. Wait about a minute.
+3. Fully close the app and open it again. If it still looks the same, close and reopen it once more.
+
+Every release bumps two markers together: `?v=N` on the scripts in `index.html`, and `REL = N` in `sw.js`.
+
+## Files
+| File | What it is |
+| --- | --- |
+| `index.html` | The whole app: screens, styles and script. The PIN is at the top of the script. |
+| `aartis.js` | The three aartis: words, meanings, notes, Spotify songs and recordings. |
+| `core.js` | Logic with no screen parts: Spotify links, PIN, byte ranges, word checks. |
+| `sw.js` | Service worker: works offline, updates arrive whole, saves recordings. |
+| `aarti-words.pdf` | The printable A4 sheet, one aarti per page. |
+| `test-bell.mp3` | A 36-second temple bell for **Test casting** in Settings. |
+| `manifest.webmanifest`, `icon*.png`, `icon.svg`, `apple-touch-icon.png` | Install to home screen. |
+
+## Good to know
+- The PIN is a gentle gate, not a lock. The repo is public, so anyone who finds the files can read them.
+- The screen stays on while an aarti is open.
+- Words follow the Anuradha Paudwal recordings on Spotify. The English is a plain guide to the meaning, not a word-for-word translation.
+- **Android quirk:** on some phones, every time the installed app opens it plays a sound and shows a Chrome notification saying "Tap to copy the URL for this app". That's Chrome's **Full screen site controls** notification. Long-press the notification and turn that category off.

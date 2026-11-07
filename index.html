@@ -1,0 +1,989 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Aarti</title>
+<meta name="description" content="Diwali aartis to sing together, with words, meaning and casting.">
+<meta name="theme-color" content="#0F1528">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Aarti">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600&family=Poppins:wght@300;400;500&display=swap">
+<style>
+:root{--bg:#0F1528;--raise:#161E37;--raise-2:#1D2645;--line:rgba(205,214,245,.09);--line-2:rgba(205,214,245,.17);
+--ink:#ECE8DF;--ink-2:#A3ABC2;--ink-3:#6E7794;--sun:#F2C063;--sun-soft:rgba(242,192,99,.17);--on-sun:#1D1505;
+--dome-in:#0A0F21;--dome-out:#1A2448;--sans:"Hanken Grotesk","Poppins",system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans Devanagari","Kohinoor Devanagari",sans-serif;color-scheme:dark;
+--ls:20px}
+:root[data-theme="red"]{--bg:#0C0404;--raise:#160707;--raise-2:#1F0A0A;--line:rgba(255,90,70,.12);--line-2:rgba(255,90,70,.22);--ink:#E2573F;--ink-2:#A9412F;--ink-3:#74291F;--sun:#FF5B3D;--sun-soft:rgba(255,91,61,.18);--on-sun:#1A0503;--dome-in:#070202;--dome-out:#1E0808}
+:root[data-theme="amber"]{--bg:#0D0904;--raise:#171008;--raise-2:#20170C;--line:rgba(255,190,110,.10);--line-2:rgba(255,190,110,.20);--ink:#EBC48A;--ink-2:#A98A5C;--ink-3:#6F5A3B;--sun:#FFB04A;--sun-soft:rgba(255,176,74,.18);--on-sun:#1A0F02;--dome-in:#080502;--dome-out:#241809}
+:root[data-theme="sea"]{--bg:#06121A;--raise:#0B1C26;--raise-2:#102632;--line:rgba(150,220,230,.09);--line-2:rgba(150,220,230,.18);--ink:#D6E9EC;--ink-2:#8EAEB4;--ink-3:#5A7880;--sun:#6FD9D0;--sun-soft:rgba(111,217,208,.16);--on-sun:#031513;--dome-in:#030B10;--dome-out:#0F2A38}
+:root[data-theme="aurora"]{--bg:#07110D;--raise:#0C1A14;--raise-2:#11241B;--line:rgba(150,235,190,.09);--line-2:rgba(150,235,190,.18);--ink:#D7EBDF;--ink-2:#8DAA9A;--ink-3:#5A7566;--sun:#86E3A8;--sun-soft:rgba(134,227,168,.16);--on-sun:#04140B;--dome-in:#040A07;--dome-out:#12291E}
+:root[data-theme="dusk"]{--bg:#110D1A;--raise:#1A1426;--raise-2:#221A31;--line:rgba(210,190,255,.09);--line-2:rgba(210,190,255,.18);--ink:#E8E1F4;--ink-2:#A79CBD;--ink-3:#6E6485;--sun:#F2A7C8;--sun-soft:rgba(242,167,200,.16);--on-sun:#1E0812;--dome-in:#0A0712;--dome-out:#261C3A}
+:root[data-size="large"]{--ls:23px} :root[data-size="largest"]{--ls:27px}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.45 var(--sans);-webkit-font-smoothing:antialiased;
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);min-height:100vh;overflow-x:hidden}
+button,input{font:inherit;color:inherit}
+button{background:none;border:0;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+a{color:inherit;-webkit-tap-highlight-color:transparent}
+:focus-visible{outline:2px solid var(--sun);outline-offset:2px;border-radius:8px}
+.num{font-variant-numeric:tabular-nums}
+.vh{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+.wrap{max-width:34rem;margin:0 auto;padding:0 20px 48px;position:relative}
+
+/* Header */
+header{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:14px 0 6px;min-height:64px}
+.head-left{display:flex;align-items:center;gap:4px;min-width:0}
+.back{margin-left:-12px}
+.mark{font-weight:600;font-size:17px;letter-spacing:-.01em}
+.where{display:block;font-size:13px;color:var(--ink-3);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tools{display:flex;gap:4px;margin-right:-8px}
+.icon-btn{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;color:var(--ink-2);flex:none;position:relative}
+.icon-btn:active{background:var(--raise)}
+.icon-btn svg{width:22px;height:22px}
+.icon-btn[hidden]{display:none}
+
+/* Notices */
+.notice{display:flex;gap:12px;align-items:center;margin:10px 0 0;padding:10px 12px 10px 14px;border-radius:14px;background:var(--raise);font-size:14px;color:var(--ink-2)}
+.notice p{margin:0;flex:1}
+.notice .link-btn{color:var(--sun);font-weight:600;white-space:nowrap;text-decoration:none}
+.notice .x{color:var(--ink-3);width:44px;height:44px;margin:-8px -8px -8px 0;display:grid;place-items:center;border-radius:50%;flex:none}
+.notice .x svg{width:16px;height:16px}
+
+/* Screen (follows the finger on a back swipe) */
+#screen{will-change:auto}
+#screen.dragging{will-change:transform}
+#screen.springing{transition:transform .28s cubic-bezier(.2,.8,.2,1)}
+.swipe-arrow{position:fixed;left:14px;top:50%;width:44px;height:44px;margin-top:-22px;border-radius:50%;display:grid;place-items:center;
+  background:var(--raise-2);color:var(--ink);opacity:0;pointer-events:none;z-index:6}
+.swipe-arrow svg{width:20px;height:20px}
+
+/* Diya */
+.diya{display:block;overflow:visible}
+.diya .rangoli{fill:none;stroke:var(--line-2);stroke-linecap:round}
+.diya .rangoli .dots{stroke-width:2.2;stroke-dasharray:0 7.2}
+.diya .rangoli .ring{stroke-width:1;opacity:.7}
+.diya .rangoli .petal{fill:var(--line);stroke:none}
+.diya .glow{opacity:0;transition:opacity 1.4s ease}
+.diya.lit .glow{opacity:1;animation:breathe 4.5s ease-in-out infinite}
+.diya .flame-g{transform-box:view-box;transform-origin:100px 113px;opacity:0}
+.diya.lit .flame-g{opacity:1}
+.diya.lighting .flame-g{animation:ignite 1s cubic-bezier(.2,.8,.2,1) both}
+.diya .flame{transform-box:view-box;transform-origin:100px 113px}
+.diya.lit .flame{animation:flicker 3.4s ease-in-out infinite}
+@keyframes flicker{0%,100%{transform:scale(1,1) skewX(0)}18%{transform:scale(.97,1.05) skewX(1.6deg)}37%{transform:scale(1.02,.96) skewX(-1.1deg)}55%{transform:scale(.98,1.03) skewX(.9deg)}78%{transform:scale(1.01,.98) skewX(-1.5deg)}}
+@keyframes breathe{50%{opacity:.72}}
+@keyframes ignite{from{transform:scale(.04);opacity:0}45%{opacity:1}to{transform:scale(1);opacity:1}}
+.hero-diya{width:176px;height:176px;margin:4px auto 10px}
+
+/* Hero and text */
+.hero{padding:0 0 8px}
+h1.title{margin:0;font-size:26px;line-height:1.15;font-weight:600;letter-spacing:-.015em}
+.story{margin:12px 0 0;font-size:18px;font-weight:300;line-height:1.55;letter-spacing:.005em;color:var(--ink);max-width:30em}
+.facts{margin:10px 0 0;font-size:14px;color:var(--ink-2)}
+.actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin-top:18px}
+.btn{height:44px;padding:0 18px;border-radius:22px;background:var(--raise-2);font-weight:600;font-size:15px;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;white-space:nowrap}
+.btn.primary{background:var(--sun);color:var(--on-sun)}
+.btn svg{width:18px;height:18px;flex:none}
+.btn:disabled{opacity:.5;cursor:default}
+.link-btn{color:var(--ink-2);font-size:14px;text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--line-2);min-height:44px;display:inline-flex;align-items:center}
+.section-title{margin:34px 0 2px;font-size:14px;font-weight:500;color:var(--ink-3)}
+.foot{margin-top:32px;font-size:12.5px;line-height:1.5;color:var(--ink-3)}
+
+/* Rows */
+.rows{margin:0;padding:0;list-style:none}
+.row{display:flex;align-items:center;gap:14px;width:100%;min-height:64px;padding:12px 0;border-bottom:1px solid var(--line);text-align:left;text-decoration:none}
+.row-n{flex:none;width:34px;height:34px;border-radius:50%;background:var(--raise-2);display:grid;place-items:center;font-size:14px;font-weight:600;color:var(--ink-2)}
+.row-n svg{width:18px;height:18px}
+.row-main{flex:1;min-width:0}
+.row-title{display:block;font-weight:600;font-size:16px}
+.row-sub{display:block;font-size:13.5px;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row-end{flex:none;color:var(--ink-3)}
+.row-end svg{width:20px;height:20px;display:block}
+
+/* Aarti screen */
+.a-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-top:4px}
+.a-dev{margin:6px 0 0;font-size:19px;color:var(--sun);font-weight:400;line-height:1.4}
+.mini-diya{width:64px;height:64px;flex:none;margin:-8px -6px 0 0}
+.doing{display:flex;gap:12px;margin:16px 0 0;padding:12px 14px;border-radius:14px;background:var(--raise);font-size:15px;line-height:1.5;color:var(--ink-2)}
+.doing svg{width:18px;height:18px;flex:none;margin-top:2px;color:var(--sun)}
+.play-card{margin:22px 0 0;padding:16px;border-radius:18px;background:var(--raise)}
+.play-note{margin:10px 0 0;font-size:14px;color:var(--ink-2)}
+.play-src{margin:4px 0 0;font-size:13.5px;color:var(--ink-3);display:flex;flex-wrap:wrap;align-items:center;column-gap:10px}
+.play-src .link-btn{font-size:13.5px}
+.own-tag{color:var(--sun)}
+
+/* Audio player (recordings and the test bell) */
+.player{display:flex;align-items:center;gap:12px}
+.round-btn{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:var(--sun);color:var(--on-sun);flex:none}
+.round-btn svg{width:22px;height:22px}
+.round-btn.small{width:44px;height:44px}
+.round-btn.small svg{width:18px;height:18px}
+.pl-mid{flex:1;min-width:0}
+.pl-title{font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pl-time{font-size:13px;color:var(--ink-2)}
+.seek{-webkit-appearance:none;appearance:none;width:100%;height:28px;background:transparent;margin:0;touch-action:none}
+.seek::-webkit-slider-runnable-track{height:4px;border-radius:2px;background:linear-gradient(var(--sun),var(--sun)) 0/var(--p,0%) 100% no-repeat,var(--line-2)}
+.seek::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--ink);margin-top:-6px}
+.seek::-moz-range-track{height:4px;border-radius:2px;background:var(--line-2)}
+.seek::-moz-range-progress{height:4px;border-radius:2px;background:var(--sun)}
+.seek::-moz-range-thumb{width:16px;height:16px;border:0;border-radius:50%;background:var(--ink)}
+.cast[aria-pressed="true"]{color:var(--sun);background:var(--sun-soft)}
+
+/* Spinner: a comet */
+.spinner,.btn.busy::after{border-radius:50%;background:conic-gradient(from 90deg,transparent 10%,currentColor 95%);
+  -webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 2.2px),#000 calc(100% - 2px));
+  mask:radial-gradient(farthest-side,transparent calc(100% - 2.2px),#000 calc(100% - 2px));animation:spin .8s linear infinite}
+.spinner{display:inline-block;width:20px;height:20px;vertical-align:middle}
+.btn.busy{pointer-events:none}
+.btn.busy::after{content:"";width:13px;height:13px;flex:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Segmented switch */
+.switcher{display:inline-flex;padding:3px;border-radius:22px;background:var(--raise);margin:26px 0 4px}
+.switcher button{height:38px;min-width:44px;padding:0 16px;border-radius:19px;font-size:14px;font-weight:500;color:var(--ink-2)}
+.switcher button[aria-pressed="true"]{background:var(--raise-2);color:var(--ink)}
+.switcher [lang="hi"]{font-size:15px}
+
+/* Words */
+.words{margin-top:10px}
+.block{margin:22px 0 0}
+.block.refrain{padding-left:14px;border-left:2px solid var(--sun)}
+.block-tag{margin:0 0 6px;font-size:13px;color:var(--ink-3)}
+.ln{margin:0 0 10px;font-size:var(--ls);line-height:1.5;font-weight:400}
+.ln .x{margin-left:8px;font-size:13px;color:var(--ink-3);white-space:nowrap;vertical-align:2px}
+.ln .sub{display:block;font-size:max(13px,calc(var(--ls)*.68));color:var(--ink-3);margin-top:2px;line-height:1.45}
+.ln.echo{padding-left:18px;color:var(--ink-2);font-size:calc(var(--ls)*.9)}
+.ln.cue{color:var(--sun);font-size:calc(var(--ls)*.8);font-weight:500}
+.words[data-mode="dev"] .ln{font-size:calc(var(--ls)*1.08);line-height:1.6}
+.words[data-mode="dev"] .ln.echo{font-size:calc(var(--ls)*.97)}
+.words[data-mode="dev"] .ln.cue{font-size:calc(var(--ls)*.86)}
+.words[data-mode="en"] .ln{font-weight:300}
+.words[data-mode="en"] .ln.cue{font-weight:500}
+.words[data-mode="en"] .ln.echo .main:empty{display:none}
+.words[data-mode="en"] .ln.echo .sub{margin-top:0}
+.next{margin:36px 0 0;padding-top:22px;border-top:1px solid var(--line)}
+.next-label{margin:0 0 4px;font-size:13px;color:var(--ink-3)}
+
+/* Sheets */
+dialog.sheet{position:fixed;inset:auto 0 0 0;margin:0 auto;width:100%;max-width:34rem;max-height:88vh;border:0;border-radius:22px 22px 0 0;padding:0;background:var(--raise);color:var(--ink);overflow:auto;overscroll-behavior:contain}
+dialog.sheet[open]{animation:rise .28s cubic-bezier(.2,.8,.2,1)}
+dialog.sheet.springing{transition:transform .25s cubic-bezier(.2,.8,.2,1)}
+dialog.sheet::backdrop{background:rgba(4,6,14,.62)}
+@keyframes rise{from{transform:translateY(40px);opacity:0}}
+.sheet-in{padding:10px 22px calc(28px + env(safe-area-inset-bottom))}
+.grab-zone{margin:-10px -22px 0;padding:10px 22px 0;touch-action:none}
+.grabber{width:36px;height:4px;border-radius:2px;background:var(--line-2);margin:0 auto 10px}
+.sheet-head{display:flex;align-items:center;justify-content:space-between}
+.sheet-head h2{margin:0;font-size:20px;font-weight:600;letter-spacing:-.01em}
+.sheet-head .icon-btn{margin-right:-10px}
+.sheet h3{margin:26px 0 8px;font-size:15px;font-weight:600}
+.sheet p{margin:6px 0;color:var(--ink-2);font-size:15px}
+.sheet .small{font-size:13.5px;color:var(--ink-3)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{height:38px;padding:0 14px;border-radius:19px;background:var(--raise-2);font-size:14px;font-weight:500;color:var(--ink-2)}
+.chip[aria-pressed="true"]{background:var(--sun);color:var(--on-sun)}
+.list{margin:0;padding:0;list-style:none}
+.list li{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:56px;border-bottom:1px solid var(--line)}
+.list li:last-child{border-bottom:0}
+.list li span small{display:block;color:var(--ink-3);font-size:12.5px}
+.list .mini{color:var(--ink-2);font-size:14px;font-weight:600;padding:0 4px;min-height:44px}
+.field{width:100%;min-width:0;height:48px;border-radius:12px;border:1px solid var(--line-2);background:var(--bg);padding:0 14px;font-size:16px}
+.field::placeholder{color:var(--ink-3)}
+.field.bad{border-color:var(--sun)}
+.form-note{margin:8px 0 0;font-size:14px;color:var(--sun);min-height:0}
+.form-note:empty{display:none}
+.pin-field{max-width:12rem;text-align:center;font-size:24px;letter-spacing:.4em;padding-left:calc(14px + .4em)}
+.test-box{margin-top:12px;padding:12px;border-radius:14px;background:var(--bg)}
+.result{margin:8px 0 0;font-size:13.5px;color:var(--ink-2)}
+.result:empty{display:none}
+
+/* Popover: theme picker */
+.pop{position:absolute;top:64px;right:12px;z-index:5;width:min(300px,calc(100% - 24px));padding:16px 12px 12px;border-radius:18px;background:var(--raise);border:1px solid var(--line-2);box-shadow:0 18px 40px rgba(0,0,0,.45);animation:drop .18s ease-out;transform-origin:top right}
+.pop[hidden]{display:none}
+@keyframes drop{from{opacity:0;transform:translateY(-6px) scale(.98)}}
+.theme-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px 6px}
+.theme-opt{display:grid;justify-items:center;gap:6px;padding:4px 0;font-size:12.5px;color:var(--ink-2);min-height:44px}
+.theme-opt[aria-pressed="true"]{color:var(--ink)}
+.sw{width:42px;height:42px;border-radius:50%;border:1px solid var(--line-2);background:radial-gradient(circle,var(--b) 0 6px,transparent 7px),radial-gradient(circle at 50% 35%,var(--c),var(--a))}
+.theme-opt[aria-pressed="true"] .sw{box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--sun)}
+.theme-note{margin:12px 4px 0;font-size:12.5px;color:var(--ink-3)}
+
+/* Toast: a popover so it shows above open sheets */
+.toast{position:fixed;inset:auto auto calc(24px + env(safe-area-inset-bottom)) 50%;margin:0;border:0;width:max-content;max-width:calc(100% - 40px);transform:translate(-50%,0);
+  background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:22px;font-size:14px;font-weight:500;text-align:center;z-index:30;overflow:visible;
+  display:none;align-items:center;gap:10px}
+.toast.show{display:flex;animation:toastIn .2s ease-out}
+.toast .spinner{width:14px;height:14px;flex:none}
+@keyframes toastIn{from{opacity:0;transform:translate(-50%,16px)}}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .spinner,.btn.busy::after{animation:spin 1.6s linear infinite!important}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="head-left">
+      <button class="icon-btn back" id="backBtn" type="button" hidden aria-label="Back to the aartis">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
+      </button>
+      <div style="min-width:0"><div class="mark">Aarti</div><div class="where" id="where"></div></div>
+    </div>
+    <div class="tools">
+      <button class="icon-btn" id="themeBtn" type="button" aria-expanded="false" aria-haspopup="true" aria-controls="themes" aria-label="Colour theme" title="Colour theme">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.6" fill="currentColor" stroke="none"/></svg>
+      </button>
+      <button class="icon-btn" id="settingsBtn" type="button" aria-label="Settings" title="Settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg>
+      </button>
+    </div>
+  </header>
+  <div class="pop" id="themes" hidden role="group" aria-label="Colour theme"></div>
+  <div id="notices"></div>
+  <main id="screen" aria-live="polite"></main>
+</div>
+<div class="swipe-arrow" id="swipeArrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></div>
+<dialog class="sheet" id="sheet" aria-labelledby="sheetTitle"><div class="sheet-in" id="sheetBody"></div></dialog>
+<div class="toast" id="toast" role="status" popover="manual"></div>
+<audio id="player" preload="none"></audio>
+
+<script src="core.js?v=1"></script>
+<script src="aartis.js?v=1"></script>
+<script>
+(() => {
+'use strict';
+/* ---------- Settings you may change ---------- */
+const PIN = '1008';                    // the PIN friends type in; the shared link carries it
+const RELEASE = 1;
+
+const C = window.Core;
+const AARTIS = window.AartiData.AARTIS;
+const UA = navigator.userAgent;
+const isIOS = /iP(hone|ad|od)/.test(UA) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const isAndroid = /Android/.test(UA);
+const platform = isAndroid ? 'android' : isIOS ? 'ios' : 'other';
+const standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- Storage ---------- */
+const P = 'aar.';
+const get = (k, d) => { try { const v = localStorage.getItem(P + k); return v == null ? d : JSON.parse(v); } catch { return d; } };
+const put = (k, v) => { try { localStorage.setItem(P + k, JSON.stringify(v)); } catch {} };
+
+const THEMES = [
+  { id: 'twilight', name: 'Twilight', bg: '#0F1528', dome: '#1A2448', accent: '#F2C063' },
+  { id: 'red', name: 'Night red', bg: '#0C0404', dome: '#1E0808', accent: '#FF5B3D' },
+  { id: 'amber', name: 'Amber', bg: '#0D0904', dome: '#241809', accent: '#FFB04A' },
+  { id: 'sea', name: 'Deep sea', bg: '#06121A', dome: '#0F2A38', accent: '#6FD9D0' },
+  { id: 'aurora', name: 'Aurora', bg: '#07110D', dome: '#12291E', accent: '#86E3A8' },
+  { id: 'dusk', name: 'Dusk', bg: '#110D1A', dome: '#261C3A', accent: '#F2A7C8' },
+];
+const LIT_FOR = 8 * 3600e3;            // the diya stays lit for the evening
+
+const S = {
+  set: Object.assign({ theme: 'twilight', mode: 'rom', size: 'standard' }, get('settings', {})),
+  unlocked: !!get('ok', false),
+  own: get('own', {}),
+  litAt: get('litAt', 0),
+  route: { r: 'home' },
+  installEvt: null,
+  cur: null,            // which recording is loaded in the player: 'a:<id>' or 'bell'
+  castAvail: null,
+  wake: null,
+};
+const saveSet = () => put('settings', S.set);
+const isLit = () => Date.now() - S.litAt < LIT_FOR;
+
+/* ---------- Helpers ---------- */
+const $ = (s, el = document) => el.querySelector(s);
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const byId = (id) => AARTIS.find((a) => a.id === id);
+const appUrl = () => location.origin + location.pathname;
+const timesWord = (x) => ({ 2: 'twice', 3: 'three times', 4: 'four times' }[x] || `${x} times`);
+
+const ICON = {
+  x: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>',
+  chev: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>',
+  play: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.4-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5Z"/></svg>',
+  pause: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6.5" y="5" width="4" height="14" rx="1.2"/><rect x="13.5" y="5" width="4" height="14" rx="1.2"/></svg>',
+  cast: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M3 9V6.5A1.5 1.5 0 0 1 4.5 5h15A1.5 1.5 0 0 1 21 6.5v11a1.5 1.5 0 0 1-1.5 1.5H14"/><path d="M3 12.5a6.5 6.5 0 0 1 6.5 6.5M3 16a3 3 0 0 1 3 3"/><circle cx="3.6" cy="18.6" r=".9" fill="currentColor" stroke="none"/></svg>',
+  airplay: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 17H4.5A1.5 1.5 0 0 1 3 15.5v-9A1.5 1.5 0 0 1 4.5 5h15A1.5 1.5 0 0 1 21 6.5v9a1.5 1.5 0 0 1-1.5 1.5h-2"/><path d="M12 14.5l4.5 5h-9z" fill="currentColor"/></svg>',
+  flame: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5c2.6 4 4.6 7.3 3.6 10.6-.6 2-2 3.4-3.6 3.4s-3-1.4-3.6-3.4C7.4 9.8 9.4 6.5 12 2.5Z"/><path d="M4 16.5c.6 3 3.9 5 8 5s7.4-2 8-5Z" opacity=".55"/></svg>',
+  doc: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>',
+  down: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10.5l5 5 5-5M5 20h14"/></svg>',
+};
+
+/* ---------- The diya (hero) ---------- */
+let diyaN = 0;
+function diyaSvg(lit, cls, rangoli) {
+  const n = ++diyaN;
+  const petals = rangoli ? Array.from({ length: 12 }, (_, i) => `<ellipse class="petal" cx="100" cy="14" rx="3" ry="6" transform="rotate(${i * 30} 100 100)"/>`).join('') : '';
+  return `<svg class="diya ${lit ? 'lit' : ''} ${cls || ''}" viewBox="0 0 200 200" aria-hidden="true" focusable="false">
+    <defs>
+      <radialGradient id="dg${n}" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#F7C46A" stop-opacity=".45"/><stop offset=".45" stop-color="#F2A54A" stop-opacity=".14"/><stop offset="1" stop-color="#F2A54A" stop-opacity="0"/></radialGradient>
+      <linearGradient id="dc${n}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#DE8C45"/><stop offset="1" stop-color="#8A4120"/></linearGradient>
+      <linearGradient id="df${n}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFC75A"/><stop offset=".7" stop-color="#F59A36"/><stop offset="1" stop-color="#E8702A"/></linearGradient>
+    </defs>
+    ${rangoli ? `<g class="rangoli"><circle class="dots" cx="100" cy="100" r="96"/><circle class="ring" cx="100" cy="100" r="78"/>${petals}</g>` : ''}
+    <circle class="glow" cx="100" cy="94" r="80" fill="url(#dg${n})"/>
+    <g class="flame-g"><g class="flame">
+      <path d="M100 48 C113 70 122 91 115 106 C110 116 90 116 85 106 C78 91 87 70 100 48 Z" fill="url(#df${n})"/>
+      <path d="M100 72 C107 86 110 98 106 106 C103 111 97 111 94 106 C90 98 93 86 100 72 Z" fill="#FFF1C9"/>
+    </g></g>
+    <path d="M38 120 C42 150 70 162 100 162 C130 162 158 150 162 120 Z" fill="url(#dc${n})"/>
+    <ellipse cx="100" cy="120" rx="62" ry="9" fill="#5C2812"/>
+    <ellipse cx="100" cy="120" rx="62" ry="9" fill="none" stroke="#EDA35C" stroke-width="2.4"/>
+    <g fill="#F2B172" opacity=".85"><circle cx="64" cy="139" r="2.6"/><circle cx="82" cy="145" r="2.6"/><circle cx="100" cy="147" r="2.6"/><circle cx="118" cy="145" r="2.6"/><circle cx="136" cy="139" r="2.6"/></g>
+    <path d="M100 119 V110" stroke="#2A1206" stroke-width="3" stroke-linecap="round"/>
+  </svg>`;
+}
+
+/* ---------- Toast (a popover, so it shows above sheets) ---------- */
+let toastTimer;
+function toast(msg, busy) {
+  const t = $('#toast');
+  t.innerHTML = (busy ? '<span class="spinner" aria-hidden="true"></span>' : '') + `<span>${esc(msg)}</span>`;
+  try { if (t.matches(':popover-open')) t.hidePopover(); t.showPopover(); } catch {}
+  t.classList.remove('show'); void t.offsetWidth; t.classList.add('show');
+  clearTimeout(toastTimer);
+  if (!busy) toastTimer = setTimeout(() => { t.classList.remove('show'); try { t.hidePopover(); } catch {} }, Math.max(2600, msg.length * 55));
+}
+
+/* ---------- Themes ---------- */
+function themeGridHtml() {
+  return `<div class="theme-grid">${THEMES.map((t) => `<button class="theme-opt" type="button" data-theme="${t.id}" aria-pressed="${S.set.theme === t.id}">
+      <span class="sw" style="--a:${t.bg};--c:${t.dome};--b:${t.accent}"></span>${t.name}</button>`).join('')}</div>
+    <p class="theme-note">Night red and Amber are gentlest on eyes adjusted to the dark.</p>`;
+}
+function setTheme(id) {
+  const t = THEMES.find((x) => x.id === id) || THEMES[0];
+  S.set.theme = t.id; saveSet();
+  if (t.id === 'twilight') delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme = t.id;
+  document.querySelector('meta[name=theme-color]').setAttribute('content', t.bg);
+  document.querySelectorAll('.theme-opt').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.theme === t.id)));
+}
+function setSize(sz) {
+  S.set.size = sz; saveSet();
+  if (sz === 'standard') delete document.documentElement.dataset.size; else document.documentElement.dataset.size = sz;
+}
+
+const POPS = { themes: '#themeBtn' };
+function togglePop(id, open) {
+  const pop = $('#' + id), show = open == null ? pop.hidden : open;
+  if (show) pop.innerHTML = themeGridHtml();
+  pop.hidden = !show;
+  $(POPS[id]).setAttribute('aria-expanded', String(show));
+}
+function closePops() { for (const id in POPS) if (!$('#' + id).hidden) togglePop(id, false); }
+const popOpen = () => Object.keys(POPS).some((id) => !$('#' + id).hidden);
+// With a panel open, a tap outside it only closes the panel. Runs before any other tap handling.
+document.addEventListener('click', (e) => {
+  if (!popOpen() || e.target.closest('.pop, ' + Object.values(POPS).join(', '))) return;
+  e.preventDefault(); e.stopPropagation(); closePops();
+}, true);
+
+/* ---------- Routes and back ---------- */
+function go(route, replace) {
+  const prev = replace ? (history.state && history.state.prev) || 'home' : (S.route.r === 'home' ? 'home' : (history.state && history.state.prev) || 'home');
+  const st = { ...route, prev };
+  if (replace) history.replaceState(st, ''); else history.pushState(st, '');
+  S.route = route;
+  render(true);
+}
+// Back always goes up one level: an aarti or the closing screen goes to the list.
+function up() {
+  return new Promise((res) => {
+    if (S.route.r === 'home') { res(); return; }
+    if (history.state && history.state.prev === 'home' && history.length > 1) {
+      let done = false;
+      const fin = () => { if (done) return; done = true; window.removeEventListener('popstate', fin); setTimeout(res, 0); };
+      window.addEventListener('popstate', fin);
+      setTimeout(() => { if (!done) { S.route = { r: 'home' }; history.replaceState({ r: 'home' }, ''); render(true); fin(); } }, 400);
+      history.back();
+    } else {
+      history.replaceState({ r: 'home' }, '');
+      S.route = { r: 'home' };
+      render(true);
+      res();
+    }
+  });
+}
+window.addEventListener('popstate', (e) => {
+  const st = e.state && e.state.r ? e.state : { r: 'home' };
+  S.route = st.r === 'aarti' ? { r: 'aarti', id: st.id } : { r: st.r };
+  render(true);
+});
+
+/* ---------- Screens ---------- */
+function render(newScreen) {
+  closePops();
+  const back = $('#backBtn'), where = $('#where');
+  $('#settingsBtn').hidden = !S.unlocked;
+  if (!S.unlocked) { back.hidden = true; where.textContent = 'Diwali'; $('#screen').innerHTML = lockHtml(); renderNotices(); return; }
+  const r = S.route;
+  back.hidden = r.r === 'home';
+  if (r.r === 'aarti' && byId(r.id)) {
+    const i = AARTIS.findIndex((a) => a.id === r.id);
+    where.textContent = `${AARTIS[i].deity} · ${i + 1} of ${AARTIS.length}`;
+    $('#screen').innerHTML = aartiHtml(AARTIS[i], i);
+    prepPlayer(AARTIS[i]);
+  } else if (r.r === 'done') {
+    where.textContent = 'Shubh Deepavali';
+    $('#screen').innerHTML = doneHtml();
+  } else {
+    S.route = { r: 'home' };
+    where.textContent = `Diwali · ${AARTIS.length} aartis`;
+    $('#screen').innerHTML = homeHtml();
+  }
+  renderNotices();
+  syncPlayers();
+  keepAwake();
+  if (newScreen) window.scrollTo(0, 0);
+}
+
+function lockHtml() {
+  return `<section class="hero">${diyaSvg(false, 'hero-diya', true)}
+    <h1 class="title">Welcome</h1>
+    <p class="story">Aarti is shared with a few friends for Diwali. Enter the PIN to begin.</p>
+    <form id="pinForm" autocomplete="off" novalidate style="margin-top:18px">
+      <label class="vh" for="pinIn">PIN</label>
+      <input class="field pin-field num" id="pinIn" inputmode="numeric" pattern="[0-9]*" maxlength="8" autocomplete="one-time-code" enterkeyhint="go" placeholder="····">
+      <p class="form-note" id="pinNote" role="alert"></p>
+      <div class="actions"><button class="btn primary" type="submit">Open Aarti</button></div>
+    </form>
+  </section>`;
+}
+
+function homeHtml() {
+  const lit = isLit();
+  const lead = lit
+    ? `The diya is lit. Begin with Ganesh, remover of obstacles, then Lakshmi, and close with Om Jai Jagdish Hare.`
+    : `Gather everyone at the mandir, then light the diya to begin.`;
+  const btn = lit
+    ? `<button class="btn primary" type="button" data-go="${AARTIS[0].id}">Begin with Ganesh</button>`
+    : `<button class="btn primary" type="button" data-act="light">Light the diya</button>`;
+  const pdf = isIOS || platform === 'other' ? 'target="_blank" rel="noopener"' : 'download="Diwali aartis.pdf"';
+  return `<section class="hero" id="hero">${diyaSvg(lit, 'hero-diya', true)}
+      <h1 class="title">Diwali aarti</h1>
+      <p class="story" id="lead">${esc(lead)}</p>
+      <p class="facts">Words in Hindi, Roman letters and English.</p>
+      <div class="actions" id="heroActions">${btn}</div>
+    </section>
+    <h2 class="section-title">The three aartis</h2>
+    <ul class="rows">${AARTIS.map((a, i) => `<li><button class="row" type="button" data-go="${a.id}">
+        <span class="row-n num">${i + 1}</span>
+        <span class="row-main"><span class="row-title">${esc(a.title)}</span><span class="row-sub">${esc(a.tagline)}</span></span>
+        <span class="row-end">${ICON.chev}</span></button></li>`).join('')}
+      <li><a class="row" href="aarti-words.pdf" ${pdf}>
+        <span class="row-n">${ICON.doc}</span>
+        <span class="row-main"><span class="row-title">Printable words</span><span class="row-sub">A4 PDF, one aarti per page</span></span>
+        <span class="row-end">${ICON.down}</span></a></li>
+    </ul>
+    <p class="foot">${AARTIS.some((a) => !a.audio) ? 'The music plays in your Spotify app for now. ' : 'Tap the cast button on an aarti to play it on a speaker or TV. '}The English is a plain guide to the meaning, not a word-for-word translation.</p>`;
+}
+
+function srcFor(a) { return C.sourceFor(a, S.own[a.id]); }
+
+function playCardHtml(a) {
+  const s = srcFor(a);
+  if (s.kind === 'file') {
+    return `<section class="play-card" aria-label="Recording">${playerHtml('a:' + a.id, s.url, a.title, a.artist)}
+      <p class="play-src">${esc(a.artist)}<button class="link-btn" type="button" data-own="${a.id}">Use your own version</button></p></section>`;
+  }
+  const t = C.openTarget(s.src, platform);
+  const attrs = `href="${esc(t.href)}"${t.newTab ? ' target="_blank" rel="noopener"' : ''}${t.fallback ? ` data-fallback="${esc(t.fallback)}"` : ''}`;
+  const src = s.own
+    ? `<span class="own-tag">Your own version</span><button class="link-btn" type="button" data-own="${a.id}">Change</button>`
+    : `${esc(a.artist)}<button class="link-btn" type="button" data-own="${a.id}">Use your own version</button>`;
+  return `<section class="play-card" aria-label="Music">
+    <a class="btn primary" ${attrs} data-spotify="${a.id}">${ICON.play}Play in Spotify</a>
+    <p class="play-note">Opens the song in your Spotify app. Come back here to follow the words.</p>
+    <p class="play-src">${src}</p></section>`;
+}
+
+function playerHtml(key, url, title, sub) {
+  const castIcon = isIOS ? ICON.airplay : ICON.cast;
+  return `<div class="player" data-key="${esc(key)}" data-url="${esc(url)}" data-title="${esc(title)}" data-sub="${esc(sub || '')}">
+    <button class="round-btn" type="button" data-play="${esc(key)}" aria-label="Play ${esc(title)}" title="Play">${ICON.play}</button>
+    <div class="pl-mid"><div class="pl-title">${esc(title)}</div>
+      <input class="seek" type="range" min="0" max="100" step="1" value="0" aria-label="Position in ${esc(title)}" data-seek="${esc(key)}">
+      <div class="pl-time num" aria-hidden="true">0:00</div></div>
+    <button class="icon-btn cast" type="button" data-cast="${esc(key)}" hidden aria-pressed="false" aria-label="Play on a speaker or TV" title="Play on a speaker or TV">${castIcon}</button>
+  </div>`;
+}
+
+function lineHtml(ln, mode, extra) {
+  const t = C.lineText(ln, mode);
+  const lang = mode === 'dev' ? 'hi' : mode === 'en' ? 'en-GB' : 'hi-Latn';
+  const x = ln.x ? `<span class="x num" aria-label="sung ${timesWord(ln.x)}">×${ln.x}</span>` : '';
+  const sub = t.sub ? `<span class="sub" lang="hi-Latn">${esc(t.sub)}</span>` : '';
+  return `<p class="ln${ln.echo ? ' echo' : ''}${extra ? ' ' + extra : ''}"><span class="main" lang="${lang}">${esc(t.main)}</span>${x}${sub}</p>`;
+}
+
+function wordsHtml(a) {
+  const mode = S.set.mode;
+  return C.blocks(a).map((b) => {
+    if (b.type === 'refrain') {
+      return `<div class="block refrain"><p class="block-tag">Refrain${b.x > 1 ? `, sung ${timesWord(b.x)}` : ''}</p>${b.lines.map((ln) => lineHtml(ln, mode)).join('')}</div>`;
+    }
+    return `<div class="block verse">${b.lines.map((ln) => lineHtml(ln, mode)).join('')}${b.cue ? lineHtml(b.cue, mode, 'cue') : ''}</div>`;
+  }).join('');
+}
+
+function aartiHtml(a, i) {
+  const next = AARTIS[i + 1];
+  const m = S.set.mode;
+  return `<section class="a-head"><div><h1 class="title">${esc(a.title)}</h1><p class="a-dev" lang="hi">${esc(a.titleD)}</p></div>${diyaSvg(true, 'mini-diya')}</section>
+    <p class="story">${esc(a.about)}</p>
+    <p class="doing">${ICON.flame}<span>${esc(a.doing)}</span></p>
+    ${playCardHtml(a)}
+    <div class="switcher" role="group" aria-label="Show the words in">
+      <button type="button" data-mode="dev" aria-pressed="${m === 'dev'}" aria-label="Hindi, in Devanagari"><span lang="hi">हिन्दी</span></button>
+      <button type="button" data-mode="rom" aria-pressed="${m === 'rom'}" aria-label="Hindi, in Roman letters">Roman</button>
+      <button type="button" data-mode="en" aria-pressed="${m === 'en'}" aria-label="English meaning">English</button>
+    </div>
+    <section class="words" id="words" data-mode="${m}" aria-label="Words">${wordsHtml(a)}</section>
+    <div class="next">${next
+      ? `<p class="next-label">Next</p><button class="btn primary" type="button" data-next="${next.id}">${esc(next.title)}</button>`
+      : `<p class="next-label">That was the last aarti</p><button class="btn primary" type="button" data-act="finish">Finish</button>`}</div>`;
+}
+
+function doneHtml() {
+  return `<section class="hero">${diyaSvg(true, 'hero-diya', true)}
+    <h1 class="title">Shubh Deepavali</h1>
+    <p class="story">Pass the aarti plate round. Each person holds their hands over the flame, then brings them to their eyes, taking in its blessing.</p>
+    <p class="story">Then share the prasad, the sweets that were offered.</p>
+    <div class="actions"><button class="btn primary" type="button" data-act="home">Back to the start</button></div>
+  </section>`;
+}
+
+/* ---------- Install nudges ---------- */
+function renderNotices() {
+  const out = [], dismissed = get('dismissed', {});
+  if (S.unlocked && S.route.r === 'home' && !standalone && !dismissed.install) {
+    if (S.installEvt) out.push(`<div class="notice"><p>Add Aarti to your home screen for one-tap access.</p><button class="link-btn" type="button" data-act="install">Install</button><button class="x" type="button" data-dismiss="install" aria-label="Dismiss">${ICON.x}</button></div>`);
+    else if (isIOS) out.push(`<div class="notice"><p>Add Aarti to your Home Screen: tap Share, then Add to Home Screen.</p><button class="x" type="button" data-dismiss="install" aria-label="Dismiss">${ICON.x}</button></div>`);
+  }
+  $('#notices').innerHTML = out.join('');
+}
+window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); S.installEvt = e; renderNotices(); });
+
+/* ---------- Sheets ---------- */
+const sheet = $('#sheet');
+const head = (title) => `<div class="grab-zone" data-grab><div class="grabber"></div><div class="sheet-head"><h2 id="sheetTitle">${title}</h2><button class="icon-btn" type="button" data-act="close" aria-label="Close">${ICON.x}</button></div></div>`;
+function openSheet(html) {
+  $('#sheetBody').innerHTML = html;
+  sheet.style.transform = '';
+  if (!sheet.open) sheet.showModal();
+}
+function closeSheet() { if (sheet.open) sheet.close(); }
+sheet.addEventListener('click', (e) => { if (e.target === sheet) closeSheet(); });
+sheet.addEventListener('close', () => { sheet.style.transform = ''; sheet.classList.remove('springing'); });
+
+function openOwn(id) {
+  const a = byId(id), own = S.own[id];
+  const has = !!(own && (own.id || own.url));
+  const current = has ? (own.kind === 'track' ? C.trackUrl(own.id) : own.url) : '';
+  openSheet(head('Your own version') + `
+    <p>Prefer a different recording of ${esc(a.title)}? Paste a link to it from Spotify. In Spotify, open the song, tap ⋯, then Share, then Copy link.</p>
+    <form id="ownForm" data-id="${a.id}" novalidate style="margin-top:14px">
+      <label class="vh" for="ownIn">Spotify link</label>
+      <input class="field" id="ownIn" type="text" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" placeholder="https://open.spotify.com/track/…" value="${esc(current)}">
+      <p class="form-note" id="ownNote" role="alert"></p>
+      <div class="actions"><button class="btn primary" type="submit">Use this version</button>
+        ${has ? `<button class="btn" type="button" data-unown="${a.id}">Go back to the app’s song</button>` : ''}</div>
+    </form>
+    <p class="small" style="margin-top:14px">Your choice stays on this phone. The words are for the app’s song, so another recording may repeat lines a little differently.</p>`);
+}
+
+function openSettings() {
+  const ownRows = AARTIS.map((a) => {
+    const o = S.own[a.id], has = !!(o && (o.id || o.url));
+    return `<li><span>${esc(a.title)}<small>${has ? 'Your own Spotify version' : 'The app’s song'}</small></span>
+      <button class="mini" type="button" data-own="${a.id}">${has ? 'Change' : 'Set'}</button></li>`;
+  }).join('');
+  const canCast = !!($('#player').remote || $('#player').webkitShowPlaybackTargetPicker);
+  openSheet(head('Settings') + `
+    <h3>Words</h3>
+    <p class="small">Text size</p>
+    <div class="chips" role="group" aria-label="Text size">${[['standard', 'Standard'], ['large', 'Large'], ['largest', 'Largest']].map(([k, n]) =>
+      `<button class="chip" type="button" data-size="${k}" aria-pressed="${S.set.size === k}">${n}</button>`).join('')}</div>
+
+    <h3>Your own versions</h3>
+    <p>Play a different recording of any aarti from your own Spotify.</p>
+    <ul class="list">${ownRows}</ul>
+
+    <h3>Test casting</h3>
+    <p>When the recordings are in the app, you can send them to a speaker or TV. Check it works now with a short temple bell.</p>
+    <p class="small">${isIOS ? 'On iPhone this uses AirPlay.' : 'Chromecast works from Chrome on Android. Your phone and speaker need to be on the same Wi-Fi.'}</p>
+    <div class="test-box">${playerHtml('bell', 'test-bell.mp3', 'Test bell', 'Aarti')}</div>
+    <p class="result" id="castResult">${canCast ? '' : 'This browser can’t send sound to a speaker or TV. Try Chrome on Android.'}</p>
+
+    <h3>Share</h3>
+    <p>Send Aarti to a friend. The link opens it without the PIN.</p>
+    <div class="actions"><button class="btn" type="button" data-act="share">Share Aarti</button></div>
+
+    <h3>About</h3>
+    <p class="small">Words as sung by Anuradha Paudwal. The English is a plain guide to the meaning, not a word-for-word translation. The screen stays on while an aarti is open. Release ${RELEASE}.</p>`);
+  syncPlayers();
+}
+
+/* ---------- Audio: recordings and the test bell ---------- */
+const audio = $('#player');
+function prepPlayer(a) {
+  const s = srcFor(a);
+  // Load the recording's details early so the cast button knows if a speaker is available
+  if (s.kind === 'file' && !S.cur && !audio.src) { audio.preload = 'metadata'; load('a:' + a.id, s.url, a.title, a.artist); }
+}
+function load(key, url, title, sub) {
+  if (S.cur === key) return;
+  audio.pause();
+  S.cur = key;
+  audio.src = url;
+  audio.load();
+  S.meta = { title, sub };
+  watchCast();
+}
+function setMedia() {
+  if (!('mediaSession' in navigator) || !S.meta) return;
+  try {
+    navigator.mediaSession.metadata = new MediaMetadata({ title: S.meta.title, artist: S.meta.sub || 'Aarti', album: 'Diwali aarti',
+      artwork: [{ src: 'icon-512.png', sizes: '512x512', type: 'image/png' }, { src: 'icon-192.png', sizes: '192x192', type: 'image/png' }] });
+    navigator.mediaSession.setActionHandler('play', () => audio.play());
+    navigator.mediaSession.setActionHandler('pause', () => audio.pause());
+    navigator.mediaSession.setActionHandler('seekto', (d) => { if (d && isFinite(d.seekTime)) audio.currentTime = d.seekTime; });
+  } catch {}
+}
+async function togglePlay(el) {
+  const p = el.closest('.player');
+  const key = p.dataset.key;
+  if (S.cur !== key) load(key, p.dataset.url, p.dataset.title, p.dataset.sub);
+  if (audio.paused) {
+    S.waiting = true; syncPlayers();
+    try { await audio.play(); setMedia(); }
+    catch (err) {
+      S.waiting = false; syncPlayers();
+      if (err && err.name === 'NotAllowedError') toast('Tap play again to start the sound.');
+      else toast('Couldn’t play the recording. Check your connection.');
+    }
+  } else audio.pause();
+}
+function syncPlayers() {
+  const playing = !audio.paused && !audio.ended;
+  const castOn = !!(audio.remote && audio.remote.state === 'connected');
+  document.querySelectorAll('.player').forEach((p) => {
+    const mine = p.dataset.key === S.cur;
+    const btn = p.querySelector('[data-play]'), seek = p.querySelector('.seek'), time = p.querySelector('.pl-time'), cast = p.querySelector('[data-cast]');
+    const busy = mine && S.waiting && !castOn;
+    const html = busy ? '<span class="spinner" aria-hidden="true"></span>' : mine && playing ? ICON.pause : ICON.play;
+    if (btn.dataset.state !== (busy ? 'busy' : mine && playing ? 'pause' : 'play')) {
+      btn.dataset.state = busy ? 'busy' : mine && playing ? 'pause' : 'play';
+      btn.innerHTML = html;
+      btn.setAttribute('aria-label', `${mine && playing ? 'Pause' : 'Play'} ${p.dataset.title}`);
+      btn.title = mine && playing ? 'Pause' : 'Play';
+    }
+    const dur = mine && isFinite(audio.duration) ? audio.duration : 0, at = mine ? audio.currentTime || 0 : 0;
+    if (!S.seeking || S.seeking !== seek) {
+      seek.max = String(Math.max(1, Math.round(dur)));
+      seek.value = String(Math.round(at));
+      seek.style.setProperty('--p', dur ? `${(at / dur) * 100}%` : '0%');
+    }
+    time.textContent = dur ? `${C.fmtTime(at)} / ${C.fmtTime(dur)}` : C.fmtTime(at);
+    const canCast = !!(audio.remote || audio.webkitShowPlaybackTargetPicker) && S.castAvail !== false;
+    cast.hidden = !canCast;
+    cast.setAttribute('aria-pressed', String(mine && castOn));
+  });
+}
+['play', 'pause', 'playing', 'timeupdate', 'durationchange', 'loadedmetadata', 'ended', 'emptied'].forEach((ev) => audio.addEventListener(ev, () => {
+  if (ev === 'playing' || ev === 'pause' || ev === 'ended') S.waiting = false;
+  syncPlayers();
+}));
+audio.addEventListener('waiting', () => { if (!audio.paused) { S.waiting = true; syncPlayers(); } });
+audio.addEventListener('error', () => { S.waiting = false; syncPlayers(); if (S.cur) toast('Couldn’t load the recording. Check your connection.'); });
+
+let castWatching = false;
+function watchCast() {
+  if (castWatching) return;
+  if (audio.remote) {
+    castWatching = true;
+    audio.remote.watchAvailability((avail) => { S.castAvail = avail; syncPlayers(); })
+      .catch(() => { S.castAvail = null; syncPlayers(); });   // can't watch here: show the button and let a tap try
+    audio.remote.addEventListener('connect', () => { syncPlayers(); toast('Playing on your speaker or TV'); castNote('Connected. The sound is playing on your speaker or TV.'); });
+    audio.remote.addEventListener('disconnect', () => { syncPlayers(); castNote(''); });
+    audio.remote.addEventListener('connecting', () => toast('Connecting to your speaker or TV…', true));
+  } else if (audio.webkitShowPlaybackTargetPicker) {
+    castWatching = true;
+    audio.addEventListener('webkitplaybacktargetavailabilitychanged', (e) => { S.castAvail = e.availability === 'available'; syncPlayers(); });
+  }
+}
+function castNote(msg) { const r = $('#castResult'); if (r) r.textContent = msg; }
+async function cast(el) {
+  const p = el.closest('.player');
+  if (S.cur !== p.dataset.key) load(p.dataset.key, p.dataset.url, p.dataset.title, p.dataset.sub);
+  if (audio.remote) {
+    try { await audio.remote.prompt(); }
+    catch (err) {
+      const n = err && err.name;
+      const msg = n === 'NotFoundError' ? 'No speakers or TVs found. Check they’re on the same Wi-Fi as this phone.'
+        : n === 'NotSupportedError' ? 'This browser can’t send this sound to a speaker. Try Chrome on Android.'
+        : n === 'InvalidStateError' ? 'Already choosing a speaker. Finish that first.'
+        : n === 'NotAllowedError' || n === 'AbortError' ? ''
+        : 'Couldn’t start casting. Try again.';
+      if (msg) { toast(msg); castNote(msg); }
+    }
+  } else if (audio.webkitShowPlaybackTargetPicker) {
+    audio.webkitShowPlaybackTargetPicker();
+  }
+}
+
+/* ---------- Spotify ---------- */
+// iPhone: if the Spotify app doesn't open within a moment, open the song's web page instead
+let fbTimer = 0;
+function spotifyTapped(a) {
+  toast('Opening Spotify…');
+  const fb = a.dataset.fallback;
+  if (!fb) return;
+  clearTimeout(fbTimer);
+  const cancel = () => clearTimeout(fbTimer);
+  document.addEventListener('visibilitychange', cancel, { once: true });
+  window.addEventListener('pagehide', cancel, { once: true });
+  window.addEventListener('blur', cancel, { once: true });
+  fbTimer = setTimeout(() => { if (document.visibilityState === 'visible') window.open(fb, '_blank', 'noopener'); }, 1600);
+}
+
+/* ---------- Keep the screen on during an aarti ---------- */
+async function keepAwake() {
+  const want = S.unlocked && (S.route.r === 'aarti' || S.route.r === 'done') && document.visibilityState === 'visible';
+  if (!want) { if (S.wake) { S.wake.release().catch(() => {}); S.wake = null; } return; }
+  if (S.wake && !S.wake.released) return;
+  try { if (navigator.wakeLock) S.wake = await navigator.wakeLock.request('screen'); } catch {}
+}
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') keepAwake(); });
+
+/* ---------- Unlock ---------- */
+function unlock() {
+  S.unlocked = true; put('ok', true);
+  history.replaceState({ r: 'home' }, '', location.pathname + location.search);
+  S.route = { r: 'home' };
+  render(true);
+}
+
+/* ---------- Taps ---------- */
+document.addEventListener('click', async (e) => {
+  const t = e.target.closest('button, a');
+  if (!t) return;
+  const d = t.dataset;
+  if (d.theme) { setTheme(d.theme); return; }
+  if (d.spotify) { spotifyTapped(t); return; }
+  if (d.go) { go({ r: 'aarti', id: d.go }); return; }
+  if (d.next) { go({ r: 'aarti', id: d.next }, true); return; }
+  if (d.mode) {
+    S.set.mode = d.mode; saveSet();
+    t.parentElement.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b === t)));
+    const w = $('#words'), a = byId(S.route.id);
+    if (w && a) { w.dataset.mode = d.mode; w.innerHTML = wordsHtml(a); }
+    return;
+  }
+  if (d.size) { t.parentElement.querySelectorAll('.chip').forEach((c) => c.setAttribute('aria-pressed', String(c === t))); setSize(d.size); toast(`Text size: ${t.textContent.toLowerCase()}`); return; }
+  if (d.own) { openOwn(d.own); return; }
+  if (d.unown) {
+    delete S.own[d.unown]; put('own', S.own);
+    closeSheet(); render();
+    toast(`Back to the app’s song for ${byId(d.unown).title}`);
+    return;
+  }
+  if (d.play) { togglePlay(t); return; }
+  if (d.cast) { cast(t); return; }
+  if (d.dismiss) { const x = get('dismissed', {}); x[d.dismiss] = 1; put('dismissed', x); renderNotices(); return; }
+  switch (d.act) {
+    case 'close': closeSheet(); break;
+    case 'light': lightDiya(); break;
+    case 'finish': go({ r: 'done' }, true); break;
+    case 'home': up(); break;
+    case 'install': if (S.installEvt) { S.installEvt.prompt(); S.installEvt = null; renderNotices(); } break;
+    case 'share': shareApp(); break;
+  }
+});
+
+function lightDiya() {
+  S.litAt = Date.now(); put('litAt', S.litAt);
+  const svg = $('#hero .diya');
+  if (svg) {
+    svg.classList.add('lit', 'lighting');
+    setTimeout(() => svg.classList.remove('lighting'), 1100);
+  }
+  $('#lead').textContent = 'The diya is lit. Begin with Ganesh, remover of obstacles, then Lakshmi, and close with Om Jai Jagdish Hare.';
+  $('#heroActions').innerHTML = `<button class="btn primary" type="button" data-go="${AARTIS[0].id}">Begin with Ganesh</button>`;
+  try { navigator.vibrate && navigator.vibrate(20); } catch {}
+}
+
+async function shareApp() {
+  const url = `${appUrl()}#pin=${PIN}`;
+  const data = { title: 'Aarti', text: 'Diwali aartis to sing together.', url };
+  if (navigator.share) {
+    try { await navigator.share(data); return; } catch (err) { if (err && err.name === 'AbortError') return; }
+  }
+  try { await navigator.clipboard.writeText(url); toast('Link copied. It opens Aarti without the PIN.'); }
+  catch { toast(`Copy this link: ${url}`); }
+}
+
+document.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const f = e.target;
+  if (f.id === 'pinForm') {
+    const v = $('#pinIn').value;
+    if (C.pinOk(v, PIN)) { unlock(); toast('Welcome. Shubh Deepavali.'); }
+    else {
+      $('#pinIn').classList.add('bad');
+      $('#pinNote').textContent = C.digits(v) ? 'That PIN isn’t right. Check with whoever shared Aarti with you.' : 'Type the PIN first.';
+      $('#pinIn').select();
+    }
+  }
+  if (f.id === 'ownForm') {
+    const id = f.dataset.id, r = C.parseSpotify($('#ownIn').value);
+    if (!r.ok) { $('#ownIn').classList.add('bad'); $('#ownNote').textContent = r.msg; return; }
+    S.own[id] = r.kind === 'track' ? { kind: 'track', id: r.id } : { kind: 'short', url: r.url };
+    put('own', S.own);
+    closeSheet(); render();
+    toast(`Your version of ${byId(id).title} is set`);
+  }
+});
+document.addEventListener('input', (e) => {
+  if (e.target.id === 'pinIn') {
+    e.target.classList.remove('bad'); $('#pinNote').textContent = '';
+    if (C.pinOk(e.target.value, PIN)) { unlock(); toast('Welcome. Shubh Deepavali.'); }
+  }
+  if (e.target.id === 'ownIn') { e.target.classList.remove('bad'); $('#ownNote').textContent = ''; }
+  if (e.target.dataset.seek) {
+    const key = e.target.dataset.seek;
+    if (key === S.cur && isFinite(audio.duration)) { audio.currentTime = +e.target.value; }
+  }
+});
+document.addEventListener('pointerdown', (e) => { if (e.target.classList && e.target.classList.contains('seek')) S.seeking = e.target; });
+document.addEventListener('pointerup', () => { S.seeking = null; });
+
+$('#settingsBtn').addEventListener('click', () => openSettings());
+$('#themeBtn').addEventListener('click', () => togglePop('themes'));
+$('#backBtn').addEventListener('click', () => up());
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Escape') return;
+  for (const id in POPS) if (!$('#' + id).hidden) { togglePop(id, false); $(POPS[id]).focus(); }
+});
+
+/* ---------- Gestures: swipe right to go up a level, drag a sheet down to close it ---------- */
+(function gestures() {
+  const scr = $('#screen'), arrow = $('#swipeArrow');
+  let g = null;
+  const sideScroller = (el) => {
+    for (let n = el; n && n !== document.body; n = n.parentElement) {
+      if (n.scrollWidth > n.clientWidth + 2) { const ox = getComputedStyle(n).overflowX; if (ox === 'auto' || ox === 'scroll') return true; }
+    }
+    return false;
+  };
+  const selecting = () => { const s = window.getSelection && window.getSelection(); return !!(s && String(s).length); };
+  document.addEventListener('touchstart', (e) => {
+    g = null;
+    if (e.touches.length !== 1) return;
+    const t = e.touches[0], el = e.target;
+    if (el.closest('input, textarea, select, [contenteditable], .seek') || sideScroller(el) || selecting()) return;
+    if (sheet.open) {
+      if (!sheet.contains(el)) return;
+      g = { kind: 'sheet', x0: t.clientX, y0: t.clientY, t0: performance.now(), dir: null, grab: !!el.closest('[data-grab]') };
+      return;
+    }
+    if (!S.unlocked || S.route.r === 'home' || popOpen()) return;
+    if (!standalone && t.clientX < 24) return;   // leave the edge to the browser's own back swipe
+    g = { kind: 'screen', x0: t.clientX, y0: t.clientY, t0: performance.now(), dir: null };
+  }, { passive: true });
+
+  document.addEventListener('touchmove', (e) => {
+    if (!g) return;
+    const t = e.touches[0], dx = t.clientX - g.x0, dy = t.clientY - g.y0;
+    if (!g.dir) {
+      if (Math.hypot(dx, dy) < 10) return;
+      if (Math.abs(dx) > Math.abs(dy) && dx > 0) g.dir = 'right';
+      else if (g.kind === 'sheet' && g.grab && dy > 0 && Math.abs(dy) > Math.abs(dx)) g.dir = 'down';
+      else { g = null; return; }   // scrolling: let it go
+    }
+    e.preventDefault();
+    g.dx = dx; g.dy = dy;
+    const now = performance.now();
+    (g.samples = g.samples || []).push([now, g.dir === 'down' ? dy : dx]);
+    while (g.samples.length > 2 && now - g.samples[0][0] > 120) g.samples.shift();
+    if (reduced()) { if (g.kind === 'screen') arrow.style.opacity = String(Math.min(1, dx / (innerWidth / 3))); return; }
+    if (g.kind === 'screen') {
+      scr.classList.add('dragging');
+      scr.style.transform = `translateX(${Math.max(0, dx)}px)`;
+      arrow.style.opacity = String(Math.min(1, dx / (innerWidth / 3)));
+    } else if (g.dir === 'right') {
+      sheet.style.transform = `translateX(${Math.max(0, dx)}px)`;
+    } else {
+      sheet.style.transform = `translateY(${Math.max(0, dy)}px)`;
+    }
+  }, { passive: false });
+
+  const end = async () => {
+    if (!g || !g.dir) { g = null; return; }
+    const G = g; g = null;
+    const dist = G.dir === 'down' ? G.dy || 0 : G.dx || 0;
+    // speed over the last tenth of a second or so, so a flick counts even after a slow start
+    const sm = G.samples || [], s0 = sm[0], s1 = sm[sm.length - 1];
+    const v = s0 && s1 && s1[0] > s0[0] ? (s1[1] - s0[1]) / (s1[0] - s0[0]) : dist / Math.max(1, performance.now() - G.t0);
+    const far = G.dir === 'down' ? dist > sheet.offsetHeight / 4 : dist > innerWidth / 3;
+    const goes = far || v > 0.5;
+    if (G.kind === 'screen') {
+      scr.classList.remove('dragging');
+      if (!goes) {
+        scr.classList.add('springing'); scr.style.transform = 'translateX(0)'; arrow.style.opacity = '0';
+        setTimeout(() => { scr.classList.remove('springing'); scr.style.transform = ''; }, 300);
+        return;
+      }
+      if (!reduced()) { scr.classList.add('springing'); scr.style.transform = `translateX(${innerWidth}px)`; await new Promise((r) => setTimeout(r, 200)); }
+      await up();
+      scr.classList.remove('springing'); scr.style.transform = ''; arrow.style.opacity = '0';
+    } else {
+      if (!goes) {
+        sheet.classList.add('springing'); sheet.style.transform = '';
+        setTimeout(() => sheet.classList.remove('springing'), 300);
+        return;
+      }
+      if (!reduced()) {
+        sheet.classList.add('springing');
+        sheet.style.transform = G.dir === 'down' ? 'translateY(100%)' : `translateX(${innerWidth}px)`;
+        await new Promise((r) => setTimeout(r, 200));
+      }
+      closeSheet();
+    }
+  };
+  document.addEventListener('touchend', end);
+  document.addEventListener('touchcancel', end);
+})();
+
+/* ---------- Start ---------- */
+(function start() {
+  const pin = C.pinFromHash(location.hash);
+  if (pin && C.pinOk(pin, PIN)) { S.unlocked = true; put('ok', true); }
+  if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+  setTheme(S.set.theme);
+  setSize(S.set.size);
+  saveSet();
+  history.replaceState({ r: 'home' }, '');
+  render(true);
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+})();
+})();
+</script>
+</body>
+</html>

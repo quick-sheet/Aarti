@@ -1,6 +1,7 @@
-const REL = 6;                    // bump on every release, together with ?v= on the scripts in index.html
+const REL = 7;                    // bump on every release, together with ?v= on the scripts in index.html
 const CACHE = 'aarti-v' + REL;
 const AUDIO = 'aarti-audio';      // saved recordings, kept across releases (keyed by their full address, ?v= included)
+const DRIFT = 'aarti-drift';      // Daily Drift's page and scripts, for the verses offline; kept across releases
 importScripts('core.js?v=' + REL);
 
 const SHELL = ['./', 'index.html', 'core.js', 'aartis.js', 'bell.js', 'manifest.webmanifest', 'icon.svg', 'icon-192.png', 'icon-512.png',
@@ -11,7 +12,7 @@ self.addEventListener('install', (e) => e.waitUntil(caches.open(CACHE)
   .then((c) => c.addAll(SHELL.map((u) => new Request(u, { cache: 'reload' })))).then(() => self.skipWaiting())));
 
 self.addEventListener('activate', (e) => e.waitUntil(caches.keys()
-  .then((k) => Promise.all(k.filter((x) => x !== CACHE && x !== AUDIO).map((x) => caches.delete(x)))).then(() => self.clients.claim())));
+  .then((k) => Promise.all(k.filter((x) => x !== CACHE && x !== AUDIO && x !== DRIFT).map((x) => caches.delete(x)))).then(() => self.clients.claim())));
 
 const FONTS = /^https:\/\/fonts\.(googleapis|gstatic)\.com\//;
 
@@ -21,6 +22,19 @@ self.addEventListener('fetch', (e) => {
   const url = new URL(req.url);
   if (url.origin === location.origin && (/\.(mp3|m4a|aac|ogg|wav)$/i.test(url.pathname) || req.headers.has('range'))) {
     e.respondWith(audioFetch(e));
+    return;
+  }
+  if (url.origin === location.origin && url.pathname.includes('/DailyDrift/')) {   // Daily Drift's own files: always the latest, a copy for offline
+    e.respondWith((async () => {
+      const c = await caches.open(DRIFT);
+      try {
+        const r = await Promise.race([fetch(req, { cache: 'no-cache' }), new Promise((_, j) => setTimeout(() => j(), 6000))]);
+        if (r.ok && r.status === 200) c.put(req, r.clone());
+        return r;
+      } catch {
+        return (await c.match(req)) || (await c.match(req, { ignoreSearch: true })) || Response.error();
+      }
+    })());
     return;
   }
   if (url.origin === location.origin) {            // network first (always checked with GitHub), 4 s, then cache

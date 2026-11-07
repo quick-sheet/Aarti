@@ -88,28 +88,16 @@ a{color:inherit;-webkit-tap-highlight-color:transparent}
 .orb.faith svg{width:23px;height:23px}
 .orb.faith[aria-pressed="true"]{color:var(--sun);box-shadow:0 0 22px var(--sun-soft)}
 
-/* A verse, as in Daily Drift: one line from the Bhagavad Gita, with the way back beneath it */
-.verse{min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;z-index:2;
-  padding:calc(84px + env(safe-area-inset-top)) 26px calc(110px + env(safe-area-inset-bottom))}
-.vtext{will-change:transform}
-.vtext.in{animation:develop .9s cubic-bezier(.2,.7,.2,1) both}
-.vtext.out{opacity:0;filter:blur(6px);transition:opacity .35s ease,filter .35s ease}
-@keyframes develop{from{opacity:0;filter:blur(8px);transform:scale(1.025)}to{opacity:1;filter:blur(0);transform:none}}
-.vbook{margin:0 0 22px;font:500 12px var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--ink-3)}
-.vq{margin:0 auto;max-width:20em;font:400 27px/1.34 var(--serif);letter-spacing:-.004em;text-wrap:balance;text-shadow:0 0 30px var(--sun-soft)}
-.vby{margin:18px 0 0;font-size:15px;letter-spacing:.02em;color:var(--ink-2)}
-.vmsg{margin:0 auto;max-width:18em;font:300 17px/1.5 var(--sans);color:var(--ink-2);text-wrap:balance}
-.vback{display:grid;place-items:center;width:48px;height:48px;margin:38px auto 0;border-radius:50%;color:var(--ink-2);box-shadow:inset 0 0 0 1px var(--line);transition:background .2s,color .2s}
-.vback:active{background:var(--sun-soft);color:var(--ink)}
-.vback svg{width:22px;height:22px}
-.vnav{position:fixed;left:0;right:0;bottom:calc(14px + env(safe-area-inset-bottom));z-index:5;display:flex;align-items:center;gap:8px;padding:0 14px;max-width:34rem;margin:0 auto}
-.vnav .icon-btn:disabled{opacity:.22}
-.vhint{flex:1;margin:0;text-align:center;font-size:13px;color:var(--ink-3);transition:opacity .5s}
-.vhint.hide{opacity:0}
-.vpull{position:fixed;left:50%;top:calc(66px + env(safe-area-inset-top));width:30px;height:30px;margin-left:-15px;display:grid;place-items:center;color:var(--ink-2);opacity:0;z-index:6;pointer-events:none;
-  filter:drop-shadow(0 0 6px var(--sun-soft))}
-.vpull .spinner{width:24px;height:24px;animation:none}
-.vpull.busy .spinner{animation:spin .8s linear infinite}
+/* A verse: Daily Drift itself, running untouched in a layer over Aarti. Its colours fill the strips by the notch and home bar. */
+.dd-layer{position:fixed;inset:0;z-index:40;opacity:0;transition:opacity .45s ease;
+  background:radial-gradient(130% 75% at 50% 0%,var(--dd-bg2,#152036) 0%,var(--dd-bg,#0B101A) 62%)}
+.dd-layer.on{opacity:1}
+.dd-layer iframe{position:absolute;top:env(safe-area-inset-top);left:env(safe-area-inset-left);border:0;display:block;background:transparent;opacity:0;transition:opacity .5s ease;
+  width:calc(100% - env(safe-area-inset-left) - env(safe-area-inset-right));height:calc(100% - env(safe-area-inset-top) - env(safe-area-inset-bottom))}
+.dd-layer.ready iframe{opacity:1}
+.dd-layer .drift{position:absolute;left:50%;top:50%;margin:-66px 0 0 -66px;transition:opacity .4s;--sun:#D6E2FF;--sun-soft:rgba(196,214,255,.2);--ink:#F1F5FF}
+.dd-layer.ready .drift{opacity:0}
+html.drifting,html.drifting body{overflow:hidden}
 /* the loader, from Daily Drift: a breathing point of light, ripples leaving it, motes in slow orbit */
 .drift{position:relative;width:132px;height:132px;margin:0 auto;transform:scale(.72)}
 .drift[hidden]{display:none}
@@ -411,7 +399,7 @@ dialog.sheet::backdrop{background:rgba(4,4,8,.6)}
   <button class="orb gone" id="backBtn" type="button" aria-label="Back to the start" title="Back">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>
   </button>
-  <button class="orb faith gone" id="faithBtn" type="button" data-act="verse" aria-pressed="false" aria-label="A verse from the Bhagavad Gita" title="A verse">
+  <button class="orb faith gone" id="faithBtn" type="button" data-act="verse" aria-label="A verse from the Bhagavad Gita, in Daily Drift" title="A verse">
     <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M235.32,180l-36.24-36.25L162.62,23.46A21.76,21.76,0,0,0,128,12.93,21.76,21.76,0,0,0,93.38,23.46L56.92,143.76,20.68,180a16,16,0,0,0,0,22.62l32.69,32.69a16,16,0,0,0,22.63,0L124.28,187a40.68,40.68,0,0,0,3.72-4.29,40.68,40.68,0,0,0,3.72,4.29L180,235.32a16,16,0,0,0,22.63,0l32.69-32.69A16,16,0,0,0,235.32,180ZM64.68,224,32,191.32l12.69-12.69,32.69,32.69ZM120,158.75a23.85,23.85,0,0,1-7,17L88.68,200,56,167.32l13.65-13.66a8,8,0,0,0,2-3.34l37-122.22A5.78,5.78,0,0,1,120,29.78Zm23,17a23.85,23.85,0,0,1-7-17v-129a5.78,5.78,0,0,1,11.31-1.68l37,122.22a8,8,0,0,0,2,3.34l14.49,14.49-33.4,32ZM191.32,224l-12.56-12.57,33.39-32L224,191.32Z"/></svg>
   </button>
   </div>
@@ -428,15 +416,15 @@ dialog.sheet::backdrop{background:rgba(4,4,8,.6)}
 <div class="toast" id="toast" role="status" popover="manual"></div>
 <audio id="player" preload="none"></audio>
 
-<script src="core.js?v=6"></script>
-<script src="aartis.js?v=6"></script>
-<script src="bell.js?v=6"></script>
+<script src="core.js?v=7"></script>
+<script src="aartis.js?v=7"></script>
+<script src="bell.js?v=7"></script>
 <script>
 (() => {
 'use strict';
 /* ---------- Settings you may change ---------- */
 const PIN = '1008';                    // the PIN friends type in; the shared link carries it
-const RELEASE = 6;
+const RELEASE = 7;
 
 const C = window.Core;
 const AARTIS = window.AartiData.AARTIS;
@@ -552,7 +540,7 @@ const Water = (() => {
   }
   function frame(now) {
     raf = 0;
-    if (document.hidden || !seen || reduced()) return;
+    if (document.hidden || !seen || reduced() || document.documentElement.classList.contains('drifting')) return;
     const on = items.filter(live);
     if (!on.length) return;
     if (now - last > 30) { last = now; on.forEach((it) => draw(it, now / 1000)); }
@@ -602,9 +590,10 @@ const FX = (() => {
     for (let i = 0; i < n; i++) { const a = rnd(0, Math.PI * 2), s = rnd(.4, 2.6); spark(x, y, { vx: Math.cos(a) * s * .7, vy: Math.sin(a) * s * .7 - 1.1 }); }
     start();
   }
+  let held = false;
   function step(t) {
     raf = 0;
-    if (document.hidden) return;
+    if (document.hidden || held) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, W, H);
     if (ambient && t - lastEmber > 900 / ambient) {
@@ -646,6 +635,7 @@ const FX = (() => {
   document.addEventListener('visibilitychange', () => { if (!document.hidden) start(); });
   return {
     burst,
+    hold(h) { held = !!h; if (held) ctx.clearRect(0, 0, W, H); else start(); },
     mood(a, p) { ambient = reduced() ? 0 : a; petals = !reduced() && !!p; if (!ambient && !petals && !parts.length) ctx.clearRect(0, 0, W, H); start(); },
     count: () => parts.length,
   };
@@ -732,7 +722,6 @@ function go(route, replace) {
   // ignore a second tap while the screen is already changing, or a tap on where you already are
   if (navigating || (route.r === S.route.r && route.id === S.route.id)) return;
   const prev = replace ? (history.state && history.state.prev) || 'home'
-    : route.r === 'verse' ? S.route.r                       // a verse goes back to where it was opened
     : (S.route.r === 'home' ? 'home' : (history.state && history.state.prev) || 'home');
   const st = { ...route, prev };
   if (replace) history.replaceState(st, ''); else history.pushState(st, '');
@@ -748,7 +737,7 @@ function go(route, replace) {
 function up() {
   return new Promise((res) => {
     if (S.route.r === 'home') { res(); return; }
-    const parent = S.route.r === 'verse' && S.route.from === 'done' ? 'done' : 'home';
+    const parent = 'home';
     if (history.state && history.state.prev === parent && history.length > 1) {
       let done = false;
       const fin = () => { if (done) return; done = true; window.removeEventListener('popstate', fin); setTimeout(res, 0); };
@@ -765,7 +754,7 @@ function up() {
 }
 window.addEventListener('popstate', (e) => {
   const st = e.state && e.state.r ? e.state : { r: 'home' };
-  S.route = st.r === 'aarti' ? { r: 'aarti', id: st.id } : st.r === 'verse' ? { r: 'verse', from: st.from } : { r: st.r };
+  S.route = st.r === 'aarti' ? { r: 'aarti', id: st.id } : { r: st.r };
   render(true);
 });
 
@@ -774,9 +763,7 @@ function render(newScreen) {
   const back = $('#backBtn'), dots = $('#dots'), settings = $('#settingsBtn'), hands = $('#faithBtn');
   settings.classList.toggle('gone', !S.unlocked);
   const r = S.route;
-  hands.classList.toggle('gone', !(S.unlocked && ['home', 'done', 'verse'].includes(r.r) && faithAvail()));
-  hands.setAttribute('aria-pressed', String(r.r === 'verse'));
-  hands.setAttribute('aria-label', r.r === 'verse' ? 'Another verse' : 'A verse from the Bhagavad Gita');
+  hands.classList.toggle('gone', !(S.unlocked && ['home', 'done'].includes(r.r) && Drift.ready()));
   if (!S.unlocked) {
     back.classList.add('gone'); dots.classList.add('gone'); setRoom('night');
     $('#screen').innerHTML = lockHtml(); FX.mood(.5, false); return;
@@ -799,11 +786,6 @@ function render(newScreen) {
     setRoom('night');
     $('#screen').innerHTML = doneHtml();
     FX.mood(.4, true);
-  } else if (r.r === 'verse') {
-    setRoom('night');
-    $('#screen').innerHTML = verseHtml();
-    showVerse(false);
-    FX.mood(.5, false);
   } else {
     S.route = { r: 'home' };
     setRoom('night');
@@ -1330,184 +1312,166 @@ async function keepAwake() {
 }
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') keepAwake(); });
 
-/* ---------- A verse, from Daily Drift ----------
-   Daily Drift's own core.js chooses the line (its Bhagavad Gita list), fetches it live, tidies it and writes the line beneath.
-   It is loaded from Daily Drift's site into its own space, so nothing is copied here and Daily Drift's settings are untouched.
-   If it can't load, or its verse functions change, the hands simply stay hidden. */
-const DD_CORE = '../DailyDrift/core.js';
-const V = { core: null, verses: get('verses', []), vi: 0, busy: false, token: 0, pulled: !!get('vpulled', false) };
-if (!Array.isArray(V.verses)) V.verses = [];
-V.vi = Math.max(0, V.verses.length - 1);
-const faithAvail = () => !!V.core || V.verses.length > 0;
-async function loadFaith() {
-  try {
-    const r = await fetch(DD_CORE, { cache: 'no-cache' });
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    const mod = { exports: {} };
-    new Function('module', await r.text())(mod);   // Daily Drift's core hands itself to "module", not to the page
-    const D = mod.exports;
-    const ready = D && ['pickRef', 'verseURL', 'parseGita', 'verseCite'].every((k) => typeof D[k] === 'function') && D.FAITH && D.FAITH.hinduism;
-    V.core = ready ? D : null;
-  } catch { V.core = null; }
-  if (['home', 'done', 'verse'].includes(S.route.r) && S.unlocked) {
-    const hands = $('#faithBtn');
-    hands.classList.toggle('gone', !faithAvail());
-  }
-}
-async function getJSON(url) {
-  const c = new AbortController(), t = setTimeout(() => c.abort(), 8000);
-  try {
-    const r = await fetch(url, { signal: c.signal, cache: 'no-store' });
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    return await r.json();
-  } finally { clearTimeout(t); }
-}
-// A line not seen lately; one already on the phone needs no fetch
-async function fetchVerse() {
-  const D = V.core;
-  if (!D) throw new Error('No Daily Drift');
-  const recent = V.verses.slice(-30).map((v) => String(v.ref));
-  for (let k = 0; k < 3; k++) {
-    const ref = D.pickRef('hinduism', recent);
-    if (ref == null) break;
-    const seen = V.verses.find((x) => String(x.ref) === String(ref));
-    if (seen) return { f: 'hinduism', ref: seen.ref, t: seen.t, by: seen.by };
+/* ---------- A verse: Daily Drift itself ----------
+   The prayer hands open Daily Drift's own page, fetched live from its site and run untouched in a layer over Aarti:
+   its stars and light, the sound when you touch, the stars gliding as you tilt the phone, pull for another verse.
+   A few lines run first inside it and do only three things:
+     1. keep its storage apart, under Aarti's own name (aar.dd.*), so Daily Drift's own settings, sets and verses are never touched;
+     2. switch its Faith on with Hinduism, start it on its dark themes and skip its install welcome;
+     3. send its round arrow, and the phone's Back, home to Aarti.
+   If its page can't be reached, or the few names Aarti relies on change, the hands simply stay hidden. */
+const Drift = (() => {
+  const DD = new URL('../DailyDrift/', location.href).href;
+  // what Aarti relies on in Daily Drift's page
+  const HOOKS = ['function openFaith(', 'data-act="back"', "const P = 'ddr.'", 'id="verseBlk"'];
+  // Runs inside the layer before anything of Daily Drift's. Storage is patched in the layer's own world only, not Aarti's.
+  const SHIM = `(function () {
+  'use strict';
+  var KEEP = 'aar.dd.';
+  var FORCE = { faith: 'true', faiths: '["hinduism"]', installSeen: 'true', faithHinted: 'true' };
+  var FIRST = { tone: '"dark"', themeN: '0' };
+  var pr = Storage.prototype, rd = pr.getItem, wr = pr.setItem, rm = pr.removeItem;
+  function own(k) { k = String(k); return k.indexOf('ddr.') === 0 ? k.slice(4) : k; }
+  pr.getItem = function (k) { var n = own(k); if (FORCE.hasOwnProperty(n)) return FORCE[n]; var v = rd.call(this, KEEP + n); return v == null && FIRST.hasOwnProperty(n) ? FIRST[n] : v; };
+  pr.setItem = function (k, v) { var n = own(k); if (!FORCE.hasOwnProperty(n)) wr.call(this, KEEP + n, v); };
+  pr.removeItem = function (k) { rm.call(this, KEEP + own(k)); };
+  var ok = false;
+  try { localStorage.setItem('ddr.zzprobe', '1'); ok = rd.call(localStorage, KEEP + 'zzprobe') === '1' && rd.call(localStorage, 'ddr.zzprobe') == null; rm.call(localStorage, KEEP + 'zzprobe'); } catch (e) {}
+  if (!ok) { try { window.stop(); } catch (e) {} parent.postMessage({ aartiDrift: 'failed' }, '*'); return; }
+  try { if (navigator.serviceWorker) navigator.serviceWorker.register = function () { return Promise.resolve(); }; } catch (e) {}
+  var gone = false;
+  function leave() { if (!gone) { gone = true; parent.postMessage({ aartiDrift: 'closed' }, '*'); } }
+  addEventListener('popstate', function (e) { e.stopImmediatePropagation(); leave(); }, true);
+  document.addEventListener('click', function (e) {
+    var b = e.target && e.target.closest && e.target.closest('[data-act=back]');
+    if (!b) return;
+    e.stopImmediatePropagation(); e.preventDefault();
+    if (history.state && history.state.dd === 'faith') history.back(); else leave();
+  }, true);
+})();`;
+  // Daily Drift's Settings, without the rows that mean nothing here
+  const TIDY = '#faithRow,#faiths,#faithNote,#insRow,#insNote,#settings .set:has([data-act=newSet]),#settings .about,#hintFaith{display:none!important}';
+  let page = null, job = null, layer = null, frame = null, opening = false;
+
+  async function text(url) {
+    const c = new AbortController(), t = setTimeout(() => c.abort(), 9000);
     try {
-      const v = D.parseGita(await getJSON(D.verseURL('hinduism', ref)), ref);
-      if (v) return v;
-    } catch (err) { if (k === 2) throw err; }
-    recent.push(String(ref));
+      const r = await fetch(url, { cache: 'no-cache', signal: c.signal });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return await r.text();
+    } finally { clearTimeout(t); }
   }
-  throw new Error('No verse');
-}
-function keepVerse(v) {
-  V.verses.push({ ...v, at: Date.now() });
-  V.verses = V.verses.slice(-80);
-  put('verses', V.verses);
-  V.vi = V.verses.length - 1;
-}
-function savedVerse(shown) {
-  const pool = V.verses.filter((v) => v !== shown);
-  return pool.length ? pool[Math.floor(Math.random() * pool.length)] : null;
-}
-const cite = (v) => (V.core ? V.core.verseCite(v) : [v.ref, v.by].filter(Boolean).join(' · '));
-const bookName = () => (V.core && V.core.FAITH.hinduism.book) || 'Bhagavad Gita';
-
-function verseHtml() {
-  return `<section class="verse" id="verse" aria-label="A verse">
-      <div class="vpull" id="vpull" aria-hidden="true"><span class="spinner"></span></div>
-      <div class="drift" id="vdrift" role="img" aria-label="Finding a verse" hidden>
-        <span class="ring"></span><span class="ring"></span><span class="ring"></span>
-        <span class="orbit o1"><i></i></span><span class="orbit o2"><i></i></span><span class="orbit o3"><i></i></span><span class="core"></span>
-      </div>
-      <div class="vtext" id="vtext" hidden>
-        <p class="vbook" id="vbook">${esc(bookName())}</p>
-        <p class="vq" id="vq"></p>
-        <p class="vby" id="vby"></p>
-      </div>
-      <p class="vmsg" id="vmsg" hidden></p>
-      <button class="vback" type="button" data-act="vback" aria-label="Back" title="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.5 6.5L5 12l5.5 5.5M5.5 12H19"/></svg></button>
-    </section>
-    <nav class="vnav" aria-label="Verses">
-      <button class="icon-btn" type="button" data-act="vprev" aria-label="Earlier verse" title="Earlier verse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 5.5L8 12l6.5 6.5"/></svg></button>
-      <p class="vhint${V.pulled ? ' hide' : ''}" id="vhint">Pull down for another verse</p>
-      <button class="icon-btn" type="button" data-act="vnext" aria-label="Later verse" title="Later verse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 5.5L16 12l-6.5 6.5"/></svg></button>
-    </nav>`;
-}
-function paintVerse(animate) {
-  const v = V.verses[V.vi], box = $('#vtext');
-  if (!box) return;
-  $('#vdrift').hidden = true;
-  $('#vmsg').hidden = true;
-  if (!v) return;
-  $('#vbook').textContent = bookName();
-  $('#vq').textContent = v.t;
-  $('#vby').textContent = cite(v);
-  box.hidden = false;
-  box.classList.remove('out', 'in');
-  if (animate && !reduced()) { void box.offsetWidth; box.classList.add('in'); }
-  $('[data-act=vprev]').disabled = V.vi <= 0;
-  $('[data-act=vnext]').disabled = V.vi >= V.verses.length - 1;
-}
-function verseMsg(msg) {
-  $('#vdrift').hidden = true; $('#vtext').hidden = true;
-  const m = $('#vmsg'); m.textContent = msg; m.hidden = false;
-  $('[data-act=vprev]').disabled = V.vi <= 0 || !V.verses.length;
-  $('[data-act=vnext]').disabled = true;
-}
-// Opening the verse screen brings a new verse, as Daily Drift does; the loader shows only if it takes a moment
-async function showVerse(another) {
-  if (V.busy) return;
-  const token = ++V.token;
-  V.busy = true;
-  const box = $('#vtext'), pull = $('#vpull');
-  if (another && box && !box.hidden) { box.classList.remove('in'); box.classList.add('out'); }
-  if (another && pull) { pull.style.opacity = '1'; pull.classList.add('busy'); }
-  const slow = setTimeout(() => { if (token === V.token && !another) { $('#vdrift').hidden = false; if (box) box.hidden = true; } }, 300);
-  let got = null;
-  try { got = await fetchVerse(); } catch {}
-  clearTimeout(slow);
-  if (another) await new Promise((r) => setTimeout(r, reduced() ? 0 : 200));   // let the old verse finish fading
-  V.busy = false;
-  if (pull) { pull.classList.remove('busy'); pull.style.opacity = '0'; }
-  if (token !== V.token || S.route.r !== 'verse') { if (got) keepVerse(got); return; }
-  if (got) {
-    keepVerse(got);
-    paintVerse(true);
-    ringBell({ gain: 0.26 });                     // the same bell, quieter, as the verse arrives
-    return;
+  // Daily Drift's page, ready to run: its scripts written in, so it also opens offline from Aarti's saved copy
+  function prepare() {
+    if (page) return Promise.resolve(true);
+    if (job) return job;
+    job = (async () => {
+      try {
+        const html = await text(DD);
+        if (!HOOKS.every((h) => html.includes(h))) throw new Error('Daily Drift has changed');
+        let out = html;
+        for (const m of [...html.matchAll(/<script src="([^"]+)"><\/script>/g)]) {
+          const js = await text(new URL(m[1], DD).href);
+          out = out.replace(m[0], () => '<script>' + js.replace(/<\/script/gi, '<\\/script') + '<\/script>');
+        }
+        page = out.replace(/<head>/i, () => `<head><base href="${DD}"><script>${SHIM}<\/script><style>${TIDY}</style>`);
+      } catch { page = null; }
+      job = null;
+      hands();
+      return !!page;
+    })();
+    return job;
   }
-  const old = savedVerse(another ? V.verses[V.vi] : null);
-  if (old) { V.vi = V.verses.indexOf(old); paintVerse(true); toast('You’re offline, so this is a verse from earlier.'); }
-  else verseMsg('Couldn’t reach the verses just now. Check your connection, then pull down to try again.');
-}
-function anotherVerse() {
-  if (!V.pulled) { V.pulled = true; put('vpulled', true); const h = $('#vhint'); if (h) h.classList.add('hide'); }
-  showVerse(true);
-}
-function stepVerse(d) {
-  const i = V.vi + d;
-  if (V.busy || i < 0 || i >= V.verses.length) return;
-  V.vi = i;
-  paintVerse(true);
-}
-function openVerse() {
-  if (!faithAvail()) return;
-  if (S.route.r === 'verse') { anotherVerse(); return; }
-  go({ r: 'verse', from: S.route.r === 'done' ? 'done' : 'home' });
-}
-
-// Pull the verse down for another, as in Daily Drift
-(function pullForVerse() {
-  let pg = null;
-  document.addEventListener('touchstart', (e) => {
-    pg = null;
-    if (S.route.r !== 'verse' || sheet.open || e.touches.length !== 1 || window.scrollY > 2 || V.busy) return;
-    pg = { x0: e.touches[0].clientX, y0: e.touches[0].clientY, dy: 0, on: false };
-  }, { passive: true });
-  document.addEventListener('touchmove', (e) => {
-    if (!pg) return;
-    const dx = e.touches[0].clientX - pg.x0, dy = e.touches[0].clientY - pg.y0;
-    if (!pg.on) {
-      if (Math.hypot(dx, dy) < 10) return;
-      if (dy > 0 && dy > Math.abs(dx)) pg.on = true; else { pg = null; return; }
+  function hands() {
+    const h = $('#faithBtn');
+    if (h) h.classList.toggle('gone', !(page && S.unlocked && ['home', 'done'].includes(S.route.r)));
+  }
+  // Verses seen on Aarti's own verse screen (releases 4 to 6) carry over, once
+  function carryOver() {
+    const old = get('verses', null);
+    if (Array.isArray(old) && localStorage.getItem('aar.dd.verses') == null) {
+      const vs = old.filter((v) => v && v.t).slice(-80).map((v, i) => ({ f: 'hinduism', ref: v.ref, t: v.t, by: v.by, at: v.at || Date.now(),
+        id: v.id || 'a' + (v.at || Date.now()).toString(36) + i }));
+      try { localStorage.setItem('aar.dd.verses', JSON.stringify(vs)); if (get('vpulled', false)) localStorage.setItem('aar.dd.vpulled', 'true'); } catch {}
     }
-    e.preventDefault();
-    pg.dy = dy;
-    const pull = $('#vpull'), box = $('#vtext');
-    if (pull) { pull.style.opacity = String(Math.min(1, dy / 90)); pull.querySelector('.spinner').style.transform = `rotate(${dy * 2}deg)`; }
-    if (box && !reduced()) box.style.transform = `translateY(${Math.min(70, dy * .35)}px)`;
-  }, { passive: false });
-  const end = () => {
-    if (!pg) return;
-    const P = pg; pg = null;
-    const pull = $('#vpull'), box = $('#vtext');
-    if (box) { box.style.transition = 'transform .3s cubic-bezier(.2,.8,.2,1)'; box.style.transform = ''; setTimeout(() => { box.style.transition = ''; }, 320); }
-    if (P.on && P.dy > 90) anotherVerse();
-    else if (pull) pull.style.opacity = '0';
-  };
-  document.addEventListener('touchend', end);
-  document.addEventListener('touchcancel', end);
+    if (old != null) { try { localStorage.removeItem(P + 'verses'); localStorage.removeItem(P + 'vpulled'); } catch {} }
+  }
+  async function open() {
+    if (layer || opening) return;
+    opening = true;
+    const ok = page || await prepare();
+    opening = false;
+    if (!ok) { toast('The verses can’t be reached just now. Try again when you’re online.'); return; }
+    if (layer) return;
+    carryOver();
+    layer = document.createElement('div');
+    layer.className = 'dd-layer';
+    layer.innerHTML = `<div class="drift" role="img" aria-label="Opening Daily Drift"><span class="ring"></span><span class="ring"></span><span class="ring"></span>
+      <span class="orbit o1"><i></i></span><span class="orbit o2"><i></i></span><span class="orbit o3"><i></i></span><span class="core"></span></div>`;
+    frame = document.createElement('iframe');
+    frame.title = 'A verse from the Bhagavad Gita, in Daily Drift';
+    frame.setAttribute('allow', 'accelerometer; gyroscope; magnetometer; autoplay; web-share; clipboard-write');
+    frame.srcdoc = page;
+    layer.append(frame);
+    document.body.append(layer);
+    document.documentElement.classList.add('drifting');
+    FX.hold(true);
+    requestAnimationFrame(() => requestAnimationFrame(() => layer && layer.classList.add('on')));
+    const mine = layer, f = frame;
+    setTimeout(() => { if (layer === mine && !mine.classList.contains('ready')) failed(); }, 20000);   // never leave the loader turning
+    f.addEventListener('load', async () => {
+      if (layer !== mine) return;
+      const w = f.contentWindow;
+      try {
+        if (typeof w.openFaith !== 'function' || w.eval('typeof S') !== 'object') throw new Error('no faith');
+        colours(w);
+        w.openFaith();
+        for (let i = 0; i < 100 && layer === mine && w.eval('S.view') !== 'faith'; i++) await new Promise((r) => setTimeout(r, 40));
+        if (layer !== mine) return;
+        if (w.eval('S.view') !== 'faith') throw new Error('no verse view');
+        mine.classList.add('ready');
+        try { f.focus(); } catch {}
+      } catch { failed(); }
+    }, { once: true });
+  }
+  // Its colours fill the strips by the notch and home bar, and the phone's bar takes its colour
+  function colours(w) {
+    const root = w.document.documentElement, meta = document.querySelector('meta[name=theme-color]');
+    const paint = () => {
+      if (!layer) return;
+      const bg = root.style.getPropertyValue('--bg').trim(), bg2 = root.style.getPropertyValue('--bg-2').trim();
+      if (bg) { layer.style.setProperty('--dd-bg', bg); meta.setAttribute('content', bg); }
+      if (bg2) layer.style.setProperty('--dd-bg2', bg2);
+    };
+    new MutationObserver(paint).observe(root, { attributes: true, attributeFilter: ['style'] });
+    paint();
+  }
+  function close() {
+    if (!layer) return;
+    const l = layer, f = frame;
+    layer = null; frame = null;
+    try { const w = f.contentWindow; if (w && typeof w.pauseAudio === 'function') w.pauseAudio(); } catch {}   // its own gentle fade
+    l.classList.remove('on');
+    setTimeout(() => {
+      l.remove();
+      document.documentElement.classList.remove('drifting');
+      FX.hold(false); Water.start();
+      setRoom(S.route.r === 'aarti' ? S.route.id : 'night');
+      const h = $('#faithBtn'); if (h && !h.classList.contains('gone')) h.focus({ preventScroll: true });
+    }, reduced() ? 0 : 460);
+  }
+  function failed() {
+    page = null;
+    close();
+    hands();
+    toast('The verses can’t open just now.');
+  }
+  window.addEventListener('message', (e) => {
+    if (!frame || e.source !== frame.contentWindow || !e.data) return;
+    if (e.data.aartiDrift === 'closed') close();
+    else if (e.data.aartiDrift === 'failed') failed();
+  });
+  return { prepare, open, ready: () => !!page, isOpen: () => !!layer };
 })();
 
 /* ---------- Unlock ---------- */
@@ -1594,10 +1558,8 @@ document.addEventListener('click', async (e) => {
     case 'close': closeSheet(); break;
     case 'light': lightDiya(t); break;
     case 'finish': go({ r: 'done' }, true); break;
-    case 'verse': openVerse(); break;
+    case 'verse': Drift.open(); break;
     case 'vback': up(); break;
-    case 'vprev': stepVerse(-1); break;
-    case 'vnext': stepVerse(1); break;
     case 'home': up(); break;
     case 'install': if (S.installEvt) { S.installEvt.prompt(); S.installEvt = null; renderNotices(); } break;
     case 'share': shareApp(); break;
@@ -1757,7 +1719,8 @@ $('#backBtn').addEventListener('click', () => up());
   history.replaceState({ r: 'home' }, '');
   render(true);
   loadCastLib();
-  loadFaith();
+  setTimeout(() => Drift.prepare(), 1200);          // Daily Drift's page, made ready in the background for the hands
+  addEventListener('online', () => { if (!Drift.ready()) Drift.prepare(); });
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 })();
 })();

@@ -6,7 +6,12 @@ Live at **https://quick-sheet.github.io/Aarti/**
 
 An evening experience rather than an app. It opens on a dark scene from the diya photo; touch it and the light spreads out from the wick (a soft temple bell rings), the flames sway and flicker, the water ripples under them and the mandala glows. Then you move through three rooms in the order the aartis are sung: Jai Ganesh Deva, Om Jai Lakshmi Mata and Om Jai Jagdish Hare. Each room has its own painting and colours. The painting softens behind the words as you scroll, the verse in the middle of the screen glows, and a floating dock holds play, the Hindi · Roman · English switch and casting. There's also a printable A4 sheet of all three. The app opens with a PIN (1008).
 
-The prayer hands (top left on the opening and closing screens) open a verse from the Bhagavad Gita, exactly as Daily Drift's faith verses work: pull down or tap the hands again for another, use the arrows to look back. Aarti uses Daily Drift's own `core.js` straight from its site (`quick-sheet.github.io/DailyDrift/`), so nothing is copied and Daily Drift's settings are untouched. If Daily Drift can't be reached or its verse functions change, the hands stay hidden; verses already seen stay on the phone for offline.
+The prayer hands (top left on the opening and closing screens) open Daily Drift itself, on a verse from the Bhagavad Gita: its stars and light, the sound as you touch and draw, the stars gliding as you tilt the phone, pull down for another verse, the arrows to look back, share. Aarti loads Daily Drift's own page live from its site (`quick-sheet.github.io/DailyDrift/`) and runs it untouched in a layer, with a few lines that only:
+- keep its storage apart under Aarti's own name (`aar.dd.*`), so your Daily Drift settings, sets and verses are never touched;
+- switch its Faith on with Hinduism only, start it on its dark themes, skip its install welcome and hide the Settings rows that mean nothing here;
+- send its round arrow, and the phone's Back, home to Aarti.
+
+Aarti relies on a few names in Daily Drift's page: `function openFaith(`, the back button's `data-act="back"`, `id="verseBlk"` and the storage prefix `const P = 'ddr.'`. Keep those when changing Daily Drift; if they change, the hands simply hide. After its first open, Aarti keeps a copy of Daily Drift's page so the verses open offline too.
 
 ## Host
 GitHub Pages, from the `main` branch, root folder. No server, no build step.

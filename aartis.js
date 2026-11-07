@@ -3,7 +3,8 @@
    echo = the short answering line (no meaning of its own).
    Parts: { refrain: n } = the full refrain, sung n times; { lines: [...], cue: true } = a verse that ends with the cue line.
    To use your own recording later: put the MP3 in the repo's main folder and set audio: '<name>.mp3?v=1'.
-   If you replace a recording, change ?v=1 to ?v=2 so phones fetch the new one. */
+   If you replace a recording, change ?v=1 to ?v=2 so phones fetch the new one.
+   art = the painting for each aarti; blur = a tiny copy of it, shown softly behind the words. */
 (function (root) {
   'use strict';
   const l = (d, r, e, x) => (x ? { d, r, e, x } : { d, r, e });
@@ -12,6 +13,8 @@
   const AARTIS = [
     {
       id: 'ganesh',
+      art: 'ganesh.jpg',            // the painting: room background, TV picture when casting and lock-screen picture
+      blur: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAAkABgDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDl/DGn/arlFYEBmxnFd2INLB+yC3Pl7vKM3+3/AIVynh0SfZ1SBz5iyqxUtxtPt+Vb7FI7L51Uq83nKUUld3TBP1718ziW5VHrY9bC0ouGq3OQ8SWC2t3IifwnFFaHiFne2CTOd5kZgh4wvrjrk0V6OHm/Zq559aCjOyGaBGBGryxPNHIuzAJBAP0raMjpbRWxnlEAwEePJYAHhfrmuV025kgtYpd+E3YDLKNw/wCAntnvW0dSuRbI32pt4kJxsG3H+90zXFiKXvtt7ns4edFUoplDXd0kk0+Ztp4JlOS3+T/WiqN9diZHG5gpBw+Sc/7PYYorvoR5YWZ5WMlCVS8NjGhuZVIUEceozVwXUn2dVIUqDnBWiit6kV2OSLdytPfTyRCBnzGh+Vewoooq4KyE23uf/9k=',
       title: 'Jai Ganesh Deva',
       titleD: 'जय गणेश देवा',
       deity: 'Ganesh',
@@ -51,6 +54,8 @@
     },
     {
       id: 'lakshmi',
+      art: 'lakshmi.jpg',            // the painting: room background, TV picture when casting and lock-screen picture
+      blur: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAAkABgDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDjtBtBJtZiwJYBfl4P416EukWKwi080faNmcY/T61w2l3QRVwWcR4IRumfwrbbVr7aupDyN/mlzEWIIXbs/PivAxLm5aOx30KcWu5g65Y+WHdFf5WwePlFFT6neiWNyWaNZBu2rwMkelFd1GT5dTlnFXMjTZGRlKymPByGxnB+lXIjGDuedZW80uck/P359OayrR2j2OpBJ+6A3IrXF7IYGY7QmAvRd5I56elRXi+Y7cJOmoWe5RvpCzOzsHJzyM4/D6dKKguS7h3IPAw2W70V1UlaJ59ZpzbjsVInK8CryzP5Q+Y8+9FFOaRESnK5Y4oooq1sSf/Z',
       title: 'Om Jai Lakshmi Mata',
       titleD: 'ॐ जय लक्ष्मी माता',
       deity: 'Lakshmi',
@@ -117,6 +122,8 @@
     },
     {
       id: 'jagdish',
+      art: 'jagdish.jpg',            // the painting: room background, TV picture when casting and lock-screen picture
+      blur: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHBwgHBgoICAgLCgoLDhgQDg0NDh0VFhEYIx8lJCIfIiEmKzcvJik0KSEiMEExNDk7Pj4+JS5ESUM8SDc9Pjv/2wBDAQoLCw4NDhwQEBw7KCIoOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozv/wAARCAAkABgDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDlfDtj58iFwfmYBfl4P4138el6ZIslj5TJOhK5dQAxxnj8K5Dw9dEEKqbyi5QScgHjkVvG7nOdTFzAXMgIQDjp5ePXOK8CvGc5vpoehSUFHuclr1h5LSMgf5XKnC8AfWir+tXOFdCrpvQM6K2Ru9fx6/jRXZRk1GzOWoo30ZT0FYgUklmljjHG5QPlYjrzxW+tmpslsFn3xu3DLy3XP51zekXptoY1LYVmyo4YD1yOtbX2qI2jSmBMedjzRKQRx2XrjmuXERmp3jKx6mFjQdJX3MrXDvkmmwrrwoK5HOOT9fX60VHqt41xBIFB8tW+bACrntgdaK7qKfLqeZilBVPc2MGGVk4XH1xzWmt3KbYAnkn73f8AOiiqrJGEGZs0ztwcf40UUVrHYhn/2Q==',
       title: 'Om Jai Jagdish Hare',
       titleD: 'ॐ जय जगदीश हरे',
       deity: 'Vishnu',

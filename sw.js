@@ -1,10 +1,10 @@
-const REL = 2;                    // bump on every release, together with ?v= on the scripts in index.html
+const REL = 3;                    // bump on every release, together with ?v= on the scripts in index.html
 const CACHE = 'aarti-v' + REL;
 const AUDIO = 'aarti-audio';      // saved recordings, kept across releases (keyed by their full address, ?v= included)
 importScripts('core.js?v=' + REL);
 
-const SHELL = ['./', 'index.html', 'core.js', 'aartis.js', 'manifest.webmanifest', 'icon.svg', 'icon-192.png', 'icon-512.png',
-  'icon-maskable-512.png', 'apple-touch-icon.png', 'aarti-words.pdf'];
+const SHELL = ['./', 'index.html', 'core.js', 'aartis.js', 'bell.js', 'manifest.webmanifest', 'icon.svg', 'icon-192.png', 'icon-512.png',
+  'icon-maskable-512.png', 'apple-touch-icon.png', 'aarti-words.pdf', 'ganesh.jpg', 'lakshmi.jpg', 'jagdish.jpg'];
 
 self.addEventListener('install', (e) => e.waitUntil(caches.open(CACHE)
   .then((c) => c.addAll(SHELL.map((u) => new Request(u, { cache: 'reload' })))).then(() => self.skipWaiting())));

@@ -6,6 +6,8 @@ Live at **https://quick-sheet.github.io/Aarti/**
 
 An evening experience rather than an app: you light the diya (a soft temple bell rings), then move through three rooms in the order the aartis are sung: Jai Ganesh Deva, Om Jai Lakshmi Mata and Om Jai Jagdish Hare. Each room has its own painting and colours. The painting softens behind the words as you scroll, the verse in the middle of the screen glows, and a floating dock holds play, the Hindi · Roman · English switch and casting. There's also a printable A4 sheet of all three. The app opens with a PIN (1008).
 
+The prayer hands (top left on the opening and closing screens) open a verse from the Bhagavad Gita, exactly as Daily Drift's faith verses work: pull down or tap the hands again for another, use the arrows to look back. Aarti uses Daily Drift's own `core.js` straight from its site (`quick-sheet.github.io/DailyDrift/`), so nothing is copied and Daily Drift's settings are untouched. If Daily Drift can't be reached or its verse functions change, the hands stay hidden; verses already seen stay on the phone for offline.
+
 ## Host
 GitHub Pages, from the `main` branch, root folder. No server, no build step.
 

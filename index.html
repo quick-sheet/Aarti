@@ -246,6 +246,9 @@ dialog.welcome.closing::backdrop{animation:w-fade .44s ease reverse both}
 .w-install strong{font-weight:500;color:var(--ink)}
 .w-actions{display:flex;gap:10px;margin-top:18px}
 .w-actions .btn{flex:1}
+.rel{-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
+.owner{margin-top:6px}
+.owner .small{margin-bottom:0}
 .w-credit{margin:30px 0 0;font:400 12.5px var(--sans);letter-spacing:.06em;color:var(--ink-3);opacity:.75}
 
 /* A reflection: the same frosted card as the welcome, in the colours of the moment, for reading */
@@ -563,10 +566,10 @@ dialog.sheet::backdrop{background:rgba(4,4,8,.6)}
 <div class="toast" id="toast" role="status" popover="manual"></div>
 <audio id="player" preload="none"></audio>
 
-<script src="core.js?v=15"></script>
-<script src="aartis.js?v=15"></script>
-<script src="bell.js?v=15"></script>
-<script src="puja-times.js?v=15"></script>
+<script src="core.js?v=16"></script>
+<script src="aartis.js?v=16"></script>
+<script src="bell.js?v=16"></script>
+<script src="puja-times.js?v=16"></script>
 <script>
 (() => {
 'use strict';
@@ -578,7 +581,9 @@ document.addEventListener('touchmove', (e) => { if (e.touches.length > 1) e.prev
 addEventListener('wheel', (e) => { if (e.ctrlKey) e.preventDefault(); }, { passive: false });
 /* ---------- Settings you may change ---------- */
 const PIN = '1008';                    // the PIN friends type in; the shared link carries it
-const RELEASE = 15;
+const RELEASE = 16;
+const API = '';                        // visit messages: your Apps Script web app address (README, "Visit messages"); '' = off
+const EXPECT_BUILD = 1;                // the Apps Script release this page needs
 
 const C = window.Core;
 const AARTIS = window.AartiData.AARTIS;
@@ -909,6 +914,7 @@ function render(newScreen) {
   if (r.r !== 'home' && S.pujaSeen) S.pujaTucked = true;          // back from an aarti, the time waits in the corner
   if (r.r !== 'home') Tuck.stop();
   Swipe.drop();
+  Visits.page(!S.unlocked ? 'pin' : r.r === 'aarti' ? r.id : r.r === 'done' ? 'done' : 'home');
 
   if (!tilak.innerHTML) tilak.innerHTML = TILAK;
   tilak.classList.toggle('gone', !(S.unlocked && (r.r === 'home' || (r.r === 'aarti' && byId(r.id)))));
@@ -1694,9 +1700,11 @@ function openSettings() {
 
     <h3>About</h3>
     <button class="meaning-link" type="button" data-act="welcome">${ICON.flame}<span>How to use Aarti</span></button>
-    <p class="small">Words as sung by Anuradha Paudwal. The English is a plain guide to the meaning, not a word-for-word translation. The screen stays on while an aarti is open. Release ${RELEASE}.</p>
+    <p class="small">Words as sung by Anuradha Paudwal. The English is a plain guide to the meaning, not a word-for-word translation. The screen stays on while an aarti is open. <span class="rel" data-rel>Release ${RELEASE}.</span></p>
+    ${Visits.ownerHtml()}
     <p class="credit">Big Bear Binary</p>`);
   syncPlayers();
+  Visits.ownerCheck();
 }
 
 /* ---------- Audio: recordings and the test bell ---------- */
@@ -2187,7 +2195,7 @@ document.addEventListener('click', async (e) => {
     return;
   }
   const d = t.dataset;
-  if (d.spotify) { spotifyTapped(t); return; }
+  if (d.spotify) { Visits.did('spotify'); spotifyTapped(t); return; }
   if (d.go) { go({ r: 'aarti', id: d.go }); return; }
   if (d.next) { go({ r: 'aarti', id: d.next }, true); return; }
   if (d.jump) { if (S.route.id !== d.jump) go({ r: 'aarti', id: d.jump }, true); return; }
@@ -2200,21 +2208,21 @@ document.addEventListener('click', async (e) => {
   }
   if (d.size) { t.parentElement.querySelectorAll('.chip').forEach((c) => c.setAttribute('aria-pressed', String(c === t))); setSize(d.size); toast(`Text size: ${t.textContent.toLowerCase()}`); return; }
   if (d.own) { openOwn(d.own); return; }
-  if (d.place) { choosePlace(d.place); return; }
+  if (d.place) { Visits.did('place'); choosePlace(d.place); return; }
   if (d.unown) {
     delete S.own[d.unown]; put('own', S.own);
     closeSheet(); render();
     toast(`Back to the app’s song for ${byId(d.unown).title}`);
     return;
   }
-  if (d.play) { togglePlay(t); return; }
-  if (d.cast) { cast(t); return; }
+  if (d.play) { if (/^a:/.test(d.play)) Visits.did('played:' + d.play.slice(2)); togglePlay(t); return; }
+  if (d.cast) { Visits.did('cast'); cast(t); return; }
   if (d.dismiss) { const x = get('dismissed', {}); x[d.dismiss] = 1; put('dismissed', x); renderNotices(); return; }
   switch (d.act) {
     case 'close': closeSheet(); break;
-    case 'light': lightDiya(t); break;
+    case 'light': Visits.did('lit'); lightDiya(t); break;
     case 'finish': go({ r: 'done' }, true); break;
-    case 'verse': Drift.open(); break;
+    case 'verse': Visits.did('verse'); Drift.open(); break;
     case 'vback': up(); break;
     case 'home': up(); break;
     case 'place': openPlaces(false); break;
@@ -2224,9 +2232,10 @@ document.addEventListener('click', async (e) => {
     case 'install': installApp(); break;
     case 'welcomeDone': closeWelcome(); break;
     case 'welcome': openWelcome(); break;
-    case 'reflect': openReflect(); break;
+    case 'reflect': Visits.did('reflection'); openReflect(); break;
     case 'reflectClose': closeReflect(); break;
-    case 'share': shareApp(); break;
+    case 'share': Visits.did('shared'); shareApp(); break;
+    case 'tgTest': Visits.test(t); break;
     case 'bell':
       S.set.bell = S.set.bell === false; saveSet();
       t.setAttribute('aria-checked', String(S.set.bell));
@@ -2534,15 +2543,181 @@ const Swipe = (() => {
   document.addEventListener('touchcancel', end);
 })();
 
+/* ---------- Visits: a note to G on Telegram each time Aarti is opened ----------
+   One message per visit, kept up to date while it lasts: when it was opened, how long it was on screen (time in the
+   background doesn't count), where they went and what they did, roughly where they are (the town their internet
+   connection is in, from a free lookup) and the phone. It goes through G's own Apps Script, which holds the bot's token;
+   nothing secret is in this page. Off until API (top of the script) has the web app address.
+   G's own phones are left out: open Aarti once with #me at the end of its address, or tap "Release" in Settings
+   five times. #count (or five taps again) puts a phone back in. */
+const Visits = (() => {
+  const GAP = 30 * 60 * 1000;                     // away for longer than this, and coming back is a new visit
+  const counting = () => !!API && !get('noCount', false) && !navigator.webdriver;
+  let v = null, shown = 0, timer = 0, beat = 0, where = null, dev = null, started = false, taps = [];
+  const rid = () => { const a = new Uint8Array(10); crypto.getRandomValues(a); return [...a].map((x) => (x % 36).toString(36)).join('') + Date.now().toString(36).slice(-4); };
+  const secs = () => (v ? v.secs + (shown ? (performance.now() - shown) / 1000 : 0) : 0);
+  const save = () => { if (v) put('visit', { ...v, secs: Math.round(secs()), last: Date.now() }); };
+  function begin() {
+    const n = get('visits', 0) + 1; put('visits', n);
+    v = { id: rid(), n, secs: 0, pages: [], did: [], via: S.cameByLink ? 'link' : standalone ? 'app' : 'browser' };
+    save();
+  }
+  function payload(open) {
+    let puja = '';
+    try { const pl = myPlace(); puja = (pl && pl.city) || ''; } catch {}
+    let tz = '';
+    try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch {}
+    return JSON.stringify({ action: 'visit', id: v.id, n: v.n, secs: Math.round(secs()), open, pages: v.pages, did: v.did,
+      place: where || {}, puja, tz, dev: dev || {}, via: v.via, release: RELEASE });
+  }
+  function send(open, leaving) {
+    if (!started || !v || !counting()) return;
+    const body = payload(open);
+    try {
+      if (leaving && navigator.sendBeacon && navigator.sendBeacon(API, body)) return;
+      fetch(API, { method: 'POST', body, keepalive: true, credentials: 'omit' }).catch(() => {});
+    } catch {}
+  }
+  const soon = (ms) => { clearTimeout(timer); timer = setTimeout(() => { if (shown) send(true); }, ms); };
+  // roughly where: the town the internet connection is in, looked up at most every few hours
+  async function lookup() {
+    const c = get('where', null);
+    if (c && c.p && Date.now() - c.at < 6 * 3600e3) { where = c.p; return; }
+    const one = async (url, pick) => {
+      const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 5000);
+      try { const r = await fetch(url, { signal: ctl.signal, cache: 'no-store', credentials: 'omit', referrerPolicy: 'no-referrer' }); return r.ok ? pick(await r.json()) : null; }
+      catch { return null; } finally { clearTimeout(t); }
+    };
+    where = await one('https://ipwho.is/?fields=success,city,region,country,flag.emoji',
+      (j) => (j && j.success !== false && j.country ? { city: j.city || '', region: j.region || '', country: j.country, flag: (j.flag && j.flag.emoji) || '' } : null))
+      || await one('https://get.geojs.io/v1/ip/geo.json', (j) => (j && j.country ? { city: j.city || '', region: j.region || '', country: j.country, flag: '' } : null));
+    if (where) put('where', { at: Date.now(), p: where });
+  }
+  // the phone: model where the browser says (Android's Chrome does, iPhones don't), system and browser
+  async function device() {
+    const o = { model: '', os: '', browser: '', installed: standalone };
+    let m;
+    if ((m = /Android\s(\d+)/.exec(UA))) o.os = 'Android ' + m[1];
+    else if ((m = /(iPhone|iPad|iPod)[^)]*?OS (\d+)_(\d+)/.exec(UA))) { o.model = m[1]; o.os = 'iOS ' + m[2] + '.' + m[3]; }
+    else if (isIOS) { o.model = 'iPad'; o.os = 'iPadOS'; }
+    else if (/Windows NT/.test(UA)) o.os = 'Windows';
+    else if (/CrOS/.test(UA)) o.os = 'ChromeOS';
+    else if (/Mac OS X/.test(UA)) o.os = 'macOS';
+    else if (/Linux/.test(UA)) o.os = 'Linux';
+    for (const [re, name] of [[/SamsungBrowser\/(\d+)/, 'Samsung Internet'], [/EdgA?\/(\d+)/, 'Edge'], [/OPR\/(\d+)/, 'Opera'], [/FxiOS\/(\d+)/, 'Firefox'],
+      [/Firefox\/(\d+)/, 'Firefox'], [/CriOS\/(\d+)/, 'Chrome'], [/Chrome\/(\d+)/, 'Chrome'], [/Version\/(\d+)[\d.]* .*Safari/, 'Safari']]) {
+      if ((m = re.exec(UA))) { o.browser = name + ' ' + m[1]; break; }
+    }
+    try {
+      const h = navigator.userAgentData && navigator.userAgentData.getHighEntropyValues
+        && await navigator.userAgentData.getHighEntropyValues(['model', 'platformVersion']);
+      if (h && h.model) o.model = /^SM-/.test(h.model) ? 'Samsung ' + h.model : /^Pixel/.test(h.model) ? 'Google ' + h.model : h.model;
+      if (h && h.platform === 'Android' && h.platformVersion) o.os = 'Android ' + h.platformVersion.split('.')[0];
+      if (h && h.platform === 'Windows' && parseInt(h.platformVersion, 10) >= 13) o.os = 'Windows 11';
+    } catch {}
+    dev = o;
+  }
+  function onVis() {
+    if (!v) return;
+    if (document.visibilityState === 'hidden') {
+      if (shown) { v.secs += (performance.now() - shown) / 1000; shown = 0; }
+      clearTimeout(timer); save(); send(false, true);
+    } else if (!shown) {
+      const last = (get('visit', null) || {}).last || 0;
+      if (Date.now() - last > GAP) { S.cameByLink = false; begin(); if (page.last) v.pages.push(page.last); }
+      shown = performance.now(); save(); soon(4000);
+    }
+  }
+  function start() {
+    if (started || !counting()) return;
+    started = true;
+    const old = get('visit', null);
+    if (old && old.id && Date.now() - (old.last || 0) < GAP) v = { id: old.id, n: old.n, secs: old.secs || 0, pages: old.pages || [], did: old.did || [], via: old.via };
+    else begin();
+    if (page.last) page(page.last);
+    shown = document.visibilityState === 'visible' ? performance.now() : 0;
+    Promise.all([lookup(), device()]).then(() => soon(600));
+    soon(4000);
+    beat = setInterval(() => { if (shown) { save(); send(true); } }, 120000);
+    document.addEventListener('visibilitychange', onVis);
+    addEventListener('pagehide', () => { if (shown) { v.secs += (performance.now() - shown) / 1000; shown = 0; } save(); send(false, true); });
+  }
+  function page(k) {
+    page.last = k;
+    if (!v) return;
+    if (v.pages[v.pages.length - 1] !== k && v.pages.length < 30) { v.pages.push(k); save(); if (started) soon(5000); }
+  }
+  function did(k) {
+    if (!v || v.did.includes(k) || v.did.length >= 20) return;
+    v.did.push(k); save(); if (started) soon(5000);
+  }
+
+  // ----- G's own phones -----
+  function leaveOut(off) {
+    put('noCount', !!off);
+    if (off) { clearTimeout(timer); clearInterval(beat); started = false; v = null; localStorage.removeItem(P + 'visit'); }
+    else start();
+    toast(off ? 'This phone won’t be counted in visit messages' : 'This phone is counted again');
+    const box = $('#owner'); if (box) box.outerHTML = ownerHtml();
+    ownerCheck();
+  }
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest || !e.target.closest('[data-rel]')) return;
+    const now = Date.now(); taps = taps.filter((t) => now - t < 2500); taps.push(now);
+    if (taps.length >= 5) { taps = []; leaveOut(!get('noCount', false)); }
+  });
+  function ownerHtml() {
+    if (!get('noCount', false)) return '<div id="owner" hidden></div>';
+    return `<div class="owner" id="owner"><p class="small">This phone isn’t counted. Visit messages: <span id="ownerState">${API ? 'checking…' : 'off (the Apps Script address isn’t in index.html yet)'}</span></p>
+      ${API ? '<div class="actions"><button class="btn" type="button" data-act="tgTest">Send test message</button></div>' : ''}</div>`;
+  }
+  async function call(action, method) {
+    const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 12000);
+    try {
+      const r = method === 'GET' ? await fetch(`${API}?action=${action}`, { signal: ctl.signal, credentials: 'omit' })
+        : await fetch(API, { method: 'POST', body: JSON.stringify({ action }), signal: ctl.signal, credentials: 'omit' });
+      return await r.json();
+    } finally { clearTimeout(t); }
+  }
+  async function ownerCheck() {
+    const el = $('#ownerState');
+    if (!el || !API) return;
+    let txt;
+    try {
+      const j = await call('ping', 'GET');
+      if (!j || !j.ok) txt = 'Apps Script answered oddly';
+      else if ((j.build || 0) < EXPECT_BUILD) txt = `Apps Script is out of date (release ${j.build || 0}, Aarti needs ${EXPECT_BUILD}): Deploy → Manage deployments → Edit → New version`;
+      else if (!j.ready) txt = 'Apps Script needs BOT_TOKEN and CHAT_ID in Script Properties';
+      else txt = `on (Apps Script release ${j.build})`;
+    } catch { txt = 'couldn’t reach Apps Script'; }
+    if (el.isConnected) el.textContent = txt;
+  }
+  async function test(btn) {
+    btn.disabled = true;
+    try { const j = await call('test', 'POST'); toast(j && j.ok ? 'Test message sent. Check Telegram.' : (j && j.error) || 'Apps Script didn’t answer'); }
+    catch { toast('Couldn’t reach Apps Script'); }
+    btn.disabled = false;
+  }
+  return { start, page, did, leaveOut, ownerHtml, ownerCheck, test };
+})();
+
 /* ---------- Start ---------- */
 (function start() {
   const pin = C.pinFromHash(location.hash);
   if (pin && C.pinOk(pin, PIN)) { S.unlocked = true; put('ok', true); }
+  S.cameByLink = !!pin;
+  const me = /[#&]me(?:&|$)/.test(location.hash), back = /[#&]count(?:&|$)/.test(location.hash);
   if (location.hash) history.replaceState(null, '', location.pathname + location.search);
   setSize(S.set.size);
   saveSet();
   history.replaceState({ r: 'home' }, '');
   render(true);
+  if (me || back) Visits.leaveOut(me); else Visits.start();
+  // #me or #count added to the address of a page that's already open
+  addEventListener('hashchange', () => {
+    const h = location.hash, m2 = /[#&]me(?:&|$)/.test(h), c2 = /[#&]count(?:&|$)/.test(h);
+    if (m2 || c2) { history.replaceState(history.state, '', location.pathname + location.search); Visits.leaveOut(m2); }
+  });
   loadCastLib();
   setTimeout(() => Drift.prepare(), 1200);          // Daily Drift's page, made ready in the background for the hands
   addEventListener('online', () => { if (!Drift.ready()) Drift.prepare(); });

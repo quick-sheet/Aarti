@@ -2,7 +2,7 @@
    Each line: d = Devanagari, r = Roman letters, e = English meaning, x = times sung (if more than once),
    echo = the short answering line (no meaning of its own).
    Parts: { refrain: n } = the full refrain, sung n times; { lines: [...], cue: true } = a verse that ends with the cue line.
-   To use your own recording later: put the MP3 in the repo's main folder and set audio: '<name>.mp3?v=1'.
+   audio = the recording, an MP3 in the repo's main folder ('' would send people to Spotify instead).
    If you replace a recording, change ?v=1 to ?v=2 so phones fetch the new one.
    art = the painting for each aarti; blur = a tiny copy of it, shown softly behind the words. */
 (function (root) {
@@ -24,7 +24,7 @@
       summary: 'Sung first, to Ganesh, lord of beginnings and remover of obstacles. It praises his single tusk, four arms and the mouse he rides, and asks him to bless the home.',
       spotify: '670010LTT4haWIeJhsK9JG',
       artist: 'Anuradha Paudwal',
-      audio: '',
+      audio: 'ganesh.mp3?v=1',
       refrain: [
         l('जय गणेश, जय गणेश, जय गणेश देवा', 'Jai Ganesh, jai Ganesh, jai Ganesh deva', 'Glory to Ganesh, glory to Lord Ganesh,'),
         l('माता जाकी पार्वती, पिता महादेवा', 'Mata jaki Parvati, pita Mahadeva', 'whose mother is Parvati and whose father is Shiva, the great god.'),
@@ -65,7 +65,7 @@
       summary: 'Sung to Lakshmi, goddess of wealth, wellbeing and good fortune, whose night Diwali is. It names her many forms and asks her to bring joy and plenty to the home.',
       spotify: '0ZkIWsbj1psnuSoJ22riCR',
       artist: 'Anuradha Paudwal, Arun Paudwal',
-      audio: '',
+      audio: 'lakshmi.mp3?v=1',
       refrain: [
         l('ॐ जय लक्ष्मी माता, मैया जय लक्ष्मी माता', 'Om jai Lakshmi mata, maiya jai Lakshmi mata', 'Om, glory to you, Mother Lakshmi, glory to Mother Lakshmi.'),
         l('तुमको निशदिन सेवत, मैया जी को निशदिन सेवत', 'Tumko nishadin sevat, maiya ji ko nishadin sevat', 'Day and night you are worshipped,'),
@@ -133,7 +133,7 @@
       summary: 'Sung last, to Vishnu, lord of the universe; it closes almost every Hindu puja. A prayer of surrender: you are my mother and father, take away our troubles.',
       spotify: '4rvn5djkLdm5AT6b58pVS5',
       artist: 'Anuradha Paudwal',
-      audio: '',
+      audio: 'jagdish.mp3?v=1',
       refrain: [
         l('ॐ जय जगदीश हरे, स्वामी जय जगदीश हरे', 'Om jai Jagdish hare, swami jai Jagdish hare', 'Om, glory to you, Lord of the universe, glory to the Lord of the universe.'),
         l('भक्त जनों के संकट', 'Bhakt janon ke sankat', 'The troubles of your devotees,'),

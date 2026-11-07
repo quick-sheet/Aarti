@@ -38,10 +38,25 @@ In the app, open Settings and tap **Share Aarti**. It sends the line at the top 
 On iPhone, the home-screen app has its own storage, so it may ask for the PIN once more.
 
 ## Music
-- **For now:** each aarti's **Play in Spotify** button opens the song in the Spotify app. You can cast from there with Spotify's own Connect button.
-- **Your own version:** anyone can paste a Spotify link to a different recording of any aarti (on the aarti, tap **Use your own version**, or go to Settings). It's saved on their phone only.
-- **Adding your recordings:** upload the MP3 files to the repo's main folder, next to `index.html`. Then, in `aartis.js`, set each aarti's `audio:` line, for example `audio: 'ganesh.mp3?v=1'`, and update its `artist`. The app then plays the recording itself, with a cast button and lock-screen controls. On Android, casting uses Google's Cast library: the TV shows the aarti's name and the diya, and play, pause and the position stay in step with your phone. iPhone uses AirPlay. Each recording is saved on the phone after its first play, so it works offline too. If you replace a recording later, change `?v=1` to `?v=2`.
-- If the words in your recordings differ (more verses, different repeats), the words in `aartis.js` and the PDF need updating to match.
+- **The recordings:** `ganesh.mp3`, `lakshmi.mp3` and `jagdish.mp3` play in the app, with the words alongside, on the lock screen, and on a TV or speaker with the cast button. They are 320 kbps MP3s made from G's WAV recordings, matched to the same loudness (−14 LUFS, peaks at −1 dB or lower). Each is saved on the phone the first time it's opened, so it plays offline after that.
+- **Replacing a recording:** upload the new MP3 with the same name, then in `aartis.js` change that aarti's `audio: '….mp3?v=1'` to `?v=2` so phones fetch the new one. Keep each file under 25 MB (GitHub's limit for uploads in the browser).
+- **Your own version:** anyone can still paste a Spotify link to a different recording of any aarti (on the aarti, tap **Use your own version**, or go to Settings). It's saved on their phone only.
+- If the words in a recording differ (more verses, different repeats), the words in `aartis.js` and the PDF need updating to match.
+
+## Visit messages (Telegram)
+Each time someone opens Aarti, G gets one Telegram message, updated while the visit lasts: when it was opened, how long it was on screen (time in the background doesn't count), which aartis they opened and what they did (lit the diya, played, cast, read a reflection, shared), roughly where they are (the town their internet connection is in, from ipwho.is, or GeoJS if that's down, plus the place they chose for the puja times), and the phone (model on Android; iPhones only say "iPhone"). Coming back within half an hour continues the same visit. Automated browsers aren't counted.
+
+It goes through a small Apps Script in G's Google account, which holds the bot's token. Nothing secret is in this repo.
+
+**Set it up once (a computer is easiest):**
+1. Go to script.google.com → **New project**, and name it `Aarti visits`.
+2. Paste `apps-script/Code.gs` over the default file. In **Project Settings**, tick **Show "appsscript.json" manifest file in editor**, then paste `apps-script/appsscript.json` into it.
+3. In **Project Settings → Script Properties**, add `BOT_TOKEN` (the bot's token from BotFather) and `CHAT_ID` (your chat ID). Message your bot once first, so it's allowed to message you.
+4. **Deploy → New deployment →** ⚙ **Web app**. Execute as **Me**, Who has access **Anyone**. **Deploy**, approve access, and copy the **Web app URL**.
+5. In this repo, open `index.html` → ✎ edit → find `const API = '';` near the top of the script and paste the URL between the quotes. Commit.
+6. Leave your own phones out: open `https://quick-sheet.github.io/Aarti/#me` once on each (on iPhone, in the installed app: Settings → tap **Release 16** five times). Then Settings shows **Visit messages: on** and a **Send test message** button.
+
+`#count` (or five more taps) puts a phone back in. **After changing `Code.gs`:** Deploy → Manage deployments → ✎ Edit → Version **New version** → Deploy. That keeps the same URL.
 
 ## Update
 1. On GitHub, go to **Add file → Upload files**, choose the changed files (files with the same name replace the old ones) and tap **Commit changes**.
@@ -54,7 +69,9 @@ Every release bumps two markers together: `?v=N` on the scripts in `index.html`,
 | File | What it is |
 | --- | --- |
 | `index.html` | The whole app: screens, styles and script. The PIN is at the top of the script. |
-| `aartis.js` | The three aartis: words, meanings, notes, paintings, Spotify songs and recordings. |
+| `aartis.js` | The three aartis: words, meanings, notes, paintings, recordings and Spotify songs. |
+| `ganesh.mp3`, `lakshmi.mp3`, `jagdish.mp3` | The three recordings. |
+| `apps-script/` | `Code.gs` and `appsscript.json` for the visit messages (pasted into Apps Script; no secrets in them). |
 | `ganesh.jpg`, `lakshmi.jpg`, `jagdish.jpg` | The paintings: each room's background, the TV picture when casting, the lock-screen picture. To change one, upload a new picture with the same name (portrait, about 1024 × 1536). |
 | `diya.jpg`, `diya-dark.jpg` | The opening photo: lit (with the flames taken out, as they're drawn on top so they can move) and before lighting. |
 | `flame-c.png`, `flame-l.png`, `flame-r.png` | The three flames, cut from the photo, which sway and flicker. |

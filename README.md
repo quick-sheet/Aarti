@@ -14,6 +14,11 @@ The prayer hands (top left on the opening and closing screens) open Daily Drift 
 
 Aarti relies on a few names in Daily Drift's page: `function openFaith(`, the back button's `data-act="back"`, `id="verseBlk"` and the storage prefix `const P = 'ddr.'`. Keep those when changing Daily Drift; if they change, the hands simply hide. After its first open, Aarti keeps a copy of Daily Drift's page so the verses open offline too.
 
+### Lakshmi Puja times
+Under the title on the opening screen: the Lakshmi Puja muhurat for your place on Sunday 8 November 2026, in that place's own time. It starts on a best guess from the phone's time zone (nothing is looked up and no location is asked for); tap the place to choose from 45 places in 20 countries, or change it in Settings. Through the evening it reads "today", "now, until…", then "Pradosh Kaal continues until…". The **i** explains Lakshmi Puja, Muhurat, Pradosh Kaal, Vrishabha and Amavasya in plain English, with the times for your place.
+
+The times are in `puja-times.js`, worked out with Drik Panchang's rules (Pradosh Kaal is the first fifth of the night; the muhurat is while Vrishabha is rising, on Amavasya) on this year's clocks, including B.C. and Alberta no longer turning their clocks back. Wherever Drik Panchang publishes its own minute (London, Leicester, Birmingham, Manchester, Delhi, New York, Chicago, Houston, Bay Area, Los Angeles, Toronto), that is used. For Diwali 2027 (29 October) the file needs a new set of times.
+
 ## Host
 GitHub Pages, from the `main` branch, root folder. No server, no build step.
 
@@ -48,6 +53,7 @@ Every release bumps two markers together: `?v=N` on the scripts in `index.html`,
 | `diya.jpg`, `diya-dark.jpg` | The opening photo: lit (with the flames taken out, as they're drawn on top so they can move) and before lighting. |
 | `flame-c.png`, `flame-l.png`, `flame-r.png` | The three flames, cut from the photo, which sway and flicker. |
 | `water.png` | Marks where the water is, so only the reflections ripple, not the bowl, lotuses or petals. |
+| `puja-times.js` | The Lakshmi Puja muhurat and Pradosh Kaal for 45 places, for Diwali 2026. |
 | `bell.js` | The soft temple bell, made on the phone (no sound file): it's prepared quietly a moment after Aarti opens, then simply played, so it rings cleanly while the screen animates. Settings can switch it off. |
 | `core.js` | Logic with no screen parts: Spotify links, PIN, byte ranges, word checks. |
 | `sw.js` | Service worker: works offline, updates arrive whole, saves recordings. |

@@ -42,7 +42,7 @@ Every release bumps two markers together: `?v=N` on the scripts in `index.html`,
 | `diya.jpg`, `diya-dark.jpg` | The opening photo: lit (with the flames taken out, as they're drawn on top so they can move) and before lighting. |
 | `flame-c.png`, `flame-l.png`, `flame-r.png` | The three flames, cut from the photo, which sway and flicker. |
 | `water.png` | Marks where the water is, so only the reflections ripple, not the bowl, lotuses or petals. |
-| `bell.js` | The soft temple bell, made live on the phone (no sound file). Settings can switch it off. |
+| `bell.js` | The soft temple bell, made on the phone (no sound file): it's prepared quietly a moment after Aarti opens, then simply played, so it rings cleanly while the screen animates. Settings can switch it off. |
 | `core.js` | Logic with no screen parts: Spotify links, PIN, byte ranges, word checks. |
 | `sw.js` | Service worker: works offline, updates arrive whole, saves recordings. |
 | `aarti-words.pdf` | The printable A4 sheet, one aarti per page. |

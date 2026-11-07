@@ -1,4 +1,4 @@
-const REL = 5;                    // bump on every release, together with ?v= on the scripts in index.html
+const REL = 6;                    // bump on every release, together with ?v= on the scripts in index.html
 const CACHE = 'aarti-v' + REL;
 const AUDIO = 'aarti-audio';      // saved recordings, kept across releases (keyed by their full address, ?v= included)
 importScripts('core.js?v=' + REL);

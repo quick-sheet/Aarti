@@ -15,7 +15,7 @@
 <meta name="apple-mobile-web-app-title" content="Aarti">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600&family=Lora:wght@400;500&family=Tiro+Devanagari+Hindi&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,500;1,400&family=Tiro+Devanagari+Hindi&display=swap">
 <style>
 /* Colours glide from one aarti to the next */
 @property --bg{syntax:'<color>';inherits:true;initial-value:#0A100A}
@@ -72,6 +72,11 @@ a{color:inherit;-webkit-tap-highlight-color:transparent}
   -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);flex:none;transition:opacity .4s}
 .orb svg{width:21px;height:21px}
 .orb.gone{opacity:0;visibility:hidden}
+/* settings stays out of the way: a quiet grey mark, brighter when touched */
+#settingsBtn{background:none;-webkit-backdrop-filter:none;backdrop-filter:none;color:var(--ink-2);filter:drop-shadow(0 1px 3px rgba(0,0,0,.5))}
+#settingsBtn:not(.gone){opacity:.45}
+#settingsBtn:not(.gone):active,#settingsBtn:not(.gone):focus-visible{opacity:.9}
+#settingsBtn svg{width:19px;height:19px}
 .dots{display:flex;align-items:center;border-radius:22px;background:var(--glass);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);transition:opacity .4s}
 .dots.gone{opacity:0;visibility:hidden}
 .dot{width:36px;height:44px;display:grid;place-items:center}
@@ -214,9 +219,14 @@ button.hero:focus-visible .wick{opacity:.8}
 .quiet{font-size:13px;line-height:1.5;color:var(--ink-3);max-width:24rem;margin:4px auto 0}
 
 /* Buttons */
-.btn{height:46px;padding:0 22px;border-radius:23px;background:var(--raise-2);font-weight:600;font-size:15px;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;white-space:nowrap}
-.btn.primary{background:var(--sun);color:var(--on-sun);box-shadow:0 8px 26px var(--sun-soft)}
-.btn svg{width:18px;height:18px;flex:none}
+.btn{height:44px;padding:0 18px;border-radius:12px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--ink);
+  font:500 15px/1 var(--sans);letter-spacing:.01em;display:inline-flex;align-items:center;justify-content:center;gap:9px;text-decoration:none;white-space:nowrap;
+  transition:background .2s,border-color .2s}
+.btn:active{background:var(--sun-soft)}
+/* the main action takes the gold, lightly: gold words, a gold hairline, a breath of gold behind */
+.btn.primary{color:var(--sun);border-color:var(--sun-soft);border-color:color-mix(in srgb,var(--sun) 42%,transparent);background:color-mix(in srgb,var(--sun) 7%,transparent)}
+.btn.primary:active{background:var(--sun-soft)}
+.btn svg{width:17px;height:17px;flex:none}
 .link-btn{color:var(--ink-2);font-size:14px;text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--line);min-height:44px;display:inline-flex;align-items:center;gap:8px}
 .link-btn svg{width:17px;height:17px}
 
@@ -228,7 +238,7 @@ button.hero:focus-visible .wick{opacity:.8}
 .notice .x svg{width:16px;height:16px}
 
 /* PIN */
-.pin-field{display:block;margin:20px auto 0;width:12rem;height:54px;border-radius:16px;border:1px solid var(--line);background:var(--glass);
+.pin-field{display:block;margin:20px auto 0;width:12rem;height:54px;border-radius:12px;border:1px solid var(--line);background:var(--glass);
   text-align:center;font-size:26px;letter-spacing:.4em;padding-left:.4em}
 .pin-field::placeholder{color:var(--ink-3)}
 .pin-field.bad{border-color:var(--sun)}
@@ -299,21 +309,24 @@ button.hero:focus-visible .wick{opacity:.8}
 .finish-card span{display:block;font-size:14px;color:var(--ink-2)}
 
 /* The dock: play, how to show the words, and casting. It tucks away as you scroll down. */
-.dock{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));z-index:15;display:flex;align-items:center;gap:6px;padding:6px;border-radius:30px;
+.dock{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));z-index:15;display:flex;align-items:center;gap:6px;padding:6px;border-radius:18px;
   background:var(--glass);-webkit-backdrop-filter:blur(18px) saturate(1.2);backdrop-filter:blur(18px) saturate(1.2);border:1px solid var(--line);
   box-shadow:0 14px 34px rgba(0,0,0,.38);transform:translate(-50%,0);transition:transform .4s cubic-bezier(.2,.8,.2,1),opacity .4s;max-width:calc(100% - 20px)}
 .dock.away{transform:translate(-50%,150%);opacity:0}
 .seg{display:flex;gap:2px}
-.seg button{height:44px;min-width:44px;padding:0 13px;border-radius:22px;font-size:14px;font-weight:500;color:var(--ink-2)}
+.seg button{height:44px;min-width:44px;padding:0 13px;border-radius:12px;font-size:14px;font-weight:500;color:var(--ink-2)}
 .seg button[aria-pressed="true"]{background:var(--raise-2);color:var(--ink)}
 .seg [lang="hi"]{font-size:15.5px}
-.dock-play{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--sun);color:var(--on-sun);flex:none}
+.dock-play,.round-btn{display:grid;place-items:center;flex:none;border-radius:50%;color:var(--sun);background:var(--sun-soft);background:color-mix(in srgb,var(--sun) 12%,transparent);
+  box-shadow:inset 0 0 0 1px var(--sun-soft);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--sun) 45%,transparent);transition:background .2s}
+.dock-play:active,.round-btn:active{background:var(--sun-soft)}
+.dock-play{width:44px;height:44px}
 .dock-play svg{width:19px;height:19px}
 
 /* Players: recordings and the test bell */
 .player{display:flex;align-items:center;gap:12px}
 .player.mini{gap:4px}
-.round-btn{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:var(--sun);color:var(--on-sun);flex:none}
+.round-btn{width:52px;height:52px}
 .round-btn svg{width:22px;height:22px}
 .player.mini .round-btn{width:44px;height:44px}
 .player.mini .round-btn svg{width:18px;height:18px}
@@ -355,9 +368,10 @@ dialog.sheet::backdrop{background:rgba(4,4,8,.6)}
 .sheet h3{margin:26px 0 8px;font-size:15px;font-weight:600}
 .sheet p{margin:6px 0;color:var(--ink-2);font-size:15px}
 .sheet .small{font-size:13.5px;color:var(--ink-3)}
+.sheet .credit{margin:26px 0 0;text-align:right;font:italic 400 15px var(--serif);letter-spacing:.02em;color:var(--ink-3)}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{height:40px;padding:0 15px;border-radius:20px;background:var(--raise-2);font-size:14px;font-weight:500;color:var(--ink-2)}
-.chip[aria-pressed="true"]{background:var(--sun);color:var(--on-sun)}
+.chip{height:40px;padding:0 15px;border-radius:10px;border:1px solid var(--line);background:none;font-size:14px;font-weight:500;color:var(--ink-2)}
+.chip[aria-pressed="true"]{color:var(--sun);border-color:var(--sun-soft);border-color:color-mix(in srgb,var(--sun) 42%,transparent);background:color-mix(in srgb,var(--sun) 7%,transparent)}
 .list{margin:0;padding:0;list-style:none}
 .list li{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:56px;border-bottom:1px solid var(--line)}
 .list li:last-child{border-bottom:0}
@@ -414,15 +428,15 @@ dialog.sheet::backdrop{background:rgba(4,4,8,.6)}
 <div class="toast" id="toast" role="status" popover="manual"></div>
 <audio id="player" preload="none"></audio>
 
-<script src="core.js?v=5"></script>
-<script src="aartis.js?v=5"></script>
-<script src="bell.js?v=5"></script>
+<script src="core.js?v=6"></script>
+<script src="aartis.js?v=6"></script>
+<script src="bell.js?v=6"></script>
 <script>
 (() => {
 'use strict';
 /* ---------- Settings you may change ---------- */
 const PIN = '1008';                    // the PIN friends type in; the shared link carries it
-const RELEASE = 5;
+const RELEASE = 6;
 
 const C = window.Core;
 const AARTIS = window.AartiData.AARTIS;
@@ -637,17 +651,63 @@ const FX = (() => {
   };
 })();
 
-/* ---------- The bell, when the diya is lit ---------- */
-let AC = null;
+/* ---------- The bell, when the diya is lit ----------
+   Made once, quietly in the background (an offline render), then simply played back. Nothing heavy happens
+   at the moment it rings, so it stays clean on any phone while the screen animates. */
+let AC = null, BELL = null, bellJob = null, bellIdle = 0;
+const BELL_GAIN = 0.55;                           // the level the bell is made at; quieter rings scale from it
+function prepareBell() {
+  if (BELL || bellJob || !window.Bell) return;
+  const OAC = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+  if (!OAC) return;
+  try {
+    const rate = 48000, off = new OAC(2, Math.round(rate * 10.4), rate);
+    window.Bell.ring(off, off.destination, 0.02, { gain: BELL_GAIN });
+    bellJob = new Promise((res) => {
+      off.oncomplete = (e) => res(e.renderedBuffer);
+      const r = off.startRendering();
+      if (r && r.then) r.then(res, () => res(null));
+    }).then((buf) => {
+      if (!buf) return;
+      // a gentle fade over the last half second, so the end of the sound can never click
+      const n = buf.length, f = Math.round(buf.sampleRate * .5);
+      for (let ch = 0; ch < buf.numberOfChannels; ch++) {
+        const d = buf.getChannelData(ch);
+        for (let i = 0; i < f; i++) d[n - f + i] *= 1 - i / f;
+      }
+      BELL = buf;
+      document.body.dataset.bellReady = '1';
+    }).catch(() => { bellJob = null; });
+  } catch { bellJob = null; }
+}
+function audioCtx() {
+  if (AC) return AC;
+  const A = window.AudioContext || window.webkitAudioContext;
+  try { AC = new A({ latencyHint: 'playback' }); } catch { AC = new A(); }   // a roomier buffer: no crackle when the phone is busy
+  return AC;
+}
 function ringBell(opts) {
   if (S.set.bell === false || !window.Bell) return;
   try {
-    AC = AC || new (window.AudioContext || window.webkitAudioContext)();
-    if (AC.state === 'suspended') AC.resume();
-    window.Bell.ring(AC, AC.destination, null, opts);
+    const ctx = audioCtx();
+    if (ctx.state !== 'running') ctx.resume();
+    const level = (opts && opts.gain != null ? opts.gain : BELL_GAIN) / BELL_GAIN;
+    const out = ctx.createGain(); out.gain.value = level; out.connect(ctx.destination);
+    const at = ctx.currentTime + .04;
+    if (BELL) {
+      const src = ctx.createBufferSource(); src.buffer = BELL; src.connect(out); src.start(at);
+    } else {
+      window.Bell.ring(ctx, out, at, { gain: BELL_GAIN });   // not made yet (a very quick first touch): ring it live this once
+      prepareBell();
+    }
     document.body.dataset.bells = String((+document.body.dataset.bells || 0) + 1);
+    // let the sound system rest once the bell has died away (Android and computers; iPhone keeps it ready)
+    clearTimeout(bellIdle);
+    if (!isIOS) bellIdle = setTimeout(() => { try { if (ctx.state === 'running') ctx.suspend(); } catch {} }, 11500);
   } catch {}
 }
+// make the bell soon after opening, once the page has settled
+setTimeout(() => (window.requestIdleCallback || setTimeout)(prepareBell, { timeout: 2500 }), 900);
 
 /* ---------- The painting moves gently with the phone (Android) ---------- */
 const TILT = { tx: 0, ty: 0, x: 0, y: 0, base: null, raf: 0 };
@@ -1004,7 +1064,8 @@ function openSettings() {
     <div class="actions"><button class="btn" type="button" data-act="share">Share Aarti</button></div>
 
     <h3>About</h3>
-    <p class="small">Words as sung by Anuradha Paudwal. The English is a plain guide to the meaning, not a word-for-word translation. The screen stays on while an aarti is open. Release ${RELEASE}.</p>`);
+    <p class="small">Words as sung by Anuradha Paudwal. The English is a plain guide to the meaning, not a word-for-word translation. The screen stays on while an aarti is open. Release ${RELEASE}.</p>
+    <p class="credit">Big Bear Binary</p>`);
   syncPlayers();
 }
 

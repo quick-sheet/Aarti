@@ -9,6 +9,7 @@ An evening experience rather than an app. It opens on a dark scene from the diya
 The prayer hands (top left on the opening and closing screens) open Daily Drift itself, on a verse from the Bhagavad Gita: its stars and light, the sound as you touch and draw, the stars gliding as you tilt the phone, pull down for another verse, the arrows to look back, share. Aarti loads Daily Drift's own page live from its site (`quick-sheet.github.io/DailyDrift/`) and runs it untouched in a layer, with a few lines that only:
 - keep its storage apart under Aarti's own name (`aar.dd.*`), so your Daily Drift settings, sets and verses are never touched;
 - switch its Faith on with Hinduism only, start it on its dark themes, skip its install welcome and hide the Settings rows that mean nothing here;
+- show its **Pull down for another verse** each time a verse opens, once the sound is on, until they pull;
 - send its round arrow, and the phone's Back, home to Aarti.
 
 Aarti relies on a few names in Daily Drift's page: `function openFaith(`, the back button's `data-act="back"`, `id="verseBlk"` and the storage prefix `const P = 'ddr.'`. Keep those when changing Daily Drift; if they change, the hands simply hide. After its first open, Aarti keeps a copy of Daily Drift's page so the verses open offline too.

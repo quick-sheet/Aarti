@@ -416,15 +416,15 @@ dialog.sheet::backdrop{background:rgba(4,4,8,.6)}
 <div class="toast" id="toast" role="status" popover="manual"></div>
 <audio id="player" preload="none"></audio>
 
-<script src="core.js?v=7"></script>
-<script src="aartis.js?v=7"></script>
-<script src="bell.js?v=7"></script>
+<script src="core.js?v=8"></script>
+<script src="aartis.js?v=8"></script>
+<script src="bell.js?v=8"></script>
 <script>
 (() => {
 'use strict';
 /* ---------- Settings you may change ---------- */
 const PIN = '1008';                    // the PIN friends type in; the shared link carries it
-const RELEASE = 7;
+const RELEASE = 8;
 
 const C = window.Core;
 const AARTIS = window.AartiData.AARTIS;
@@ -1317,7 +1317,8 @@ document.addEventListener('visibilitychange', () => { if (document.visibilitySta
    its stars and light, the sound when you touch, the stars gliding as you tilt the phone, pull for another verse.
    A few lines run first inside it and do only three things:
      1. keep its storage apart, under Aarti's own name (aar.dd.*), so Daily Drift's own settings, sets and verses are never touched;
-     2. switch its Faith on with Hinduism, start it on its dark themes and skip its install welcome;
+     2. switch its Faith on with Hinduism, start it on its dark themes, skip its install welcome, and show its
+        "Pull down for another verse" each time a verse opens (once the sound is on, until they pull);
      3. send its round arrow, and the phone's Back, home to Aarti.
    If its page can't be reached, or the few names Aarti relies on change, the hands simply stay hidden. */
 const Drift = (() => {
@@ -1328,7 +1329,7 @@ const Drift = (() => {
   const SHIM = `(function () {
   'use strict';
   var KEEP = 'aar.dd.';
-  var FORCE = { faith: 'true', faiths: '["hinduism"]', installSeen: 'true', faithHinted: 'true' };
+  var FORCE = { faith: 'true', faiths: '["hinduism"]', installSeen: 'true', faithHinted: 'true', vpulled: 'false' };
   var FIRST = { tone: '"dark"', themeN: '0' };
   var pr = Storage.prototype, rd = pr.getItem, wr = pr.setItem, rm = pr.removeItem;
   function own(k) { k = String(k); return k.indexOf('ddr.') === 0 ? k.slice(4) : k; }
@@ -1392,7 +1393,7 @@ const Drift = (() => {
     if (Array.isArray(old) && localStorage.getItem('aar.dd.verses') == null) {
       const vs = old.filter((v) => v && v.t).slice(-80).map((v, i) => ({ f: 'hinduism', ref: v.ref, t: v.t, by: v.by, at: v.at || Date.now(),
         id: v.id || 'a' + (v.at || Date.now()).toString(36) + i }));
-      try { localStorage.setItem('aar.dd.verses', JSON.stringify(vs)); if (get('vpulled', false)) localStorage.setItem('aar.dd.vpulled', 'true'); } catch {}
+      try { localStorage.setItem('aar.dd.verses', JSON.stringify(vs)); } catch {}
     }
     if (old != null) { try { localStorage.removeItem(P + 'verses'); localStorage.removeItem(P + 'vpulled'); } catch {} }
   }

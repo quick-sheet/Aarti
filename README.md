@@ -21,7 +21,7 @@ On iPhone, the home-screen app has its own storage, so it may ask for the PIN on
 ## Music
 - **For now:** each aarti's **Play in Spotify** button opens the song in the Spotify app. You can cast from there with Spotify's own Connect button.
 - **Your own version:** anyone can paste a Spotify link to a different recording of any aarti (on the aarti, tap **Use your own version**, or go to Settings). It's saved on their phone only.
-- **Adding your recordings:** upload the MP3 files to the repo's main folder, next to `index.html`. Then, in `aartis.js`, set each aarti's `audio:` line, for example `audio: 'ganesh.mp3?v=1'`, and update its `artist`. The app then plays the recording itself, with a cast button (Chromecast from Chrome on Android, AirPlay on iPhone) and lock-screen controls. Each recording is saved on the phone after its first play, so it works offline too. If you replace a recording later, change `?v=1` to `?v=2`.
+- **Adding your recordings:** upload the MP3 files to the repo's main folder, next to `index.html`. Then, in `aartis.js`, set each aarti's `audio:` line, for example `audio: 'ganesh.mp3?v=1'`, and update its `artist`. The app then plays the recording itself, with a cast button and lock-screen controls. On Android, casting uses Google's Cast library: the TV shows the aarti's name and the diya, and play, pause and the position stay in step with your phone. iPhone uses AirPlay. Each recording is saved on the phone after its first play, so it works offline too. If you replace a recording later, change `?v=1` to `?v=2`.
 - If the words in your recordings differ (more verses, different repeats), the words in `aartis.js` and the PDF need updating to match.
 
 ## Update
@@ -45,5 +45,7 @@ Every release bumps two markers together: `?v=N` on the scripts in `index.html`,
 ## Good to know
 - The PIN is a gentle gate, not a lock. The repo is public, so anyone who finds the files can read them.
 - The screen stays on while an aarti is open.
+- Casting on Android loads one script from Google (gstatic.com). If it can't load, the browser's own casting is used instead.
 - Words follow the Anuradha Paudwal recordings on Spotify. The English is a plain guide to the meaning, not a word-for-word translation.
+- **Cast ping:** while casting, Chrome refreshes its casting notification whenever playback starts, pauses or ends, and some phones play a sound each time. Long-press that notification and set it to silent.
 - **Android quirk:** on some phones, every time the installed app opens it plays a sound and shows a Chrome notification saying "Tap to copy the URL for this app". That's Chrome's **Full screen site controls** notification. Long-press the notification and turn that category off.

@@ -259,14 +259,14 @@ dialog.sheet::backdrop{background:rgba(4,6,14,.62)}
 <div class="toast" id="toast" role="status" popover="manual"></div>
 <audio id="player" preload="none"></audio>
 
-<script src="core.js?v=1"></script>
-<script src="aartis.js?v=1"></script>
+<script src="core.js?v=2"></script>
+<script src="aartis.js?v=2"></script>
 <script>
 (() => {
 'use strict';
 /* ---------- Settings you may change ---------- */
 const PIN = '1008';                    // the PIN friends type in; the shared link carries it
-const RELEASE = 1;
+const RELEASE = 2;
 
 const C = window.Core;
 const AARTIS = window.AartiData.AARTIS;
@@ -614,7 +614,9 @@ function openSettings() {
     return `<li><span>${esc(a.title)}<small>${has ? 'Your own Spotify version' : 'The app’s song'}</small></span>
       <button class="mini" type="button" data-own="${a.id}">${has ? 'Change' : 'Set'}</button></li>`;
   }).join('');
-  const canCast = !!($('#player').remote || $('#player').webkitShowPlaybackTargetPicker);
+  const canCast = !!(CAF || $('#player').remote || $('#player').webkitShowPlaybackTargetPicker);
+  const castHint = !canCast ? 'This browser can’t send sound to a speaker or TV. Try Chrome on Android.'
+    : isAndroid && !CAF ? 'If the bell doesn’t start on the TV, open quick-sheet.github.io/Aarti in Chrome itself and cast from there.' : '';
   openSheet(head('Settings') + `
     <h3>Words</h3>
     <p class="small">Text size</p>
@@ -629,7 +631,7 @@ function openSettings() {
     <p>When the recordings are in the app, you can send them to a speaker or TV. Check it works now with a short temple bell.</p>
     <p class="small">${isIOS ? 'On iPhone this uses AirPlay.' : 'Chromecast works from Chrome on Android. Your phone and speaker need to be on the same Wi-Fi.'}</p>
     <div class="test-box">${playerHtml('bell', 'test-bell.mp3', 'Test bell', 'Aarti')}</div>
-    <p class="result" id="castResult">${canCast ? '' : 'This browser can’t send sound to a speaker or TV. Try Chrome on Android.'}</p>
+    <p class="result" id="castResult">${esc(castHint)}</p>
 
     <h3>Share</h3>
     <p>Send Aarti to a friend. The link opens it without the PIN.</p>
@@ -642,6 +644,7 @@ function openSettings() {
 
 /* ---------- Audio: recordings and the test bell ---------- */
 const audio = $('#player');
+const abs = (u) => new URL(u, location.href).href;
 function prepPlayer(a) {
   const s = srcFor(a);
   // Load the recording's details early so the cast button knows if a speaker is available
@@ -666,9 +669,119 @@ function setMedia() {
     navigator.mediaSession.setActionHandler('seekto', (d) => { if (d && isFinite(d.seekTime)) audio.currentTime = d.seekTime; });
   } catch {}
 }
+
+/* ---------- Google Cast (Chrome on Android and computers) ----------
+   The app tells the TV exactly what to play, with its name and the diya, and hears back how it's going.
+   If Google's library can't load, the browser's own casting is used instead, and AirPlay on iPhone. */
+const CAST_LIB = 'https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1';
+let CAF = null;
+function loadCastLib() {
+  if (isIOS) return;
+  window.__onGCastApiAvailable = (ok) => { if (ok) { try { initCaf(); } catch { CAF = null; } } };
+  const el = document.createElement('script');
+  el.src = CAST_LIB; el.async = true;
+  document.head.append(el);
+}
+function initCaf() {
+  const F = window.cast.framework;   // "cast" alone is our own cast-button function
+  const ctx = F.CastContext.getInstance();
+  ctx.setOptions({ receiverApplicationId: chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID, autoJoinPolicy: chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED });
+  const player = new F.RemotePlayer(), ctrl = new F.RemotePlayerController(player);
+  CAF = { F, ctx, player, ctrl, loading: null, last: null };
+  const avail = (st) => { S.castAvail = st !== F.CastState.NO_DEVICES_AVAILABLE; };
+  avail(ctx.getCastState());
+  ctx.addEventListener(F.CastContextEventType.CAST_STATE_CHANGED, (e) => { avail(e.castState); syncPlayers(); });
+  ctx.addEventListener(F.CastContextEventType.SESSION_STATE_CHANGED, onCafSession);
+  ctrl.addEventListener(F.RemotePlayerEventType.ANY_CHANGE, () => {
+    const k = remoteKey();
+    if (k) CAF.last = { key: k, t: player.currentTime || 0 };
+    syncPlayers();
+  });
+  try { audio.disableRemotePlayback = true; } catch {}   // our cast button does it, so Chrome's own doesn't compete
+  castNote('');
+  syncPlayers();
+}
+const cafOn = () => !!(CAF && CAF.player.isConnected);
+function castName() {
+  try { return CAF.ctx.getCurrentSession().getCastDevice().friendlyName || 'your speaker'; } catch { return 'your speaker'; }
+}
+// Which of the app's sounds is on the TV right now, if any
+function remoteKey() {
+  if (!cafOn() || !CAF.player.isMediaLoaded || !CAF.player.mediaInfo) return null;
+  const id = CAF.player.mediaInfo.contentId;
+  const el = [...document.querySelectorAll('.player')].find((x) => abs(x.dataset.url) === id);
+  if (el) return el.dataset.key;
+  if (abs('test-bell.mp3') === id) return 'bell';
+  const a = AARTIS.find((x) => x.audio && abs(x.audio) === id);
+  return a ? 'a:' + a.id : null;
+}
+function onCafSession(e) {
+  const SS = CAF.F.SessionState;
+  if (e.sessionState === SS.SESSION_STARTING) toast('Connecting…', true);
+  else if (e.sessionState === SS.SESSION_START_FAILED) {
+    const m = 'Couldn’t connect. Check the speaker or TV is on, and on the same Wi-Fi as this phone.';
+    toast(m); castNote(m);
+  } else if (e.sessionState === SS.SESSION_ENDED) {
+    // pick up on this phone where the TV got to, paused
+    const L = CAF.last;
+    if (L && L.key === S.cur && isFinite(audio.duration)) { try { audio.currentTime = Math.min(L.t, audio.duration); } catch {} }
+    CAF.last = null; CAF.loading = null;
+    toast('Stopped casting'); castNote('');
+  }
+  syncPlayers();
+}
+async function cafLoad(p) {
+  const sess = CAF.ctx.getCurrentSession();
+  if (!sess) return;
+  const key = p.dataset.key, title = p.dataset.title, name = castName();
+  const from = S.cur === key && isFinite(audio.currentTime) && !audio.ended ? audio.currentTime : 0;
+  if (!audio.paused) audio.pause();             // the TV takes over
+  const mi = new chrome.cast.media.MediaInfo(abs(p.dataset.url), C.mimeFor(p.dataset.url));
+  mi.streamType = chrome.cast.media.StreamType.BUFFERED;
+  const md = new chrome.cast.media.MusicTrackMediaMetadata();
+  md.title = title; md.artist = p.dataset.sub || 'Aarti'; md.albumName = 'Diwali aarti';
+  md.images = [new chrome.cast.Image(abs('icon-512.png'))];
+  mi.metadata = md;
+  const req = new chrome.cast.media.LoadRequest(mi);
+  req.autoplay = true; req.currentTime = from;
+  CAF.loading = key; syncPlayers();
+  toast(`Sending ${title} to ${name}…`, true);
+  try {
+    const err = await sess.loadMedia(req);
+    if (err) throw err;
+    toast(`Playing on ${name}`);
+    castNote(`Connected. ${title} is playing on ${name}.`);
+  } catch {
+    const m = `${name} couldn’t play ${title}. Try again, or play it on this phone.`;
+    toast(m); castNote(m);
+  }
+  CAF.loading = null; syncPlayers();
+}
+async function cafCast(p) {
+  if (cafOn() && remoteKey() === p.dataset.key) {   // already on the TV: Chrome's own panel offers Stop casting
+    try { await CAF.ctx.requestSession(); } catch {}
+    return;
+  }
+  if (!cafOn()) {
+    try { await CAF.ctx.requestSession(); }
+    catch (err) {
+      const m = err === 'cancel' ? '' : err === 'receiver_unavailable' ? 'No speakers or TVs found. Check they’re on the same Wi-Fi as this phone.'
+        : err === 'timeout' ? 'The speaker didn’t answer in time. Try again.' : 'Couldn’t start casting. Try again.';
+      if (m) { toast(m); castNote(m); }
+      return;
+    }
+    if (!cafOn()) return;
+  }
+  await cafLoad(p);
+}
+
 async function togglePlay(el) {
   const p = el.closest('.player');
   const key = p.dataset.key;
+  if (cafOn()) {                                   // while casting, play and pause happen on the TV
+    if (remoteKey() === key) CAF.ctrl.playOrPause(); else await cafLoad(p);
+    return;
+  }
   if (S.cur !== key) load(key, p.dataset.url, p.dataset.title, p.dataset.sub);
   if (audio.paused) {
     S.waiting = true; syncPlayers();
@@ -681,29 +794,41 @@ async function togglePlay(el) {
   } else audio.pause();
 }
 function syncPlayers() {
-  const playing = !audio.paused && !audio.ended;
-  const castOn = !!(audio.remote && audio.remote.state === 'connected');
+  const rk = remoteKey(), cafConn = cafOn();
+  const localPlaying = !audio.paused && !audio.ended;
+  const castOn = cafConn || !!(audio.remote && audio.remote.state === 'connected');
   document.querySelectorAll('.player').forEach((p) => {
-    const mine = p.dataset.key === S.cur;
+    const key = p.dataset.key, onTv = rk === key, mine = key === S.cur;
     const btn = p.querySelector('[data-play]'), seek = p.querySelector('.seek'), time = p.querySelector('.pl-time'), cast = p.querySelector('[data-cast]');
-    const busy = mine && S.waiting && !castOn;
-    const html = busy ? '<span class="spinner" aria-hidden="true"></span>' : mine && playing ? ICON.pause : ICON.play;
-    if (btn.dataset.state !== (busy ? 'busy' : mine && playing ? 'pause' : 'play')) {
-      btn.dataset.state = busy ? 'busy' : mine && playing ? 'pause' : 'play';
-      btn.innerHTML = html;
-      btn.setAttribute('aria-label', `${mine && playing ? 'Pause' : 'Play'} ${p.dataset.title}`);
-      btn.title = mine && playing ? 'Pause' : 'Play';
+    let playing, busy, dur, at;
+    if (onTv) {
+      const R = CAF.player;
+      playing = !R.isPaused && R.playerState !== 'IDLE';
+      busy = R.playerState === 'BUFFERING' || CAF.loading === key;
+      dur = R.duration || 0; at = R.currentTime || 0;
+    } else {
+      playing = mine && localPlaying;
+      busy = !!(CAF && CAF.loading === key) || (mine && S.waiting && !castOn);
+      dur = mine && isFinite(audio.duration) ? audio.duration : 0; at = mine ? audio.currentTime || 0 : 0;
     }
-    const dur = mine && isFinite(audio.duration) ? audio.duration : 0, at = mine ? audio.currentTime || 0 : 0;
+    const state = busy ? 'busy' : playing ? 'pause' : 'play';
+    if (btn.dataset.state !== state) {
+      btn.dataset.state = state;
+      btn.innerHTML = busy ? '<span class="spinner" aria-hidden="true"></span>' : playing ? ICON.pause : ICON.play;
+      btn.setAttribute('aria-label', `${playing ? 'Pause' : 'Play'} ${p.dataset.title}${onTv ? ' on ' + castName() : ''}`);
+      btn.title = playing ? 'Pause' : 'Play';
+    }
     if (!S.seeking || S.seeking !== seek) {
       seek.max = String(Math.max(1, Math.round(dur)));
       seek.value = String(Math.round(at));
       seek.style.setProperty('--p', dur ? `${(at / dur) * 100}%` : '0%');
     }
     time.textContent = dur ? `${C.fmtTime(at)} / ${C.fmtTime(dur)}` : C.fmtTime(at);
-    const canCast = !!(audio.remote || audio.webkitShowPlaybackTargetPicker) && S.castAvail !== false;
+    const canCast = CAF ? S.castAvail !== false : !!(audio.remote || audio.webkitShowPlaybackTargetPicker) && S.castAvail !== false;
     cast.hidden = !canCast;
-    cast.setAttribute('aria-pressed', String(mine && castOn));
+    const pressed = CAF ? cafConn && (onTv || !rk) : mine && castOn;
+    cast.setAttribute('aria-pressed', String(pressed));
+    cast.setAttribute('aria-label', pressed ? `Casting to ${CAF ? castName() : 'your speaker or TV'}. Change or stop` : 'Play on a speaker or TV');
   });
 }
 ['play', 'pause', 'playing', 'timeupdate', 'durationchange', 'loadedmetadata', 'ended', 'emptied'].forEach((ev) => audio.addEventListener(ev, () => {
@@ -713,16 +838,17 @@ function syncPlayers() {
 audio.addEventListener('waiting', () => { if (!audio.paused) { S.waiting = true; syncPlayers(); } });
 audio.addEventListener('error', () => { S.waiting = false; syncPlayers(); if (S.cur) toast('Couldn’t load the recording. Check your connection.'); });
 
+// The browser's own casting: used when Google's library isn't available, and for AirPlay on iPhone
 let castWatching = false;
 function watchCast() {
-  if (castWatching) return;
+  if (castWatching || CAF) return;
   if (audio.remote) {
     castWatching = true;
-    audio.remote.watchAvailability((avail) => { S.castAvail = avail; syncPlayers(); })
-      .catch(() => { S.castAvail = null; syncPlayers(); });   // can't watch here: show the button and let a tap try
-    audio.remote.addEventListener('connect', () => { syncPlayers(); toast('Playing on your speaker or TV'); castNote('Connected. The sound is playing on your speaker or TV.'); });
-    audio.remote.addEventListener('disconnect', () => { syncPlayers(); castNote(''); });
-    audio.remote.addEventListener('connecting', () => toast('Connecting to your speaker or TV…', true));
+    audio.remote.watchAvailability((avail) => { if (!CAF) { S.castAvail = avail; syncPlayers(); } })
+      .catch(() => { if (!CAF) { S.castAvail = null; syncPlayers(); } });   // can't watch here: show the button and let a tap try
+    audio.remote.addEventListener('connect', () => { if (CAF) return; syncPlayers(); toast('Playing on your speaker or TV'); castNote('Connected. The sound should now play on your speaker or TV.'); });
+    audio.remote.addEventListener('disconnect', () => { if (CAF) return; syncPlayers(); castNote(''); });
+    audio.remote.addEventListener('connecting', () => { if (!CAF) toast('Connecting to your speaker or TV…', true); });
   } else if (audio.webkitShowPlaybackTargetPicker) {
     castWatching = true;
     audio.addEventListener('webkitplaybacktargetavailabilitychanged', (e) => { S.castAvail = e.availability === 'available'; syncPlayers(); });
@@ -731,6 +857,7 @@ function watchCast() {
 function castNote(msg) { const r = $('#castResult'); if (r) r.textContent = msg; }
 async function cast(el) {
   const p = el.closest('.player');
+  if (CAF) { await cafCast(p); return; }
   if (S.cur !== p.dataset.key) load(p.dataset.key, p.dataset.url, p.dataset.title, p.dataset.sub);
   if (audio.remote) {
     try { await audio.remote.prompt(); }
@@ -868,8 +995,13 @@ document.addEventListener('input', (e) => {
   if (e.target.id === 'ownIn') { e.target.classList.remove('bad'); $('#ownNote').textContent = ''; }
   if (e.target.dataset.seek) {
     const key = e.target.dataset.seek;
+    if (cafOn() && remoteKey() === key) return;    // the TV is told once you let go (change)
     if (key === S.cur && isFinite(audio.duration)) { audio.currentTime = +e.target.value; }
   }
+});
+document.addEventListener('change', (e) => {
+  if (!e.target.dataset || !e.target.dataset.seek) return;
+  if (cafOn() && remoteKey() === e.target.dataset.seek) { CAF.player.currentTime = +e.target.value; CAF.ctrl.seek(); }
 });
 document.addEventListener('pointerdown', (e) => { if (e.target.classList && e.target.classList.contains('seek')) S.seeking = e.target; });
 document.addEventListener('pointerup', () => { S.seeking = null; });
@@ -981,6 +1113,7 @@ document.addEventListener('keydown', (e) => {
   saveSet();
   history.replaceState({ r: 'home' }, '');
   render(true);
+  loadCastLib();
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 })();
 })();

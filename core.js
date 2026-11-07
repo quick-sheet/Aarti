@@ -69,6 +69,13 @@
     return h ? `${h}:${String(m).padStart(2, '0')}:${ss}` : `${m}:${ss}`;
   }
 
+  /* ---------- Sound file types (told to the TV when casting) ---------- */
+  function mimeFor(url) {
+    const m = /\.([a-z0-9]+)$/i.exec(String(url || '').split(/[?#]/)[0]);
+    const ext = m ? m[1].toLowerCase() : '';
+    return { mp3: 'audio/mpeg', m4a: 'audio/mp4', mp4: 'audio/mp4', aac: 'audio/aac', ogg: 'audio/ogg', oga: 'audio/ogg', opus: 'audio/ogg', wav: 'audio/wav', flac: 'audio/flac' }[ext] || 'audio/mpeg';
+  }
+
   /* ---------- Byte ranges (service worker serving saved recordings) ---------- */
   // "bytes=0-", "bytes=100-199", "bytes=-500". Returns inclusive { start, end } or null if unusable.
   function parseRange(header, size) {
@@ -127,7 +134,7 @@
     return bad;
   }
 
-  const Core = { parseSpotify, trackUrl, openTarget, sourceFor, pinOk, pinFromHash, fmtTime, parseRange, blocks, lineText, checkAartis, digits };
+  const Core = { parseSpotify, trackUrl, openTarget, sourceFor, pinOk, pinFromHash, fmtTime, mimeFor, parseRange, blocks, lineText, checkAartis, digits };
   if (typeof module !== 'undefined' && module.exports) module.exports = Core;
   else root.Core = Core;
 })(typeof self !== 'undefined' ? self : this);

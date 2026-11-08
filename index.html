@@ -54,7 +54,7 @@
 
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;touch-action:pan-x pan-y}
-body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.45 var(--sans);-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.45 var(--sans);-webkit-font-smoothing:antialiased;min-height:100vh;min-height:100svh;overflow-x:hidden}   /* svh: the screen with the address bar showing */
 button,input{font:inherit;color:inherit}
 button{background:none;border:0;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
 a{color:inherit;-webkit-tap-highlight-color:transparent}
@@ -170,6 +170,10 @@ html.drifting,html.drifting body{overflow:hidden}
 .hero{position:relative;z-index:0;display:block;flex:none;width:100vw;height:var(--hero-h);overflow:hidden;cursor:default;touch-action:manipulation;
   -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 13%,#000 72%,transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 13%,#000 72%,transparent 100%)}
 button.hero{cursor:pointer;border-radius:0}
+/* while the opening is measured, nothing stretches it; when the puja time tucks away, the photo grows into the room it leaves */
+.fitting body,.fitting .stage{min-height:0!important}
+.fitting .hero{transition:none!important}
+.hero.growing{transition:height .9s cubic-bezier(.65,0,.35,1)}
 button.hero:focus-visible{outline:none}
 button.hero:focus-visible .wick{opacity:.8}
 .hero-move{position:absolute;inset:0}
@@ -464,7 +468,7 @@ dialog.reflect.dragged{animation:none;transition:transform .26s cubic-bezier(.2,
   background:var(--glass);-webkit-backdrop-filter:blur(18px) saturate(1.2);backdrop-filter:blur(18px) saturate(1.2);border:1px solid var(--line);
   box-shadow:0 14px 34px rgba(0,0,0,.38);transform:translate(-50%,0);transition:transform .4s cubic-bezier(.2,.8,.2,1),opacity .4s;max-width:calc(100% - 20px)}
 /* with a recording, a second row above: the position in the song, to drag, and the time */
-.dock.has-seek{display:grid;grid-template-columns:auto auto 1fr;grid-template-areas:"seek seek seek" "play cast seg";row-gap:0;column-gap:4px;
+.dock.has-seek{display:grid;grid-template-columns:auto auto 1fr auto;grid-template-areas:"seek seek seek seek" "play cast size seg";row-gap:0;column-gap:4px;
   width:min(calc(100% - 20px),27rem);padding:2px 6px 6px}
 .dock .player.dockp{display:contents}
 .dock-seek{grid-area:seek;display:flex;align-items:center;gap:10px;padding:0 6px 0 8px}
@@ -473,9 +477,21 @@ dialog.reflect.dragged{animation:none;transition:transform .26s cubic-bezier(.2,
 .dock.has-seek [data-play]{grid-area:play}
 .dock.has-seek [data-cast]{grid-area:cast}
 .dock.has-seek .seg{grid-area:seg;justify-self:end}
-/* Words that follow the song: the line being sung lights up; a quiet button brings the page back to it */
-.ln .main{transition:color .35s ease,text-shadow .35s ease}
+.dock.has-seek .size-btn{grid-area:size;justify-self:end}
+.dock .size-btn{width:40px;color:var(--ink-3)}
+.dock .size-btn svg{width:21px;height:21px}
+.icon-btn.share-btn{color:var(--sun);margin-right:-11px}
+@media (max-width:400px){.dock .seg button{padding:0 9px;min-width:40px}.dock .size-btn{width:36px}.dock.has-seek{column-gap:2px}}
+/* Words that follow the song: as each line begins it grows a little and turns gold, the one before settles back,
+   and the page glides up with them. While the song plays, the other lines step back. A quiet button brings the page back. */
+.ln .main{transition:color .45s ease,text-shadow .45s ease}
+.words.synced .ln{padding-right:8%;transform-origin:0 50%;transition:transform .5s cubic-bezier(.3,.7,.25,1),opacity .5s ease}
+.words.synced.live .block{opacity:1}
+.words.synced.live .ln{opacity:.58}
+.words.synced .ln.sung,.words.synced.live .ln.soon{opacity:1}
+.words.synced .ln.sung{transform:scale(1.08)}
 .words.synced .ln.sung .main,.words.timing .ln.sung .main{color:var(--sun);text-shadow:0 0 20px var(--sun-soft)}
+@media (prefers-reduced-motion:reduce){.words.synced .ln{transition:none}.words.synced .ln.sung{transform:none}}
 .words.timing .ln.next{position:relative}
 .words.timing .ln.next::before{content:'';position:absolute;left:-13px;top:.66em;width:6px;height:6px;border-radius:50%;background:var(--sun);box-shadow:0 0 8px var(--sun)}
 .follow-chip{position:fixed;left:50%;bottom:calc(126px + env(safe-area-inset-bottom));z-index:16;transform:translateX(-50%);display:inline-flex;align-items:center;gap:7px;
@@ -539,7 +555,7 @@ dialog.reflect.dragged{animation:none;transition:transform .26s cubic-bezier(.2,
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* Sheets */
-dialog.sheet{position:fixed;inset:auto 0 0 0;margin:0 auto;width:100%;max-width:34rem;max-height:88vh;border:0;border-radius:24px 24px 0 0;padding:0;background:var(--raise);color:var(--ink);overflow:auto;overscroll-behavior:contain}
+dialog.sheet{position:fixed;inset:auto 0 0 0;margin:0 auto;width:100%;max-width:34rem;max-height:88vh;max-height:88svh;border:0;border-radius:24px 24px 0 0;padding:0;background:var(--raise);color:var(--ink);overflow:auto;overscroll-behavior:contain}
 dialog.sheet[open]{animation:sheet-rise .3s cubic-bezier(.2,.8,.2,1)}
 dialog.sheet.springing{transition:transform .25s cubic-bezier(.2,.8,.2,1)}
 dialog.sheet::backdrop{background:rgba(4,4,8,.6)}
@@ -617,10 +633,10 @@ dialog.sheet::backdrop{background:rgba(4,4,8,.6)}
 <div class="toast" id="toast" role="status" popover="manual"></div>
 <audio id="player" preload="none"></audio>
 
-<script src="core.js?v=20"></script>
-<script src="aartis.js?v=20"></script>
-<script src="bell.js?v=20"></script>
-<script src="puja-times.js?v=20"></script>
+<script src="core.js?v=21"></script>
+<script src="aartis.js?v=21"></script>
+<script src="bell.js?v=21"></script>
+<script src="puja-times.js?v=21"></script>
 <script>
 (() => {
 'use strict';
@@ -632,7 +648,7 @@ document.addEventListener('touchmove', (e) => { if (e.touches.length > 1) e.prev
 addEventListener('wheel', (e) => { if (e.ctrlKey) e.preventDefault(); }, { passive: false });
 /* ---------- Settings you may change ---------- */
 const PIN = '1008';                    // the PIN friends type in; the shared link carries it
-const RELEASE = 20;
+const RELEASE = 21;
 const API = 'https://script.google.com/macros/s/AKfycbzKuCKJfZ0VXmYA4Us6pOxa_C4Z1HJ4k1yxzG4ujkZX8OcqN9fIIbknYDkg0ovz9u_0/exec';   // visit messages: G's Apps Script web app (README, "Visit messages"); '' = off
 const EXPECT_BUILD = 1;                // the Apps Script release this page needs
 
@@ -676,6 +692,9 @@ const byId = (id) => AARTIS.find((a) => a.id === id);
 const appUrl = () => location.origin + location.pathname;
 
 const ICON = {
+  shareDots: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="17.5" cy="5.5" r="2.5"/><circle cx="6.5" cy="12" r="2.5"/><circle cx="17.5" cy="18.5" r="2.5"/><path d="M8.7 10.7l6.6-3.9M8.7 13.3l6.6 3.9"/></svg>',
+  shareBox: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5v11M8 7.3l4-3.8 4 3.8"/><path d="M8.5 10.5H7A1.5 1.5 0 0 0 5.5 12v7A1.5 1.5 0 0 0 7 20.5h10a1.5 1.5 0 0 0 1.5-1.5v-7A1.5 1.5 0 0 0 17 10.5h-1.5"/></svg>',
+  textSize: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.8 19l3.4-8.5L9.6 19M3.9 16.3h4.6"/><path d="M10.6 19l5-14 5 14M12.4 14.2h6.4"/></svg>',
   x: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>',
   play: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.4-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5Z"/></svg>',
   pause: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6.5" y="5" width="4" height="14" rx="1.2"/><rect x="13.5" y="5" width="4" height="14" rx="1.2"/></svg>',
@@ -785,6 +804,18 @@ function setRoom(id) {
 function setSize(sz) {
   S.set.size = sz; saveSet();
   if (sz === 'standard') delete document.documentElement.dataset.size; else document.documentElement.dataset.size = sz;
+}
+// the words' three sizes; the music bar's text-size button steps through them
+const SIZES = [['standard', 'Standard'], ['large', 'Large'], ['largest', 'Largest']];
+const sizeName = () => (SIZES.find(([k]) => k === (S.set.size || 'standard')) || SIZES[0])[1];
+const sizeLabel = () => `Text size: ${sizeName()}. Tap for the next size`;
+function nextSize(btn) {
+  const i = SIZES.findIndex(([k]) => k === (S.set.size || 'standard'));
+  setSize(SIZES[(i + 1) % SIZES.length][0]);
+  if (btn) btn.setAttribute('aria-label', sizeLabel());
+  toast(`Text size: ${sizeName().toLowerCase()}`);
+  if (typeof onScroll === 'function') onScroll();
+  Sync.relight();                                   // the line being sung stays where the eye is
 }
 
 /* ---------- Sparks, embers and petals ---------- */
@@ -1041,16 +1072,43 @@ function homeHtml() {
 }
 // The opening fits the screen without scrolling: the photo gives up height until all that's below it fits,
 // measured as it will be once the diya is lit (so lighting it never pushes anything off the screen)
-function fitHome() {
+// The photo gives up just enough height for everything else to fit on the screen (lit, with the buttons and paintings).
+// skip: a piece that's on its way out (the puja line as it tucks away), left out of the measure.
+function heroFit(skip) {
   const st = $('#opening');
-  if (!st) return;
+  if (!st) return null;
+  const was = st.style.getPropertyValue('--hero-h');
+  const root = document.documentElement;
+  root.classList.add('fitting');
   st.style.removeProperty('--hero-h');
-  const lead = $('#lead'), more = $('#more'), lit = isLit(), was = lead ? lead.textContent : '';
+  const lead = $('#lead'), more = $('#more'), lit = isLit(), said = lead ? lead.textContent : '';
   if (!lit && lead && more) { lead.textContent = LIT_LEAD; more.innerHTML = moreHtml('', false); more.style.display = 'grid'; }
-  const hero = st.querySelector('.hero').getBoundingClientRect().height;
-  const over = document.documentElement.scrollHeight - innerHeight;
-  if (!lit && lead && more) { lead.textContent = was; more.innerHTML = ''; more.style.display = ''; }
-  if (over > 0) st.style.setProperty('--hero-h', `${Math.max(230, Math.floor(hero - over - 4))}px`);
+  const hide = skip && skip.style.display;
+  if (skip) skip.style.display = 'none';
+  const natural = st.querySelector('.hero').getBoundingClientRect().height;
+  const over = root.scrollHeight - innerHeight;
+  if (skip) skip.style.display = hide;
+  if (!lit && lead && more) { lead.textContent = said; more.innerHTML = ''; more.style.display = ''; }
+  if (was) st.style.setProperty('--hero-h', was);
+  void st.querySelector('.hero').offsetHeight;       // settle back before the photo may animate again
+  root.classList.remove('fitting');
+  return { natural, h: over > 0 ? Math.max(230, Math.floor(natural - over - 4)) : null };
+}
+function fitHome() {
+  const st = $('#opening'), f = heroFit();
+  if (!f) return;
+  if (f.h) st.style.setProperty('--hero-h', `${f.h}px`); else st.style.removeProperty('--hero-h');
+}
+// the puja line is folding away: the photo grows into its room over the same moment; returns how far the heading moves
+function fitHomeGrow(skip) {
+  const st = $('#opening'), hero = st && st.querySelector('.hero'), f = heroFit(skip);
+  if (!f) return 0;
+  const from = hero.getBoundingClientRect().height, to = f.h || f.natural;
+  if (Math.abs(to - from) < 1) return 0;
+  if (!reduced()) hero.classList.add('growing');
+  if (f.h) st.style.setProperty('--hero-h', `${f.h}px`); else st.style.removeProperty('--hero-h');
+  setTimeout(() => hero.classList.remove('growing'), 1000);
+  return to - from;
 }
 let fitT = 0;
 addEventListener('resize', () => { clearTimeout(fitT); fitT = setTimeout(() => { if (S.route.r === 'home') fitHome(); }, 150); });
@@ -1108,6 +1166,7 @@ function dockHtml(a) {
   const dots = `<div class="dots" id="dots" role="navigation" aria-label="The three aartis">${AARTIS.map((x, j) =>
     `<button class="dot" type="button" data-jump="${x.id}" aria-label="${esc(x.title)}, ${j + 1} of ${AARTIS.length}" aria-current="${j === i}"></button>`).join('')}</div>`;
   return `<nav class="dock${s.kind === 'file' ? ' has-seek' : ''}" id="dock" aria-label="Music and words">${dots}${play}
+    <button class="icon-btn size-btn" type="button" data-act="textSize" aria-label="${sizeLabel()}" title="Text size">${ICON.textSize}</button>
     <div class="seg" role="group" aria-label="Show the words in">
       <button type="button" data-mode="dev" aria-pressed="${m === 'dev'}" aria-label="Hindi, in Devanagari"><span lang="hi">हिन्दी</span></button>
       <button type="button" data-mode="rom" aria-pressed="${m === 'rom'}" aria-label="Hindi, in Roman letters">Roman</button>
@@ -1398,13 +1457,15 @@ const Tuck = (() => {
     // Scrolled down, it just fades and keeps its space, so nothing on screen moves.
     const fold = window.scrollY < 12;
     block.setAttribute('aria-hidden', 'true');
+    let moved = 0;
     if (fold) {
+      moved = fitHomeGrow(block);
       block.style.height = block.offsetHeight + 'px';
       void block.offsetHeight;
       block.classList.add('folding');
       block.style.height = '0px';
     } else block.classList.add('fading');
-    const finish = () => { if (fold) block.remove(); };
+    const finish = () => { if (fold) { block.remove(); if (S.route.r === 'home') fitHome(); } };
     if (reduced() || !seen || !t.animate) {
       chip.classList.remove('arriving');
       setTimeout(finish, reduced() ? 0 : 900);
@@ -1417,7 +1478,7 @@ const Tuck = (() => {
     document.body.append(fly);
     t.style.visibility = 'hidden';
     const s = z.height / a.height * 1.08;
-    const tx = z.left + z.width / 2 - (a.left + a.width * s / 2), ty = z.top + z.height / 2 - (a.top + a.height * s / 2);
+    const tx = z.left + z.width / 2 - (a.left + a.width * s / 2), ty = z.top + moved + z.height / 2 - (a.top + a.height * s / 2);
     const end = `translate(${tx}px, ${ty}px) scale(${s})`;
     fly.animate([{ transform: 'none', opacity: 1 }, { opacity: .5, offset: .48 }, { transform: end, opacity: 1, offset: .82 }, { transform: end, opacity: 0 }],
       { duration: 1000, easing: 'cubic-bezier(.65,0,.35,1)', fill: 'forwards' }).finished.then(() => fly.remove(), () => fly.remove());
@@ -1718,10 +1779,13 @@ function openSettings() {
   const castHint = !canCast ? 'This browser can’t send sound to a speaker or TV. Try Chrome on Android.'
     : isAndroid && !CAF ? 'If the bell doesn’t start on the TV, open quick-sheet.github.io/Aarti in Chrome itself and cast from there.' : '';
   openSheet(head('Settings') + `
-    <h3>Words</h3>
-    <p class="small">Text size</p>
-    <div class="chips" role="group" aria-label="Text size">${[['standard', 'Standard'], ['large', 'Large'], ['largest', 'Largest']].map(([k, n]) =>
-      `<button class="chip" type="button" data-size="${k}" aria-pressed="${S.set.size === k}">${n}</button>`).join('')}</div>
+    <h3>About</h3>
+    <button class="meaning-link" type="button" data-act="welcome">${ICON.flame}<span>How to use Aarti</span></button>
+    <p class="small">Words as sung by Anuradha Paudwal. The English is a plain guide to the meaning, not a word-for-word translation. The screen stays on while an aarti is open. <span class="rel" data-rel>Release ${RELEASE}.</span></p>
+
+    <h3>Share</h3>
+    <div class="toggle-row"><p>Send Aarti to a friend</p>
+      <button class="icon-btn share-btn" type="button" data-act="share" aria-label="Share Aarti" title="Share Aarti">${isIOS || /Macintosh/.test(UA) ? ICON.shareBox : ICON.shareDots}</button></div>
 
     ${PT ? `<h3>Lakshmi Puja times</h3>
     <div class="toggle-row"><p>For ${esc(myPlace().city)}, ${esc(myPlace().country)}</p><button class="link-btn" type="button" data-act="placeList">Change</button></div>` : ''}
@@ -1740,13 +1804,6 @@ function openSettings() {
     <div class="test-box">${playerHtml('bell', 'test-bell.mp3', 'Test bell', 'Aarti', 'icon-512.png')}</div>
     <p class="result" id="castResult">${esc(castHint)}</p>
 
-    <h3>Share</h3>
-    <p>Send Aarti to a friend. The link opens it without the PIN.</p>
-    <div class="actions"><button class="btn" type="button" data-act="share">Share Aarti</button></div>
-
-    <h3>About</h3>
-    <button class="meaning-link" type="button" data-act="welcome">${ICON.flame}<span>How to use Aarti</span></button>
-    <p class="small">Words as sung by Anuradha Paudwal. The English is a plain guide to the meaning, not a word-for-word translation. The screen stays on while an aarti is open. <span class="rel" data-rel>Release ${RELEASE}.</span></p>
     ${Visits.ownerHtml()}
     ${Sync.ownerHtml()}
     <p class="credit">Big Bear Binary</p>`);
@@ -1779,7 +1836,7 @@ function setMedia() {
       : [{ src: 'icon-512.png', sizes: '512x512', type: 'image/png' }, { src: 'icon-192.png', sizes: '192x192', type: 'image/png' }];
     navigator.mediaSession.metadata = new MediaMetadata({ title: S.meta.title, artist: S.meta.sub || 'Aarti', album: 'Diwali aarti', artwork: art });
     navigator.mediaSession.setActionHandler('play', () => audio.play());
-    navigator.mediaSession.setActionHandler('pause', () => audio.pause());
+    navigator.mediaSession.setActionHandler('pause', () => { Heal.want = 0; audio.pause(); });
     navigator.mediaSession.setActionHandler('seekto', (d) => { if (d && isFinite(d.seekTime)) audio.currentTime = d.seekTime; });
   } catch {}
 }
@@ -1898,15 +1955,57 @@ async function togglePlay(el) {
   }
   if (S.cur !== key) load(key, p.dataset.url, p.dataset.title, p.dataset.sub, p.dataset.art);
   if (audio.paused) {
+    Heal.want = Date.now();
     S.waiting = true; syncPlayers();
     try { await audio.play(); setMedia(); }
     catch (err) {
+      if (Heal.busy) return;                         // it's being loaded again quietly, and will start by itself
       S.waiting = false; syncPlayers();
       if (err && err.name === 'NotAllowedError') toast('Tap play again to start the sound.');
-      else toast('Couldn’t play the recording. Check your connection.');
+      else if (!audio.error) toast('Couldn’t play the recording. Check your connection.');
     }
-  } else audio.pause();
+  } else { Heal.want = 0; audio.pause(); }
 }
+/* If a recording stops with a loading error, it's loaded again once, quietly, and carries on from the same moment.
+   Recordings are also saved on the phone soon after Aarti opens, one at a time, so they start at once and play offline. */
+const Heal = (() => {
+  const H = { want: 0, busy: false, key: null, at: 0, playedAt: 0, warmed: false };
+  audio.addEventListener('timeupdate', () => { if (!audio.paused) H.playedAt = Date.now(); });
+  H.try = () => {
+    const key = S.cur, err = audio.error, src = audio.getAttribute('src');
+    if (!key || !src || !err || err.code === 4 || (H.key === key && Date.now() - H.at < 30000)) { H.busy = false; return false; }
+    H.key = key; H.at = Date.now(); H.busy = true;
+    const t = audio.currentTime || 0, play = Date.now() - H.want < 20000 || Date.now() - H.playedAt < 4000;
+    S.waiting = play; syncPlayers();
+    audio.src = src; audio.load();
+    audio.addEventListener('loadedmetadata', () => {
+      try { if (t) audio.currentTime = t; } catch {}
+      const done = () => { H.busy = false; S.waiting = false; syncPlayers(); };
+      if (play) audio.play().then(() => { setMedia(); done(); }, done); else done();
+    }, { once: true });
+    return true;
+  };
+  // when Aarti's helper on the phone starts looking after the page (the first visit), a recording that's ready but
+  // not playing is loaded again through it, so every piece of it then comes the same way
+  if ('serviceWorker' in navigator) navigator.serviceWorker.addEventListener('controllerchange', () => {
+    const src = audio.getAttribute('src');
+    if (!src || !audio.paused || S.waiting || H.busy) return;
+    const t = audio.currentTime || 0;
+    audio.src = src; audio.load();
+    if (t) audio.addEventListener('loadedmetadata', () => { try { audio.currentTime = t; } catch {} }, { once: true });
+  });
+  H.warm = () => {
+    if (H.warmed || !S.unlocked || !('serviceWorker' in navigator)) return;
+    const net = navigator.connection;
+    if (net && (net.saveData || /(^|-)2g$/.test(net.effectiveType || ''))) return;   // Data Saver or a very slow connection: only when played
+    H.warmed = true;
+    const here = S.route.r === 'aarti' ? S.route.id : null;
+    const list = AARTIS.filter((a) => srcFor(a).kind === 'file').sort((a, b) => (b.id === here) - (a.id === here)).map((a) => abs(srcFor(a).url));
+    if (!list.length) return;
+    setTimeout(() => navigator.serviceWorker.ready.then((reg) => { if (reg.active) reg.active.postMessage({ save: list }); }).catch(() => {}), 2500);
+  };
+  return H;
+})();
 // How long each recording is, so the bar can show it before it's played (read once from the file's start)
 const Lens = (() => {
   const known = {};
@@ -1972,7 +2071,7 @@ function syncPlayers() {
   syncPlayers();
 }));
 audio.addEventListener('waiting', () => { if (!audio.paused) { S.waiting = true; syncPlayers(); } });
-audio.addEventListener('error', () => { S.waiting = false; syncPlayers(); if (S.cur) toast('Couldn’t load the recording. Check your connection.'); });
+audio.addEventListener('error', () => { if (Heal.try()) return; S.waiting = false; syncPlayers(); if (S.cur) toast('Couldn’t load the recording. Check your connection.'); });
 
 // The browser's own casting: used when Google's library isn't available, and for AirPlay on iPhone
 let castWatching = false;
@@ -2208,6 +2307,7 @@ function unlock() {
   history.replaceState({ r: 'home' }, '', location.pathname + location.search);
   S.route = { r: 'home' };
   render(true);
+  Heal.warm();
 }
 
 /* ---------- Lighting the diya ---------- */
@@ -2250,7 +2350,7 @@ async function shareApp() {
   if (navigator.share) {
     try { await navigator.share(data); return; } catch (err) { if (err && err.name === 'AbortError') return; }
   }
-  try { await navigator.clipboard.writeText(`${data.text}\n${url}`); toast('Copied, with the link. It opens Aarti without the PIN.'); }
+  try { await navigator.clipboard.writeText(`${data.text}\n${url}`); toast('Copied, with the link.'); }
   catch { toast(`Copy this link: ${url}`); }
 }
 
@@ -2299,6 +2399,7 @@ document.addEventListener('click', async (e) => {
     case 'reflect': Visits.did('reflection'); openReflect(); break;
     case 'reflectClose': closeReflect(); break;
     case 'share': Visits.did('shared'); shareApp(); break;
+    case 'textSize': nextSize(t); break;
     case 'tgTest': Visits.test(t); break;
     case 'timeWords': closeSheet(); Sync.beginTiming(d.id); break;
     case 'copyTimes': Sync.copy(d.id); break;
@@ -2377,6 +2478,12 @@ const Swipe = (() => {
   const on = () => S.unlocked && S.route.r === 'aarti' && i0() >= 0;
   const W = () => innerWidth;
   const anyOpen = () => !!document.querySelector('dialog[open], .dd-layer, .spot');
+  // while this aarti's song is playing (on the phone or the TV), the page stays put; the dots still move between aartis
+  const held = () => {
+    const k = 'a:' + S.route.id;
+    if (cafOn() && remoteKey() === k) { const R = CAF.player; return !R.isPaused && R.playerState !== 'IDLE'; }
+    return S.cur === k && !audio.paused && !audio.ended;
+  };
   // the page's own pieces, found once per page
   function pieces() {
     if (cur && cur.room && cur.room.isConnected) return cur;
@@ -2485,6 +2592,7 @@ const Swipe = (() => {
     const el = e.target;
     if (!el.closest || !el.closest('#screen') || el.closest('#dock, input, textarea, select, .seek, [contenteditable]')) return;
     const t = e.touches[0];
+    if (held() && !x) { g = { held: true, x0: t.clientX, y0: t.clientY }; return; }
     // caught mid-way (settling back, or leaning aside): carry on from where it is
     if (raf) { cancelAnimationFrame(raf); raf = 0; }
     const caught = Math.abs(x) > .5;
@@ -2501,6 +2609,11 @@ const Swipe = (() => {
   document.addEventListener('touchmove', (e) => {
     if (!g || e.touches.length !== 1) { if (g && g.lock === 'x') { settle(0); } g = null; return; }
     const t = e.touches[0], dx = t.clientX - g.x0, dy = t.clientY - g.y0;
+    if (g.held) {                                      // the song is playing: a sideways swipe does nothing (said once)
+      if (Math.hypot(dx, dy) < 10) return;
+      if (Math.abs(dx) > Math.abs(dy) * 1.15 && !S.heldSaid) { S.heldSaid = true; toast('Pause the song to move to another aarti'); }
+      g = null; return;
+    }
     if (!g.lock) {
       if (Math.hypot(dx, dy) < 10) return;
       if (Math.abs(dx) > Math.abs(dy) * 1.15) { g.lock = 'x'; g.x0 += Math.sign(dx) * 10; Spot.hide(); }
@@ -2531,6 +2644,7 @@ const Swipe = (() => {
   document.addEventListener('keydown', (e) => {
     if (!on() || landing || navigating || raf || anyOpen() || e.altKey || e.metaKey || e.ctrlKey) return;
     if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+    if (held()) return;
     if (e.target.closest && e.target.closest('input, textarea, select, .seek, [contenteditable], .seg')) return;
     const d = e.key === 'ArrowRight' ? 1 : -1;
     e.preventDefault();
@@ -2544,14 +2658,14 @@ const Swipe = (() => {
     clearTimeout(teaseT);
     if (!on() || get('swipeHinted', false) || reduced()) return;
     teaseT = setTimeout(() => {
-      if (!on() || g || raf || x || landing || anyOpen() || scrollY > 40 || document.visibilityState !== 'visible') return;
+      if (!on() || g || raf || x || landing || anyOpen() || held() || scrollY > 40 || document.visibilityState !== 'visible') return;
       put('swipeHinted', true);
       const d = AARTIS[i0() + 1] ? 1 : -1;
       apply(-d * 1);
       spring(-d * Math.min(72, W() * .18), 0, () => { teaseT = setTimeout(() => { if (!g && x) settle(0); }, 320); }, 120);
     }, 1700);
   }
-  return { drop() { if (!landing) { clearTimeout(teaseT); if (g) g = null; clear(); } }, tease, get busy() { return !!raf || landing; } };
+  return { drop() { if (!landing) { clearTimeout(teaseT); if (g) g = null; clear(); } }, tease, held, get busy() { return !!raf || landing; } };
 })();
 
 /* ---------- Gestures: drag a sheet down (or aside) to close it. ---------- */
@@ -2647,26 +2761,49 @@ const Sync = (() => {
     if (S.cur === key) return { t: audio.currentTime || 0, playing: !audio.paused && !audio.ended };
     return null;
   }
-  function light(i) {
-    if (i === cur && (i < 0 || (lineEl(i) && lineEl(i).classList.contains('sung')))) return;
+  function light(i, soon) {
+    if (i === cur && (i < 0 || (lineEl(i) && lineEl(i).classList.contains('sung')))) { mark(soon); return; }
     document.querySelectorAll('.words .ln.sung').forEach((el) => el.classList.remove('sung'));
     cur = i;
     const el = i >= 0 && lineEl(i);
     if (el) el.classList.add('sung');
+    mark(soon);
   }
+  // in the music before the first line, the first line waits, ready, where the eye will be
+  function mark(soon) {
+    const el = lineEl(0), on = !!soon && cur < 0;
+    document.querySelectorAll('.words .ln.soon').forEach((x) => { if (!on || x !== el) x.classList.remove('soon'); });
+    if (on && el) el.classList.add('soon');
+  }
+  // the page glides so a line sits a little above the middle; in step with the line growing (a finger stops it)
+  let glideRaf = 0;
+  const ease = (k) => (k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2);
+  function glide(y) {
+    cancelAnimationFrame(glideRaf); glideRaf = 0;
+    const from = window.scrollY, d = Math.max(0, y) - from;
+    if (Math.abs(d) < 1) return;
+    if (reduced()) { window.scrollTo(0, from + d); return; }
+    const dur = Math.min(1100, 520 + Math.abs(d) * .3), t0 = performance.now();
+    const step = (now) => {
+      const k = Math.min(1, (now - t0) / dur);
+      window.scrollTo(0, from + d * ease(k));
+      glideRaf = k < 1 ? requestAnimationFrame(step) : 0;
+    };
+    glideRaf = requestAnimationFrame(step);
+  }
+  const stopGlide = () => { cancelAnimationFrame(glideRaf); glideRaf = 0; };
   function toLine(i, at) {
     const el = lineEl(i);
     if (!el) return;
     const r = el.getBoundingClientRect();
-    const y = window.scrollY + r.top + r.height / 2 - innerHeight * (at || .4);
-    window.scrollTo({ top: Math.max(0, y), behavior: reduced() ? 'auto' : 'smooth' });
+    glide(window.scrollY + r.top + r.height / 2 - innerHeight * (at || .4));
   }
   function chip(show) {
     if (!chipEl) {
       chipEl = document.createElement('button');
       chipEl.className = 'follow-chip'; chipEl.type = 'button'; chipEl.hidden = true;
       chipEl.innerHTML = `${ICON.chevDown}Follow the song`;
-      chipEl.addEventListener('click', () => { follow = true; chip(false); if (cur >= 0) toLine(cur); });
+      chipEl.addEventListener('click', () => { follow = true; chip(false); toLine(Math.max(0, cur)); });
       document.body.append(chipEl);
     }
     chipEl.hidden = !show;
@@ -2685,10 +2822,13 @@ const Sync = (() => {
     }
     const times = timesFor(a);
     words.classList.toggle('synced', !!times);
+    words.classList.toggle('live', !!(times && pos && pos.playing));
     if (!times || !pos) { light(-1); chip(false); return; }
     const i = C.lineAt(times, pos.t + LEAD);
-    if (i !== cur) { light(i); if (follow && pos.playing && i >= 0) toLine(i); }
-    chip(!follow && pos.playing && i >= 0);
+    // pressing play goes straight to the words: the line being sung, or in the opening music the first line, ready
+    if (i !== cur) { light(i, pos.playing); if (follow && pos.playing) toLine(Math.max(0, i)); }
+    else mark(pos.playing);
+    chip(!follow && pos.playing);
     if (pos.playing) raf = requestAnimationFrame(tick);
   }
   const kick = () => { if (!raf) raf = requestAnimationFrame(tick); };
@@ -2696,7 +2836,7 @@ const Sync = (() => {
   const byHand = (e) => {
     if (timing || !e.target.closest || e.target.closest('#dock, .follow-chip, .timing-panel, dialog')) return;
     const a = aarti(), pos = a && timesFor(a) && position('a:' + a.id);
-    if (pos && pos.playing && follow) { follow = false; chip(cur >= 0); }
+    if (pos && pos.playing && follow) { follow = false; stopGlide(); chip(true); }
   };
   addEventListener('touchmove', byHand, { passive: true });
   addEventListener('wheel', byHand, { passive: true });
@@ -2831,7 +2971,7 @@ const Sync = (() => {
       <ul class="list">${rows}</ul>`;
   }
   function afterRender() {
-    cur = -2; follow = true; chip(false);
+    stopGlide(); cur = -2; follow = true; chip(false);
     if (timing && (!aarti() || aarti().id !== timing.id)) stopTiming(true);
     if (S.pendingTiming && aarti() && aarti().id === S.pendingTiming) { const id = S.pendingTiming; S.pendingTiming = null; setTimeout(() => beginTiming(id), 350); }
     kick();
@@ -3007,6 +3147,7 @@ const Visits = (() => {
   setTimeout(() => Drift.prepare(), 1200);          // Daily Drift's page, made ready in the background for the hands
   addEventListener('online', () => { if (!Drift.ready()) Drift.prepare(); });
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+  Heal.warm();                                     // the recordings, saved in the background (once the PIN is in)
 })();
 })();
 </script>

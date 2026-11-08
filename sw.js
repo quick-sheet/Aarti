@@ -1,4 +1,4 @@
-const REL = 20;                    // bump on every release, together with ?v= on the scripts in index.html
+const REL = 21;                    // bump on every release, together with ?v= on the scripts in index.html
 const CACHE = 'aarti-v' + REL;
 const AUDIO = 'aarti-audio';      // saved recordings, kept across releases (keyed by their full address, ?v= included)
 const DRIFT = 'aarti-drift';      // Daily Drift's page and scripts, for the verses offline; kept across releases
@@ -55,27 +55,50 @@ self.addEventListener('fetch', (e) => {
   // Spotify and anything else: leave alone
 });
 
-// Recordings: play straight from the network the first time and save a full copy in the background,
-// then play from that copy (with byte ranges, which iPhone needs) from then on, even offline.
+// Recordings: saved whole on the phone, then played from that copy (with byte ranges, which iPhone needs), even offline.
+// The page asks for all three to be saved soon after Aarti opens; until a copy is in, they play from the network.
+// Every piece the player gets is an answer made here, whether it came from the copy or the network: Chrome stops a
+// recording ("data source error") if some pieces come straight from the network and later ones from the copy.
+const saving = {};
+function save(key) {
+  if (!saving[key]) {
+    saving[key] = (async () => {
+      const c = await caches.open(AUDIO);
+      if (await c.match(key)) return;
+      const r = await fetch(key, { cache: 'no-cache' });
+      if (r.ok && r.status === 200) await c.put(key, r);
+    })().catch(() => {}).finally(() => { delete saving[key]; });
+  }
+  return saving[key];
+}
+self.addEventListener('message', (e) => {
+  const list = e.data && Array.isArray(e.data.save) ? e.data.save : null;
+  if (!list) return;
+  // one at a time, in the order asked
+  e.waitUntil(list.reduce((p, u) => p.then(() => save(new URL(u, self.registration.scope).href.split('#')[0])), Promise.resolve()));
+});
+
 async function audioFetch(e) {
   const req = e.request, key = req.url.split('#')[0];
   const c = await caches.open(AUDIO);
   const hit = await c.match(key);
   if (hit) return ranged(hit, req.headers.get('range'));
-  e.waitUntil(fetch(key, { cache: 'no-cache' }).then((r) => (r.ok && r.status === 200 ? c.put(key, r) : null)).catch(() => {}));
-  try { return await fetch(req); } catch { return Response.error(); }
+  e.waitUntil(save(key));
+  try { return remade(await fetch(req)); } catch { return Response.error(); }
 }
 
+const remade = (r) => new Response(r.body, { status: r.status, statusText: r.statusText, headers: r.headers });
+
 async function ranged(res, range) {
-  if (!range) return res;
-  const buf = await res.arrayBuffer();
-  const r = self.Core.parseRange(range, buf.byteLength);
-  if (!r) return new Response(null, { status: 416, headers: { 'Content-Range': `bytes */${buf.byteLength}` } });
-  return new Response(buf.slice(r.start, r.end + 1), {
+  if (!range) return remade(res);
+  const blob = await res.blob();                    // the saved file stays on disk; only the piece asked for is read
+  const r = self.Core.parseRange(range, blob.size);
+  if (!r) return new Response(null, { status: 416, headers: { 'Content-Range': `bytes */${blob.size}` } });
+  return new Response(blob.slice(r.start, r.end + 1), {
     status: 206,
     headers: {
       'Content-Type': res.headers.get('Content-Type') || 'audio/mpeg',
-      'Content-Range': `bytes ${r.start}-${r.end}/${buf.byteLength}`,
+      'Content-Range': `bytes ${r.start}-${r.end}/${blob.size}`,
       'Content-Length': String(r.end - r.start + 1),
       'Accept-Ranges': 'bytes',
     },

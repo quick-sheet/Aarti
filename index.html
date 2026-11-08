@@ -617,10 +617,10 @@ dialog.sheet::backdrop{background:rgba(4,4,8,.6)}
 <div class="toast" id="toast" role="status" popover="manual"></div>
 <audio id="player" preload="none"></audio>
 
-<script src="core.js?v=19"></script>
-<script src="aartis.js?v=19"></script>
-<script src="bell.js?v=19"></script>
-<script src="puja-times.js?v=19"></script>
+<script src="core.js?v=20"></script>
+<script src="aartis.js?v=20"></script>
+<script src="bell.js?v=20"></script>
+<script src="puja-times.js?v=20"></script>
 <script>
 (() => {
 'use strict';
@@ -632,7 +632,7 @@ document.addEventListener('touchmove', (e) => { if (e.touches.length > 1) e.prev
 addEventListener('wheel', (e) => { if (e.ctrlKey) e.preventDefault(); }, { passive: false });
 /* ---------- Settings you may change ---------- */
 const PIN = '1008';                    // the PIN friends type in; the shared link carries it
-const RELEASE = 19;
+const RELEASE = 20;
 const API = 'https://script.google.com/macros/s/AKfycbzKuCKJfZ0VXmYA4Us6pOxa_C4Z1HJ4k1yxzG4ujkZX8OcqN9fIIbknYDkg0ovz9u_0/exec';   // visit messages: G's Apps Script web app (README, "Visit messages"); '' = off
 const EXPECT_BUILD = 1;                // the Apps Script release this page needs
 
@@ -2267,7 +2267,7 @@ document.addEventListener('click', async (e) => {
     S.set.mode = d.mode; saveSet();
     document.querySelectorAll('[data-mode]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.mode === d.mode)));
     const w = $('#words'), a = byId(S.route.id);
-    if (w && a) { w.dataset.mode = d.mode; w.innerHTML = wordsHtml(a); onScroll(); }
+    if (w && a) { w.dataset.mode = d.mode; w.innerHTML = wordsHtml(a); onScroll(); Sync.relight(); }
     return;
   }
   if (d.size) { t.parentElement.querySelectorAll('.chip').forEach((c) => c.setAttribute('aria-pressed', String(c === t))); setSize(d.size); toast(`Text size: ${t.textContent.toLowerCase()}`); return; }
@@ -2701,7 +2701,8 @@ const Sync = (() => {
   addEventListener('touchmove', byHand, { passive: true });
   addEventListener('wheel', byHand, { passive: true });
   addEventListener('keydown', (e) => { if (['PageDown', 'PageUp', 'ArrowDown', 'ArrowUp', 'Home', 'End'].includes(e.key)) byHand(e); });
-  audio.addEventListener('play', () => { if (!timing) { follow = true; chip(false); } kick(); });
+  // play (or carry on) brings the line being sung into view, even if it was already lit while paused
+  audio.addEventListener('play', () => { if (!timing) { follow = true; chip(false); cur = -2; } kick(); });
   audio.addEventListener('seeked', () => { cur = -2; kick(); });
 
   // ----- timing (G's phones) -----
@@ -2818,8 +2819,10 @@ const Sync = (() => {
   function ownerHtml() {
     if (!owner()) return '';
     const rows = AARTIS.filter((a) => a.audio).map((a) => {
-      const n = C.lineCount(a), mine = get('times:' + a.id, null), local = mine && mine.audio === a.audio && C.timesOk(mine.times, n);
-      const state = local ? 'Timed on this phone' : C.timesOk(a.times, n) ? 'Timed for everyone' : 'Not timed yet';
+      const n = C.lineCount(a), mine = get('times:' + a.id, null), shared = C.timesOk(a.times, n);
+      // timings on this phone that match the ones built in are simply the built-in ones
+      const local = mine && mine.audio === a.audio && C.timesOk(mine.times, n) && !(shared && JSON.stringify(mine.times) === JSON.stringify(a.times));
+      const state = local ? 'Timed on this phone' : shared ? 'Timed for everyone' : 'Not timed yet';
       return `<li><span>${esc(a.title)}<small>${n} lines · ${state}</small></span><span class="row-btns">
         ${local ? `<button class="mini" type="button" data-act="copyTimes" data-id="${a.id}">Copy</button>` : ''}
         <button class="mini" type="button" data-act="timeWords" data-id="${a.id}">Time</button></span></li>`;
@@ -2833,7 +2836,13 @@ const Sync = (() => {
     if (S.pendingTiming && aarti() && aarti().id === S.pendingTiming) { const id = S.pendingTiming; S.pendingTiming = null; setTimeout(() => beginTiming(id), 350); }
     kick();
   }
-  return { kick, afterRender, beginTiming, ownerHtml, copy, get timing() { return !!timing; } };
+  // the words were drawn again (another language): light the line again, and keep it in view if following
+  function relight() {
+    cur = -2;
+    if (timing) { light(timing.times.length - 1); paint(); return; }
+    kick();
+  }
+  return { kick, afterRender, relight, beginTiming, ownerHtml, copy, get timing() { return !!timing; } };
 })();
 
 /* ---------- Visits: a note to G on Telegram each time Aarti is opened ----------

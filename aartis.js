@@ -4,6 +4,9 @@
    Parts: { refrain: n } = the full refrain, sung n times; { lines: [...], cue: true } = a verse that ends with the cue line.
    audio = the recording, an MP3 in the repo's main folder ('' would send people to Spotify instead).
    If you replace a recording, change ?v=1 to ?v=2 so phones fetch the new one.
+   times = when each line starts, in seconds, one for every line as it is written out (every repeat
+   counted). The words follow the song with these. If the recording or the words change, time it again
+   (Settings, Time the words) and paste the new list here. A list with the wrong number of lines is ignored.
    art = the painting for each aarti; blur = a tiny copy of it, shown softly behind the words. */
 (function (root) {
   'use strict';
@@ -35,6 +38,7 @@
       spotify: '670010LTT4haWIeJhsK9JG',
       artist: 'Anuradha Paudwal',
       audio: 'ganesh.mp3?v=1',
+      times: [11.97,17.17,22.37,27.48,32.7,37.81,42.9,48.02,63.31,68.51,73.66,78.83,83.87,88.96,94.05,99.04,104.15,109.18,114.41,119.4,124.41,129.46,144.64,149.76,154.89,159.96,165,170.08,175.16,180.22,185.22,190.19,195.47,200.21,205.23,210.32,215.31,220.3,225.32,230.3],
       refrain: [G.jai, G.mata],
       cue: null,
       parts: [
@@ -67,6 +71,7 @@
       spotify: '0ZkIWsbj1psnuSoJ22riCR',
       artist: 'Anuradha Paudwal, Arun Paudwal',
       audio: 'lakshmi.mp3?v=1',
+      times: [15.31,25.77,33.44,37.88,42.97,53.66,61.32,65.73,71.63,78.45,83.72,87.53,91.42,95.79,101.39,108.32,113.84,117.76,121.57,125.92,131.54,138.43,144.1,148.38,151.76,156.13,161.72,168.7,174.29,178.08,181.85,186.36,191.9,198.86,204.44,208.24,212.01,216.5,222.02,229.02,234.56,238.33,242.16,246.63,252.27,259.12,264.6,268.36,272.07,276.47,281.33,291.4,298.6,302.69,307.27,316.71,323.38,327.26],
       refrain: [
         l('ॐ जय लक्ष्मी माता, मैया जय लक्ष्मी माता', 'Om jai Lakshmi mata, maiya jai Lakshmi mata', 'Om, glory to you, Mother Lakshmi, glory to Mother Lakshmi.'),
         l('तुमको निशदिन सेवत, मैया जी को निशदिन सेवत', 'Tumko nishadin sevat, maiya ji ko nishadin sevat', 'Day and night you are worshipped,'),
@@ -135,6 +140,7 @@
       spotify: '4rvn5djkLdm5AT6b58pVS5',
       artist: 'Anuradha Paudwal',
       audio: 'jagdish.mp3?v=1',
+      times: [17.69,28.24,32.72,40.37,45.46,56.04,59.9,68.11,73.66,80.56,86.14,89.87,93.69,98.12,103.72,110.65,116.21,120.01,123.88,128.23,133.82,140.74,146.4,150.21,154.01,158.45,164.03,170.87,176.47,184.03,188.45,193.92,200.91,206.51,210.32,214.05,218.46,223.98,230.89,236.5,244.03,248.41,253.98,260.81,266.33,270.09,273.77,278.09,282.99,293.05,296.64,304.16,308.87,318.28,321.69,328.7],
       refrain: [
         l('ॐ जय जगदीश हरे, स्वामी जय जगदीश हरे', 'Om jai Jagdish hare, swami jai Jagdish hare', 'Om, glory to you, Lord of the universe, glory to the Lord of the universe.'),
         l('भक्त जनों के संकट', 'Bhakt janon ke sankat', 'The troubles of your devotees,'),

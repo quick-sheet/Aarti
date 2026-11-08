@@ -10,6 +10,16 @@
   const l = (d, r, e, x) => (x ? { d, r, e, x } : { d, r, e });
   const echo = (d, r, e) => (e ? { d, r, e, echo: true } : { d, r, echo: true });
 
+  // Ganesh: some lines come round more than once, in their own order, so they are named here and listed as sung
+  const G = {
+    jai: l('जय गणेश, जय गणेश, जय गणेश देवा', 'Jai Ganesh, jai Ganesh, jai Ganesh deva', 'Glory to Ganesh, glory to Lord Ganesh,'),
+    mata: l('माता जाकी पार्वती, पिता महादेवा', 'Mata jaki Parvati, pita Mahadeva', 'whose mother is Parvati and whose father is Shiva, the great god.'),
+    paan: l('पान चढ़े, फूल चढ़े, और चढ़े मेवा', 'Paan chadhe, phool chadhe, aur chadhe meva', 'Betel leaves, flowers and dried fruit are offered to him,'),
+    laddu: l('लड्डुअन का भोग लगे, सन्त करें सेवा', 'Ladduan ka bhog lage, sant karen seva', 'laddoos are set before him, and the saints serve him.'),
+    soor: l('सूर श्याम शरण आए, सफल कीजे सेवा', 'Soor Shyam sharan aaye, safal kije seva', 'The poet Sur Shyam comes to you for shelter: let this worship bear fruit,'),
+    son: l('माता जाकी पार्वती, पिता महादेवा', 'Mata jaki Parvati, pita Mahadeva', 'O son of Parvati and of Shiva, the great god.'),
+  };
+
   const AARTIS = [
     {
       id: 'ganesh',
@@ -25,31 +35,22 @@
       spotify: '670010LTT4haWIeJhsK9JG',
       artist: 'Anuradha Paudwal',
       audio: 'ganesh.mp3?v=1',
-      refrain: [
-        l('जय गणेश, जय गणेश, जय गणेश देवा', 'Jai Ganesh, jai Ganesh, jai Ganesh deva', 'Glory to Ganesh, glory to Lord Ganesh,'),
-        l('माता जाकी पार्वती, पिता महादेवा', 'Mata jaki Parvati, pita Mahadeva', 'whose mother is Parvati and whose father is Shiva, the great god.'),
-      ],
+      refrain: [G.jai, G.mata],
       cue: null,
       parts: [
-        { refrain: 2 },
+        { refrain: 4 },
         { lines: [
           l('एकदन्त दयावन्त, चार भुजा धारी', 'Ekadant dayavant, chaar bhuja dhaari', 'One-tusked and kind, with four arms,', 4),
           l('माथे सिन्दूर सोहे, मूसे की सवारी', 'Maathe sindoor sohe, mooshe ki savaari', 'vermilion glows on his forehead and he rides a mouse.', 2),
         ] },
-        { lines: [
-          l('पान चढ़े, फूल चढ़े, और चढ़े मेवा', 'Paan chadhe, phool chadhe, aur chadhe meva', 'Betel leaves, flowers and dried fruit are offered to him,', 2),
-          l('लड्डुअन का भोग लगे, सन्त करें सेवा', 'Ladduan ka bhog lage, sant karen seva', 'laddoos are set before him, and the saints serve him.', 2),
-        ] },
+        { lines: [G.paan, G.laddu, G.paan, G.laddu] },
         { refrain: 2 },
         { lines: [
           l('अन्धन को आँख देत, कोढ़िन को काया', 'Andhan ko aankh det, kodhin ko kaaya', 'He gives sight to the blind and health to the sick,', 4),
           l('बाँझन को पुत्र देत, निर्धन को माया', 'Baanjhan ko putra det, nirdhan ko maaya', 'a child to the childless and wealth to the poor.', 2),
         ] },
-        { lines: [
-          l('सूर श्याम शरण आए, सफल कीजे सेवा', 'Soor Shyam sharan aaye, safal kije seva', 'The poet Sur Shyam comes to you for shelter: let this worship bear fruit,', 2),
-          l('माता जाकी पार्वती, पिता महादेवा', 'Mata jaki Parvati, pita Mahadeva', 'O son of Parvati and of Shiva, the great god.'),
-        ] },
-        { refrain: 2 },
+        { lines: [G.soor, G.son, G.soor, G.jai] },
+        { refrain: 4 },
       ],
     },
     {

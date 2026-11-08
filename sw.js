@@ -1,4 +1,4 @@
-const REL = 18;                    // bump on every release, together with ?v= on the scripts in index.html
+const REL = 19;                    // bump on every release, together with ?v= on the scripts in index.html
 const CACHE = 'aarti-v' + REL;
 const AUDIO = 'aarti-audio';      // saved recordings, kept across releases (keyed by their full address, ?v= included)
 const DRIFT = 'aarti-drift';      // Daily Drift's page and scripts, for the verses offline; kept across releases

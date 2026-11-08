@@ -91,10 +91,25 @@
 
   /* ---------- Words ---------- */
   // Turns an aarti's parts into blocks ready to draw: refrains filled in, verse cues attached.
+  // The words as they are sung, every repeat written out: a line sung four times appears four times, and a chorus sung
+  // twice appears in full twice. So each line on the page is one moment in the song (the synced words rely on it).
   function blocks(aarti) {
+    const each = (ln) => Array.from({ length: ln.x || 1 }, () => ln);
     return aarti.parts.map((p, i) => p.refrain
-      ? { type: 'refrain', x: p.refrain, lines: aarti.refrain, i }
-      : { type: 'verse', lines: p.lines, cue: p.cue ? aarti.cue : null, i });
+      ? { type: 'refrain', x: p.refrain, lines: Array.from({ length: p.refrain }, () => aarti.refrain.flatMap(each)).flat(), i }
+      : { type: 'verse', lines: p.lines.flatMap(each), cue: p.cue && aarti.cue ? each(aarti.cue) : null, i });
+  }
+  // How many lines the page shows, in order (each one gets a start time in the synced words)
+  function lineCount(aarti) { return blocks(aarti).reduce((n, b) => n + b.lines.length + (b.cue ? b.cue.length : 0), 0); }
+  // Start times for an aarti's lines are usable when there is one per line, in order
+  function timesOk(times, n) {
+    return Array.isArray(times) && times.length === n && times.every((x, i) => typeof x === 'number' && isFinite(x) && x >= 0 && (i === 0 || x >= times[i - 1]));
+  }
+  // The line being sung at time t: the last one that has started (-1 before the first)
+  function lineAt(times, t) {
+    let lo = 0, hi = times.length - 1, at = -1;
+    while (lo <= hi) { const m = (lo + hi) >> 1; if (times[m] <= t) { at = m; lo = m + 1; } else hi = m - 1; }
+    return at;
   }
 
   // Which texts a line shows in each mode. mode: 'dev' | 'rom' | 'en'
@@ -134,7 +149,7 @@
     return bad;
   }
 
-  const Core = { parseSpotify, trackUrl, openTarget, sourceFor, pinOk, pinFromHash, fmtTime, mimeFor, parseRange, blocks, lineText, checkAartis, digits };
+  const Core = { parseSpotify, trackUrl, openTarget, sourceFor, pinOk, pinFromHash, fmtTime, mimeFor, parseRange, blocks, lineCount, timesOk, lineAt, lineText, checkAartis, digits };
   if (typeof module !== 'undefined' && module.exports) module.exports = Core;
   else root.Core = Core;
 })(typeof self !== 'undefined' ? self : this);

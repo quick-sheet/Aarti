@@ -73,9 +73,9 @@ a{color:inherit;-webkit-tap-highlight-color:transparent}
 .orb svg{width:21px;height:21px}
 .orb.gone{opacity:0;visibility:hidden}
 /* settings stays out of the way: a quiet grey mark, brighter when touched */
-#settingsBtn{background:none;-webkit-backdrop-filter:none;backdrop-filter:none;color:var(--ink-2);filter:drop-shadow(0 1px 3px rgba(0,0,0,.5))}
-#settingsBtn:not(.gone){opacity:.45}
-#settingsBtn:not(.gone):active,#settingsBtn:not(.gone):focus-visible{opacity:.9}
+#settingsBtn,#faithBtn{background:none;-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:none;color:var(--ink-2);filter:drop-shadow(0 1px 3px rgba(0,0,0,.5))}
+#settingsBtn:not(.gone),#faithBtn:not(.gone){opacity:.45}
+#settingsBtn:not(.gone):active,#settingsBtn:not(.gone):focus-visible,#faithBtn:not(.gone):active,#faithBtn:not(.gone):focus-visible{opacity:.9}
 #settingsBtn svg{width:19px;height:19px}
 .dots{position:absolute;left:50%;bottom:calc(100% + 6px);transform:translateX(-50%);display:flex;align-items:center;padding:0 3px;border-radius:9px;
   background:var(--glass);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
@@ -114,8 +114,8 @@ a{color:inherit;-webkit-tap-highlight-color:transparent}
 .orb.back svg{width:22px;height:22px;filter:drop-shadow(0 0 6px var(--sun-soft));transition:transform .25s cubic-bezier(.2,.8,.2,1)}
 .orb.back:active{background:var(--sun-soft)}
 .orb.back:active svg{transform:translateX(-3px)}
-.orb.faith svg{width:23px;height:23px}
-.orb.faith[aria-pressed="true"]{color:var(--sun);box-shadow:0 0 22px var(--sun-soft)}
+.orb.faith svg{width:21px;height:21px}
+#faithBtn[aria-pressed="true"]{color:var(--sun);opacity:.95}
 
 /* A verse: Daily Drift itself, running untouched in a layer over Aarti. Its colours fill the strips by the notch and home bar. */
 .dd-layer{position:fixed;inset:0;z-index:40;opacity:0;transition:opacity .45s ease;
@@ -162,7 +162,7 @@ html.drifting,html.drifting body{overflow:hidden}
 @property --r{syntax:'<percentage>';inherits:false;initial-value:0%}
 :root{--hero-h:min(118vw,64svh,700px)}
 .stage{min-height:100svh;display:flex;flex-direction:column;align-items:center;text-align:center;
-  padding:0 24px calc(36px + env(safe-area-inset-bottom));position:relative}
+  padding:0 24px calc(36px + env(safe-area-inset-bottom));position:relative;overflow:hidden;overflow:clip}   /* the glow below the photo never makes the page scroll */
 .stage > :not(.hero){position:relative;z-index:2}
 .stage::before{content:"";position:absolute;left:0;right:0;top:calc(var(--hero-h) * .6);height:min(90vh,640px);z-index:-1;pointer-events:none;
   background:radial-gradient(60% 46% at 50% 18%,var(--sun-soft),transparent 74%);opacity:0;transition:opacity 2.2s ease}
@@ -237,6 +237,9 @@ dialog.welcome.closing::backdrop{animation:w-fade .44s ease reverse both}
 .welcome.settled .w-in{animation:none}
 .welcome .mini-diya{display:block;margin:2px auto 14px}
 .welcome h2{margin:0;font:400 31px/1.15 var(--serif);letter-spacing:-.005em;outline:none}
+.w-why{margin:12px auto 0;max-width:20em;font:400 16.5px/1.55 var(--serif);color:var(--ink);text-wrap:pretty}
+.w-mala{font-size:.95em;white-space:nowrap}
+.w-why + .w-lead{margin-top:12px}
 .w-lead{margin:8px auto 0;max-width:19em;font-size:15.5px;line-height:1.5;color:var(--ink-2)}
 .w-steps{list-style:none;margin:18px 0 0;padding:4px 2px;text-align:left;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 .w-steps li{display:flex;align-items:center;gap:13px;padding:10px 4px;font-size:15.5px;line-height:1.35;color:var(--ink)}
@@ -295,6 +298,14 @@ dialog.reflect.dragged{animation:none;transition:transform .26s cubic-bezier(.2,
 .place-btn svg{width:14px;height:14px;opacity:.7}
 /* the time, tucked in the corner: tap it to change place */
 .top-right{position:relative;display:flex;align-items:center}
+/* the opening is snug, so it all fits on the screen without scrolling (the photo gives up the rest: fitHome) */
+#opening{padding-bottom:calc(14px + env(safe-area-inset-bottom))}
+#opening .puja{margin-top:6px}
+#opening .stage-lead{margin-top:8px;font-size:16px;line-height:1.5;max-width:23em}
+#opening .more{gap:12px;margin-top:14px}
+#opening .gallery{gap:8px}
+#opening .tile{aspect-ratio:4/5}
+@media (max-height:760px){ #opening .tile{aspect-ratio:1} #opening .tile img{object-position:50% 22%} }
 .title-wrap{align-self:stretch;margin-top:-34px}
 .title-wrap .stage-title{margin:0}
 .time-chip{position:absolute;right:0;bottom:calc(100% + 2px);height:26px;padding:0 9px 0 7px;border-radius:9px;display:inline-flex;align-items:center;gap:5px;white-space:nowrap;
@@ -363,6 +374,11 @@ dialog.reflect.dragged{animation:none;transition:transform .26s cubic-bezier(.2,
 
 /* Notices */
 .notice{display:flex;gap:10px;align-items:center;margin:0 auto 18px;max-width:25rem;padding:8px 8px 8px 14px;border-radius:16px;background:var(--glass);font-size:14px;color:var(--ink-2);text-align:left}
+/* on the opening, the install offer sits over the photo, clear of the top bar and the diya */
+#opening .notices{position:absolute;left:50%;top:max(70px,calc(var(--hero-h) * .2));z-index:6;width:min(calc(100% - 32px),25rem);transform:translateX(-50%)}
+#opening .notice{margin:0;padding:10px 6px 10px 16px;border-radius:16px;font-size:15px;line-height:1.4;color:var(--ink);
+  -webkit-backdrop-filter:blur(16px) saturate(1.2);backdrop-filter:blur(16px) saturate(1.2);border:1px solid var(--line);box-shadow:0 14px 34px rgba(0,0,0,.42);animation:w-fade .6s ease both}
+#opening .notice .link-btn{min-height:44px;padding:0 6px;font-size:15px}
 .notice p{margin:0;flex:1}
 .notice .link-btn{color:var(--sun);font-weight:600;text-decoration:none}
 .notice .x{color:var(--ink-3);width:44px;height:44px;display:grid;place-items:center;border-radius:50%;flex:none}
@@ -391,7 +407,7 @@ dialog.reflect.dragged{animation:none;transition:transform .26s cubic-bezier(.2,
 .peek.leaving{opacity:0;transition:opacity .22s ease}
 .swipe-on .art,.swipe-on .art-move,.swipe-on #screen .room{will-change:transform}
 :root.swiping{transition-duration:.42s}
-.room-top{min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 22px calc(96px + env(safe-area-inset-bottom));max-width:34rem;margin:0 auto}
+.room-top{min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;padding:0 22px calc(138px + env(safe-area-inset-bottom));max-width:34rem;margin:0 auto}
 .eyebrow{margin:0;font:500 13px var(--sans);color:var(--ink-2);letter-spacing:.02em}
 .room-title{margin:6px 0 0;font:400 40px/1.06 var(--serif);letter-spacing:-.015em;text-wrap:balance;text-shadow:0 2px 24px rgba(0,0,0,.35)}
 .room-dev{margin:8px 0 0;font-size:23px;line-height:1.4;color:var(--sun)}
@@ -400,7 +416,7 @@ dialog.reflect.dragged{animation:none;transition:transform .26s cubic-bezier(.2,
 .topfade{position:fixed;top:0;left:0;right:0;height:calc(92px + env(safe-area-inset-top));z-index:3;pointer-events:none;
   background:linear-gradient(var(--bg) 40%,transparent);opacity:var(--dim,0)}
 .hint svg{width:16px;height:16px}
-.room-body{max-width:34rem;margin:0 auto;padding:4px 20px calc(130px + env(safe-area-inset-bottom))}
+.room-body{max-width:34rem;margin:0 auto;padding:4px 20px calc(170px + env(safe-area-inset-bottom))}
 .story{margin:0;font:300 18px/1.6 var(--sans);color:var(--ink)}
 .glass{border-radius:18px;background:var(--glass);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid var(--line)}
 .doing{display:flex;gap:12px;margin:18px 0 0;padding:14px 16px;font-size:15px;line-height:1.55;color:var(--ink-2)}
@@ -443,11 +459,45 @@ dialog.reflect.dragged{animation:none;transition:transform .26s cubic-bezier(.2,
 .finish-card strong{display:block;font:400 24px var(--serif)}
 .finish-card span{display:block;font-size:14px;color:var(--ink-2)}
 
-/* The dock: play, how to show the words, and casting. It tucks away as you scroll down. */
+/* The dock: play, where you are in the song, casting, and how to show the words. It stays on screen. */
 .dock{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));z-index:15;display:flex;align-items:center;gap:6px;padding:6px;border-radius:18px;
   background:var(--glass);-webkit-backdrop-filter:blur(18px) saturate(1.2);backdrop-filter:blur(18px) saturate(1.2);border:1px solid var(--line);
   box-shadow:0 14px 34px rgba(0,0,0,.38);transform:translate(-50%,0);transition:transform .4s cubic-bezier(.2,.8,.2,1),opacity .4s;max-width:calc(100% - 20px)}
-.dock.away{transform:translate(-50%,150%);opacity:0}
+/* with a recording, a second row above: the position in the song, to drag, and the time */
+.dock.has-seek{display:grid;grid-template-columns:auto auto 1fr;grid-template-areas:"seek seek seek" "play cast seg";row-gap:0;column-gap:4px;
+  width:min(calc(100% - 20px),27rem);padding:2px 6px 6px}
+.dock .player.dockp{display:contents}
+.dock-seek{grid-area:seek;display:flex;align-items:center;gap:10px;padding:0 6px 0 8px}
+.dock-seek .seek{flex:1;min-width:0;height:30px}
+.dock-seek .pl-time{flex:none;min-width:74px;text-align:right;font-size:12px;color:var(--ink-2)}
+.dock.has-seek [data-play]{grid-area:play}
+.dock.has-seek [data-cast]{grid-area:cast}
+.dock.has-seek .seg{grid-area:seg;justify-self:end}
+/* Words that follow the song: the line being sung lights up; a quiet button brings the page back to it */
+.ln .main{transition:color .35s ease,text-shadow .35s ease}
+.words.synced .ln.sung .main,.words.timing .ln.sung .main{color:var(--sun);text-shadow:0 0 20px var(--sun-soft)}
+.words.timing .ln.next{position:relative}
+.words.timing .ln.next::before{content:'';position:absolute;left:-13px;top:.66em;width:6px;height:6px;border-radius:50%;background:var(--sun);box-shadow:0 0 8px var(--sun)}
+.follow-chip{position:fixed;left:50%;bottom:calc(126px + env(safe-area-inset-bottom));z-index:16;transform:translateX(-50%);display:inline-flex;align-items:center;gap:7px;
+  height:38px;padding:0 14px 0 11px;border-radius:12px;background:var(--glass);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  box-shadow:inset 0 0 0 1px var(--line),0 8px 22px rgba(0,0,0,.3);color:var(--sun);font:500 13.5px var(--sans);transition:opacity .3s}
+.follow-chip svg{width:16px;height:16px}
+.follow-chip[hidden]{display:none}
+/* Timing the words (G's phones only): one big button to tap as each line begins */
+.timing-on .dock,.timing-on .follow-chip{visibility:hidden}
+.timing-panel{position:fixed;left:50%;bottom:calc(12px + env(safe-area-inset-bottom));z-index:17;transform:translateX(-50%);width:min(calc(100% - 20px),27rem);padding:10px;border-radius:18px;
+  background:var(--glass);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border:1px solid var(--line);box-shadow:0 14px 34px rgba(0,0,0,.4)}
+.tp-head{display:flex;align-items:center;gap:6px;padding:0 2px 8px 6px;font-size:13px;color:var(--ink-2)}
+.tp-head .tp-count{flex:1}
+.tp-head button{min-height:36px;padding:0 10px;border-radius:10px;font-weight:600;color:var(--ink-2)}
+.tp-tap{display:block;width:100%;min-height:84px;padding:12px 14px;border-radius:14px;text-align:left;background:color-mix(in srgb,var(--sun) 14%,transparent);
+  box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--sun) 50%,transparent);touch-action:manipulation;-webkit-user-select:none;user-select:none}
+.tp-tap:active,.tp-tap.hit{background:color-mix(in srgb,var(--sun) 30%,transparent)}
+.tp-tap small{display:block;font:500 12px var(--sans);color:var(--sun)}
+.tp-tap span{display:block;margin-top:4px;font:400 19px/1.3 var(--serif);color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tp-done p{margin:2px 6px 10px;color:var(--ink)}
+.tp-done .actions{display:flex;flex-wrap:wrap;gap:8px}
+.tp-done textarea{width:100%;height:84px;margin-top:8px;font:12px/1.4 ui-monospace,monospace;color:var(--ink);background:var(--raise);border:1px solid var(--line);border-radius:10px;padding:8px}
 .seg{display:flex;gap:2px}
 .seg button{height:44px;min-width:44px;padding:0 13px;border-radius:12px;font-size:14px;font-weight:500;color:var(--ink-2)}
 .seg button[aria-pressed="true"]{background:var(--raise-2);color:var(--ink)}
@@ -511,6 +561,7 @@ dialog.sheet::backdrop{background:rgba(4,4,8,.6)}
 .list li{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:56px;border-bottom:1px solid var(--line)}
 .list li:last-child{border-bottom:0}
 .list li span small{display:block;color:var(--ink-3);font-size:12.5px}
+.row-btns{display:flex;gap:6px;flex:none}
 .list .mini{color:var(--ink-2);font-size:14px;font-weight:600;padding:0 4px;min-height:44px}
 .field{width:100%;min-width:0;height:48px;border-radius:12px;border:1px solid var(--line);background:var(--bg);padding:0 14px;font-size:16px}
 .field::placeholder{color:var(--ink-3)}
@@ -547,7 +598,7 @@ dialog.sheet::backdrop{background:rgba(4,4,8,.6)}
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5.5M11 6 5 12l6 6"/></svg>
   </button>
   <button class="orb faith gone" id="faithBtn" type="button" data-act="verse" aria-label="A verse from the Bhagavad Gita, in Daily Drift" title="A verse">
-    <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M235.32,180l-36.24-36.25L162.62,23.46A21.76,21.76,0,0,0,128,12.93,21.76,21.76,0,0,0,93.38,23.46L56.92,143.76,20.68,180a16,16,0,0,0,0,22.62l32.69,32.69a16,16,0,0,0,22.63,0L124.28,187a40.68,40.68,0,0,0,3.72-4.29,40.68,40.68,0,0,0,3.72,4.29L180,235.32a16,16,0,0,0,22.63,0l32.69-32.69A16,16,0,0,0,235.32,180ZM64.68,224,32,191.32l12.69-12.69,32.69,32.69ZM120,158.75a23.85,23.85,0,0,1-7,17L88.68,200,56,167.32l13.65-13.66a8,8,0,0,0,2-3.34l37-122.22A5.78,5.78,0,0,1,120,29.78Zm23,17a23.85,23.85,0,0,1-7-17v-129a5.78,5.78,0,0,1,11.31-1.68l37,122.22a8,8,0,0,0,2,3.34l14.49,14.49-33.4,32ZM191.32,224l-12.56-12.57,33.39-32L224,191.32Z"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6.6C10.2 5.3 7.6 4.8 3.5 5v12.8c4.1-.2 6.7.3 8.5 1.6 1.8-1.3 4.4-1.8 8.5-1.6V5c-4.1-.2-6.7.3-8.5 1.6Z"/><path d="M12 6.6v12.8"/></svg>
   </button>
   </div>
   <button class="tilak gone" id="tilakBtn" type="button" data-act="reflect" aria-label="A reflection"></button>
@@ -566,10 +617,10 @@ dialog.sheet::backdrop{background:rgba(4,4,8,.6)}
 <div class="toast" id="toast" role="status" popover="manual"></div>
 <audio id="player" preload="none"></audio>
 
-<script src="core.js?v=16"></script>
-<script src="aartis.js?v=16"></script>
-<script src="bell.js?v=16"></script>
-<script src="puja-times.js?v=16"></script>
+<script src="core.js?v=18"></script>
+<script src="aartis.js?v=18"></script>
+<script src="bell.js?v=18"></script>
+<script src="puja-times.js?v=18"></script>
 <script>
 (() => {
 'use strict';
@@ -581,8 +632,8 @@ document.addEventListener('touchmove', (e) => { if (e.touches.length > 1) e.prev
 addEventListener('wheel', (e) => { if (e.ctrlKey) e.preventDefault(); }, { passive: false });
 /* ---------- Settings you may change ---------- */
 const PIN = '1008';                    // the PIN friends type in; the shared link carries it
-const RELEASE = 16;
-const API = 'https://script.google.com/macros/s/AKfycbzKuCKJfZ0VXmYA4Us6pOxa_C4Z1HJ4k1yxzG4ujkZX8OcqN9fIIbknYDkg0ovz9u_0/exec';                        // visit messages: your Apps Script web app address (README, "Visit messages"); '' = off
+const RELEASE = 18;
+const API = 'https://script.google.com/macros/s/AKfycbzKuCKJfZ0VXmYA4Us6pOxa_C4Z1HJ4k1yxzG4ujkZX8OcqN9fIIbknYDkg0ovz9u_0/exec';   // visit messages: G's Apps Script web app (README, "Visit messages"); '' = off
 const EXPECT_BUILD = 1;                // the Apps Script release this page needs
 
 const C = window.Core;
@@ -623,7 +674,6 @@ const $ = (s, el = document) => el.querySelector(s);
 const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const byId = (id) => AARTIS.find((a) => a.id === id);
 const appUrl = () => location.origin + location.pathname;
-const timesWord = (x) => ({ 2: 'twice', 3: 'three times', 4: 'four times' }[x] || `${x} times`);
 
 const ICON = {
   x: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>',
@@ -945,6 +995,7 @@ function render(newScreen) {
     $('#screen').innerHTML = homeHtml();
     if ($('#puja')) S.pujaSeen = true;
     if (S.pujaTucked && PT) updateChip();
+    fitHome();
     renderNotices();
     FX.mood(isLit() ? .8 : .35, false);
     maybeWelcome();
@@ -956,6 +1007,7 @@ function render(newScreen) {
   Water.scan();
   Spot.schedule();
   Swipe.tease();
+  Sync.afterRender();
   if (newScreen) { window.scrollTo(0, 0); S.lastY = 0; }
   onScroll();
 }
@@ -980,40 +1032,39 @@ function homeHtml() {
   const pdf = isIOS || platform === 'other' ? 'target="_blank" rel="noopener"' : 'download="Diwali aartis.pdf"';
   return `<section class="stage${lit ? ' is-lit' : ''}" id="opening">
       <button class="hero" type="button" data-act="light" aria-label="${lit ? 'The diya is lit' : 'Light the diya'}">${sceneHtml()}</button>
+      <div class="notices" id="notices"></div>
       <div class="title-wrap"><h1 class="stage-title">Diwali aarti</h1><button class="time-chip${S.pujaTucked && PT ? '' : ' gone'}" id="pujaChip" type="button" data-act="place"></button></div>
       ${S.pujaTucked ? '' : pujaHtml()}
       <p class="stage-lead" id="lead">${esc(lit ? LIT_LEAD : 'Touch the diya to light it.')}</p>
       <div class="more after-light" id="more">${lit ? moreHtml(pdf, false) : ''}</div>
-      <div class="notices" id="notices"></div>
     </section>`;
 }
+// The opening fits the screen without scrolling: the photo gives up height until all that's below it fits,
+// measured as it will be once the diya is lit (so lighting it never pushes anything off the screen)
+function fitHome() {
+  const st = $('#opening');
+  if (!st) return;
+  st.style.removeProperty('--hero-h');
+  const lead = $('#lead'), more = $('#more'), lit = isLit(), was = lead ? lead.textContent : '';
+  if (!lit && lead && more) { lead.textContent = LIT_LEAD; more.innerHTML = moreHtml('', false); more.style.display = 'grid'; }
+  const hero = st.querySelector('.hero').getBoundingClientRect().height;
+  const over = document.documentElement.scrollHeight - innerHeight;
+  if (!lit && lead && more) { lead.textContent = was; more.innerHTML = ''; more.style.display = ''; }
+  if (over > 0) st.style.setProperty('--hero-h', `${Math.max(230, Math.floor(hero - over - 4))}px`);
+}
+let fitT = 0;
+addEventListener('resize', () => { clearTimeout(fitT); fitT = setTimeout(() => { if (S.route.r === 'home') fitHome(); }, 150); });
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (S.route.r === 'home') fitHome(); });
 function moreHtml(pdf, animate) {
   const r = (d) => (animate ? ` rise" style="--d:${d}s` : '');
   return `<button class="btn primary${r(.15)}" type="button" data-go="${AARTIS[0].id}">Begin with Ganesh</button>
     <div class="gallery${r(.35)}">${AARTIS.map((a, i) => `<button class="tile" type="button" data-go="${a.id}" aria-label="${esc(a.title)}">
         <img src="${esc(a.art)}" alt="" loading="lazy" decoding="async"><span><small>${i + 1}</small>${esc(a.deity === 'Vishnu' ? 'Jagdish' : a.deity)}</span></button>`).join('')}</div>
-    <a class="link-btn${r(.55)}" href="aarti-words.pdf" ${pdf}>${ICON.down}Printable words, one aarti per page</a>
-    <p class="quiet${r(.65)}">${AARTIS.some((a) => !a.audio) ? 'The music plays in your Spotify app for now. ' : 'Tap the cast button on an aarti to play it on a speaker or TV. '}The English is a plain guide to the meaning, not a word-for-word translation.</p>`;
+    <a class="link-btn${r(.55)}" href="aarti-words.pdf" ${pdf}>${ICON.down}Printable words, one aarti per page</a>`;
 }
 
 function srcFor(a) { return C.sourceFor(a, S.own[a.id]); }
 
-function playCardHtml(a) {
-  const s = srcFor(a);
-  if (s.kind === 'file') {
-    return `<section class="play-card glass" aria-label="Recording">${playerHtml('a:' + a.id, s.url, a.title, a.artist, a.art)}
-      <p class="play-src">${esc(a.artist)}<button class="link-btn" type="button" data-own="${a.id}">Use your own version</button></p></section>`;
-  }
-  const t = C.openTarget(s.src, platform);
-  const attrs = spotifyAttrs(t);
-  const src = s.own
-    ? `<span class="own-tag">Your own version</span><button class="link-btn" type="button" data-own="${a.id}">Change</button>`
-    : `${esc(a.artist)}<button class="link-btn" type="button" data-own="${a.id}">Use your own version</button>`;
-  return `<section class="play-card glass" aria-label="Music">
-    <a class="btn primary" ${attrs} data-spotify="${a.id}">${ICON.play}Play in Spotify</a>
-    <p class="play-note">Opens the song in your Spotify app. Come back here to follow the words.</p>
-    <p class="play-src">${src}</p></section>`;
-}
 const spotifyAttrs = (t) => `href="${esc(t.href)}"${t.newTab ? ' target="_blank" rel="noopener"' : ''}${t.fallback ? ` data-fallback="${esc(t.fallback)}"` : ''}`;
 
 function playerHtml(key, url, title, sub, art, mini) {
@@ -1021,6 +1072,9 @@ function playerHtml(key, url, title, sub, art, mini) {
   const data = `data-key="${esc(key)}" data-url="${esc(url)}" data-title="${esc(title)}" data-sub="${esc(sub || '')}" data-art="${esc(art || 'icon-512.png')}"`;
   const playBtn = `<button class="round-btn" type="button" data-play="${esc(key)}" aria-label="Play ${esc(title)}" title="Play">${ICON.play}</button>`;
   const castBtn = `<button class="icon-btn cast" type="button" data-cast="${esc(key)}" hidden aria-pressed="false" aria-label="Play on a speaker or TV" title="Play on a speaker or TV">${castIcon}</button>`;
+  if (mini === 'dock') return `<div class="player dockp" ${data}><div class="dock-seek">
+      <input class="seek" type="range" min="0" max="100" step="1" value="0" aria-label="Position in ${esc(title)}" data-seek="${esc(key)}">
+      <span class="pl-time num" aria-hidden="true">0:00</span></div>${playBtn}${castBtn}</div>`;
   if (mini) return `<div class="player mini" ${data}>${playBtn}${castBtn}</div>`;
   return `<div class="player" ${data}>${playBtn}
     <div class="pl-mid"><div class="pl-title">${esc(title)}</div>
@@ -1028,32 +1082,32 @@ function playerHtml(key, url, title, sub, art, mini) {
       <div class="pl-time num" aria-hidden="true">0:00</div></div>${castBtn}</div>`;
 }
 
-function lineHtml(ln, mode, extra) {
+// One line of the words. Every repeat is written out (core.js), so each line is one moment in the song: i is its place in order.
+function lineHtml(ln, mode, extra, i) {
   const t = C.lineText(ln, mode);
   const lang = mode === 'dev' ? 'hi' : mode === 'en' ? 'en-GB' : 'hi-Latn';
-  const x = ln.x ? `<span class="x num" aria-label="sung ${timesWord(ln.x)}">×${ln.x}</span>` : '';
   const sub = t.sub ? `<span class="sub" lang="hi-Latn">${esc(t.sub)}</span>` : '';
-  return `<p class="ln${ln.echo ? ' echo' : ''}${extra ? ' ' + extra : ''}"><span class="main" lang="${lang}">${esc(t.main)}</span>${x}${sub}</p>`;
+  return `<p class="ln${ln.echo ? ' echo' : ''}${extra ? ' ' + extra : ''}" data-i="${i}"><span class="main" lang="${lang}">${esc(t.main)}</span>${sub}</p>`;
 }
 function wordsHtml(a) {
   const mode = S.set.mode;
+  let i = 0;
   return C.blocks(a).map((b) => {
-    if (b.type === 'refrain') {
-      return `<div class="block refrain"><p class="block-tag">Refrain${b.x > 1 ? `, sung ${timesWord(b.x)}` : ''}</p>${b.lines.map((ln) => lineHtml(ln, mode)).join('')}</div>`;
-    }
-    return `<div class="block verse">${b.lines.map((ln) => lineHtml(ln, mode)).join('')}${b.cue ? lineHtml(b.cue, mode, 'cue') : ''}</div>`;
+    const lines = b.lines.map((ln) => lineHtml(ln, mode, '', i++)).join('');
+    if (b.type === 'refrain') return `<div class="block refrain"><p class="block-tag">Chorus</p>${lines}</div>`;
+    return `<div class="block verse">${lines}${b.cue ? [].concat(b.cue).map((ln) => lineHtml(ln, mode, 'cue', i++)).join('') : ''}</div>`;
   }).join('');
 }
 
 function dockHtml(a) {
   const m = S.set.mode, s = srcFor(a);
   let play;
-  if (s.kind === 'file') play = playerHtml('a:' + a.id, s.url, a.title, a.artist, a.art, true);
+  if (s.kind === 'file') play = playerHtml('a:' + a.id, s.url, a.title, a.artist, a.art, 'dock');
   else play = `<a class="dock-play" ${spotifyAttrs(C.openTarget(s.src, platform))} data-spotify="${a.id}" aria-label="Play ${esc(a.title)} in Spotify" title="Play in Spotify">${ICON.play}</a>`;
   const i = AARTIS.indexOf(a);
   const dots = `<div class="dots" id="dots" role="navigation" aria-label="The three aartis">${AARTIS.map((x, j) =>
     `<button class="dot" type="button" data-jump="${x.id}" aria-label="${esc(x.title)}, ${j + 1} of ${AARTIS.length}" aria-current="${j === i}"></button>`).join('')}</div>`;
-  return `<nav class="dock" id="dock" aria-label="Music and words">${dots}${play}
+  return `<nav class="dock${s.kind === 'file' ? ' has-seek' : ''}" id="dock" aria-label="Music and words">${dots}${play}
     <div class="seg" role="group" aria-label="Show the words in">
       <button type="button" data-mode="dev" aria-pressed="${m === 'dev'}" aria-label="Hindi, in Devanagari"><span lang="hi">हिन्दी</span></button>
       <button type="button" data-mode="rom" aria-pressed="${m === 'rom'}" aria-label="Hindi, in Roman letters">Roman</button>
@@ -1079,7 +1133,6 @@ function roomHtml(a, i) {
       <div class="room-body">
         <p class="story">${esc(a.about)}</p>
         <p class="doing glass">${ICON.flame}<span>${esc(a.doing)}</span></p>
-        ${playCardHtml(a)}
         <section class="words" id="words" data-mode="${S.set.mode}" aria-label="Words">${wordsHtml(a)}</section>
         ${next
           ? `<button class="next-card" type="button" data-next="${next.id}"><img src="${esc(next.art)}" alt="" loading="lazy" decoding="async">
@@ -1102,7 +1155,7 @@ function doneHtml() {
   </section>`;
 }
 
-/* ---------- Scrolling in a room: the painting softens, the verse in view glows, the dock tucks away ---------- */
+/* ---------- Scrolling in a room: the painting softens and the verse in view glows ---------- */
 let scrollRaf = 0;
 function onScroll() {
   if (scrollRaf) return;
@@ -1122,14 +1175,6 @@ function onScroll() {
     });
     blocks.forEach((b) => b.classList.toggle('now', b === best));
     if (best) best.style.setProperty('--o', '1');
-    const dock = $('#dock');
-    if (dock) {
-      const dy = y - (S.lastY || 0), nearEnd = y + vh > document.documentElement.scrollHeight - 80;
-      if (Math.abs(dy) > 6 || nearEnd) {
-        dock.classList.toggle('away', dy > 0 && y > vh * .5 && !nearEnd);
-        S.lastY = y;
-      }
-    }
   });
 }
 window.addEventListener('scroll', onScroll, { passive: true });
@@ -1265,17 +1310,18 @@ function installLine() {
 function welcomeHtml() {
   const inst = installLine();
   let i = 0;
-  const step = (icon, text) => `<li class="w-in" style="--i:${++i + 2}">${icon}<span>${text}</span></li>`;
+  const step = (icon, text) => `<li class="w-in" style="--i:${++i + 3}">${icon}<span>${text}</span></li>`;
   return `<div class="w-in" style="--i:0"><span class="mini-diya" aria-hidden="true">${sceneHtml(true)}</span></div>
     <h2 id="wTitle" class="w-in" style="--i:1" tabindex="-1" autofocus>Happy Diwali</h2>
-    <p class="w-lead w-in" style="--i:2">A simple guide to the three Diwali aartis, in the order they’re sung.</p>
+    <p class="w-why w-in" style="--i:2">Every Diwali, my mother led the aarti and we followed. Since she passed, I’ve turned to YouTube each year to find it. Now it lives here, whole, in her memory. <span class="w-mala" aria-hidden="true">📿</span></p>
+    <p class="w-lead w-in" style="--i:3">A simple guide to the three Diwali aartis, in the order they’re sung.</p>
     <ul class="w-steps">${step(ICON.flame, 'Touch the diya to begin')}${step(ICON.words, 'Follow the words and their meaning')}${step(ICON.cast, 'Play the song, or cast it to your TV')}</ul>
-    ${inst ? `<p class="w-install w-in" id="wInstall" style="--i:6">${inst}</p>` : ''}
-    <div class="w-actions w-in" id="wActions" style="--i:7">
+    ${inst ? `<p class="w-install w-in" id="wInstall" style="--i:7">${inst}</p>` : ''}
+    <div class="w-actions w-in" id="wActions" style="--i:8">
       ${!standalone && S.installEvt ? '<button class="btn primary" type="button" data-act="install">Install app</button><button class="btn" type="button" data-act="welcomeDone">Begin</button>'
         : '<button class="btn primary" type="button" data-act="welcomeDone">Begin</button>'}
     </div>
-    <p class="w-credit w-in" style="--i:8">All artwork and content by g.s</p>`;
+    <p class="w-credit w-in" style="--i:9">All artwork and content by g.s</p>`;
 }
 function openWelcome() {
   const d = $('#welcome');
@@ -1599,7 +1645,7 @@ const Spot = (() => {
     timer = 0;
     if (reflectKey() !== k || seen(k)) return;
     const t = $('#tilakBtn');
-    const busy = !S.unlocked || document.hidden || navigating || window.scrollY > 40 || !t || t.classList.contains('gone')
+    const busy = !S.unlocked || document.hidden || navigating || window.scrollY > 40 || !t || t.classList.contains('gone') || !audio.paused
       || $('#sheet').open || $('#welcome').open || $('#reflect').open || Drift.isOpen() || document.querySelector('.puja-fly');
     if (busy) { if (n < 20) timer = setTimeout(() => attempt(k, n + 1), 3000); return; }
     show(k);
@@ -1689,7 +1735,7 @@ function openSettings() {
     <ul class="list">${ownRows}</ul>
 
     <h3>Test casting</h3>
-    <p>When the recordings are in the app, you can send them to a speaker or TV. Check it works now with a short temple bell.</p>
+    <p>Send the aartis to a speaker or TV with the cast button on the music bar. Check it works with a short temple bell.</p>
     <p class="small">${isIOS ? 'On iPhone this uses AirPlay.' : 'Chromecast works from Chrome on Android. Your phone and speaker need to be on the same Wi-Fi.'}</p>
     <div class="test-box">${playerHtml('bell', 'test-bell.mp3', 'Test bell', 'Aarti', 'icon-512.png')}</div>
     <p class="result" id="castResult">${esc(castHint)}</p>
@@ -1702,6 +1748,7 @@ function openSettings() {
     <button class="meaning-link" type="button" data-act="welcome">${ICON.flame}<span>How to use Aarti</span></button>
     <p class="small">Words as sung by Anuradha Paudwal. The English is a plain guide to the meaning, not a word-for-word translation. The screen stays on while an aarti is open. <span class="rel" data-rel>Release ${RELEASE}.</span></p>
     ${Visits.ownerHtml()}
+    ${Sync.ownerHtml()}
     <p class="credit">Big Bear Binary</p>`);
   syncPlayers();
   Visits.ownerCheck();
@@ -1860,6 +1907,25 @@ async function togglePlay(el) {
     }
   } else audio.pause();
 }
+// How long each recording is, so the bar can show it before it's played (read once from the file's start)
+const Lens = (() => {
+  const known = {};
+  return {
+    of(url) {
+      if (!url || url === 'test-bell.mp3') return 0;
+      if (known[url] != null) return known[url];
+      const m = get('len', {})[url]; if (m) return (known[url] = m);
+      known[url] = 0;
+      const pr = new Audio(); pr.preload = 'metadata'; pr.muted = true;
+      pr.addEventListener('loadedmetadata', () => {
+        if (isFinite(pr.duration) && pr.duration > 0) { known[url] = pr.duration; put('len', { ...get('len', {}), [url]: pr.duration }); syncPlayers(); }
+        pr.removeAttribute('src'); pr.load();
+      }, { once: true });
+      pr.src = url;
+      return 0;
+    },
+  };
+})();
 function syncPlayers() {
   const rk = remoteKey(), cafConn = cafOn();
   const localPlaying = !audio.paused && !audio.ended;
@@ -1877,6 +1943,7 @@ function syncPlayers() {
       playing = mine && localPlaying;
       busy = !!(CAF && CAF.loading === key) || (mine && S.waiting && !castOn);
       dur = mine && isFinite(audio.duration) ? audio.duration : 0; at = mine ? audio.currentTime || 0 : 0;
+      if (!dur) dur = Lens.of(p.dataset.url);
     }
     const state = busy ? 'busy' : playing ? 'pause' : 'play';
     if (btn.dataset.state !== state) {
@@ -1891,6 +1958,7 @@ function syncPlayers() {
       seek.style.setProperty('--p', dur ? `${(at / dur) * 100}%` : '0%');
     }
     if (time) time.textContent = dur ? `${C.fmtTime(at)} / ${C.fmtTime(dur)}` : C.fmtTime(at);
+    if (p.classList.contains('dockp')) Sync.kick();
     const canCast = CAF ? S.castAvail !== false : !!(audio.remote || audio.webkitShowPlaybackTargetPicker) && S.castAvail !== false;
     if (!cast) return;
     cast.hidden = !canCast;
@@ -2189,11 +2257,7 @@ async function shareApp() {
 /* ---------- Taps ---------- */
 document.addEventListener('click', async (e) => {
   const t = e.target.closest('button, a');
-  if (!t) {   // a tap on the words brings the dock back
-    const dock = $('#dock');
-    if (dock && e.target.closest('.room')) { dock.classList.remove('away'); S.lastY = window.scrollY; }
-    return;
-  }
+  if (!t) return;
   const d = t.dataset;
   if (d.spotify) { Visits.did('spotify'); spotifyTapped(t); return; }
   if (d.go) { go({ r: 'aarti', id: d.go }); return; }
@@ -2236,6 +2300,8 @@ document.addEventListener('click', async (e) => {
     case 'reflectClose': closeReflect(); break;
     case 'share': Visits.did('shared'); shareApp(); break;
     case 'tgTest': Visits.test(t); break;
+    case 'timeWords': closeSheet(); Sync.beginTiming(d.id); break;
+    case 'copyTimes': Sync.copy(d.id); break;
     case 'bell':
       S.set.bell = S.set.bell === false; saveSet();
       t.setAttribute('aria-checked', String(S.set.bell));
@@ -2281,6 +2347,11 @@ document.addEventListener('input', (e) => {
     const key = e.target.dataset.seek;
     if (cafOn() && remoteKey() === key) return;    // the TV is told once you let go (change)
     if (key === S.cur && isFinite(audio.duration)) { audio.currentTime = +e.target.value; }
+    else if (key !== S.cur && !cafOn()) {
+      const pl = e.target.closest('.player'), v = +e.target.value;
+      load(key, pl.dataset.url, pl.dataset.title, pl.dataset.sub, pl.dataset.art);
+      audio.addEventListener('loadedmetadata', () => { try { audio.currentTime = v; } catch {} syncPlayers(); }, { once: true });
+    }
   }
 });
 document.addEventListener('change', (e) => {
@@ -2543,10 +2614,232 @@ const Swipe = (() => {
   document.addEventListener('touchcancel', end);
 })();
 
+// While an update lands, a phone can briefly have this page with the previous core.js; these keep it working
+if (!C.lineAt) C.lineAt = (T, t) => { let at = -1; for (let i = 0; i < T.length; i++) if (T[i] <= t) at = i; return at; };
+if (!C.timesOk) C.timesOk = () => false;
+if (!C.lineCount) C.lineCount = (a) => C.blocks(a).reduce((n, b) => n + b.lines.length + (b.cue ? [].concat(b.cue).length : 0), 0);
+
+/* ---------- Words that follow the song ----------
+   When an aarti's lines have start times (times: [...] in aartis.js, or timed on G's phone), the line being sung
+   lights up and the page glides to keep it a little above the middle. Scroll by hand and the gliding stops;
+   "Follow the song" brings it back. It follows the TV too while casting.
+   Timing (G's phones only, from Settings): the song plays from the start and G taps as each line begins. */
+const Sync = (() => {
+  const LEAD = .3;                       // a line lights this many seconds early, so the eye is there in time
+  let raf = 0, cur = -1, follow = true, rem = { t: -1, at: 0 }, chipEl = null, timing = null, panel = null;
+  const aarti = () => (S.route.r === 'aarti' ? AARTIS.find((a) => a.id === S.route.id) : null);
+  const lineEl = (i) => document.querySelector(`.words .ln[data-i="${i}"]`);
+  const owner = () => !!get('noCount', false);
+  function timesFor(a) {
+    if (!a || !a.audio || srcFor(a).kind !== 'file') return null;
+    const n = C.lineCount(a), mine = owner() ? get('times:' + a.id, null) : null;
+    if (mine && mine.audio === a.audio && C.timesOk(mine.times, n)) return mine.times;
+    return C.timesOk(a.times, n) ? a.times : null;
+  }
+  // where the song is: on the phone, or on the TV (its time comes about once a second, so it's carried on between)
+  function position(key) {
+    if (cafOn() && remoteKey() === key) {
+      const R = CAF.player, t = R.currentTime || 0, now = performance.now();
+      if (t !== rem.t) rem = { t, at: now };
+      const playing = !R.isPaused && R.playerState === 'PLAYING';
+      return { t: playing ? rem.t + Math.min(2, (now - rem.at) / 1000) : t, playing };
+    }
+    if (S.cur === key) return { t: audio.currentTime || 0, playing: !audio.paused && !audio.ended };
+    return null;
+  }
+  function light(i) {
+    if (i === cur && (i < 0 || (lineEl(i) && lineEl(i).classList.contains('sung')))) return;
+    document.querySelectorAll('.words .ln.sung').forEach((el) => el.classList.remove('sung'));
+    cur = i;
+    const el = i >= 0 && lineEl(i);
+    if (el) el.classList.add('sung');
+  }
+  function toLine(i, at) {
+    const el = lineEl(i);
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    const y = window.scrollY + r.top + r.height / 2 - innerHeight * (at || .4);
+    window.scrollTo({ top: Math.max(0, y), behavior: reduced() ? 'auto' : 'smooth' });
+  }
+  function chip(show) {
+    if (!chipEl) {
+      chipEl = document.createElement('button');
+      chipEl.className = 'follow-chip'; chipEl.type = 'button'; chipEl.hidden = true;
+      chipEl.innerHTML = `${ICON.chevDown}Follow the song`;
+      chipEl.addEventListener('click', () => { follow = true; chip(false); if (cur >= 0) toLine(cur); });
+      document.body.append(chipEl);
+    }
+    chipEl.hidden = !show;
+  }
+  function tick() {
+    raf = 0;
+    const a = aarti(), words = $('#words');
+    if (!a || !words) { chip(false); return; }
+    const key = 'a:' + a.id, pos = position(key);
+    if (timing) {
+      if (timing.id !== a.id) { stopTiming(); return; }
+      const clock = panel && panel.querySelector('.tp-clock');
+      if (clock && pos) clock.textContent = C.fmtTime(pos.t);
+      if (pos && pos.playing) raf = requestAnimationFrame(tick);
+      return;
+    }
+    const times = timesFor(a);
+    words.classList.toggle('synced', !!times);
+    if (!times || !pos) { light(-1); chip(false); return; }
+    const i = C.lineAt(times, pos.t + LEAD);
+    if (i !== cur) { light(i); if (follow && pos.playing && i >= 0) toLine(i); }
+    chip(!follow && pos.playing && i >= 0);
+    if (pos.playing) raf = requestAnimationFrame(tick);
+  }
+  const kick = () => { if (!raf) raf = requestAnimationFrame(tick); };
+  // scrolling by hand stops the gliding (taps on the bar don't)
+  const byHand = (e) => {
+    if (timing || !e.target.closest || e.target.closest('#dock, .follow-chip, .timing-panel, dialog')) return;
+    const a = aarti(), pos = a && timesFor(a) && position('a:' + a.id);
+    if (pos && pos.playing && follow) { follow = false; chip(cur >= 0); }
+  };
+  addEventListener('touchmove', byHand, { passive: true });
+  addEventListener('wheel', byHand, { passive: true });
+  addEventListener('keydown', (e) => { if (['PageDown', 'PageUp', 'ArrowDown', 'ArrowUp', 'Home', 'End'].includes(e.key)) byHand(e); });
+  audio.addEventListener('play', () => { if (!timing) { follow = true; chip(false); } kick(); });
+  audio.addEventListener('seeked', () => { cur = -2; kick(); });
+
+  // ----- timing (G's phones) -----
+  function beginTiming(id) {
+    const a = AARTIS.find((x) => x.id === id);
+    if (!a || !a.audio) return;
+    if (cafOn()) { toast('Stop casting first: time the words on the phone.'); return; }
+    if (!aarti() || aarti().id !== id) { S.pendingTiming = id; go({ r: 'aarti', id }, S.route.r === 'aarti'); return; }
+    stopTiming(true);
+    timing = { id, n: C.lineCount(a), times: [], audio: a.audio };
+    document.documentElement.classList.add('timing-on');
+    $('#words').classList.add('timing'); $('#words').classList.remove('synced');
+    light(-1); chip(false);
+    panel = document.createElement('div');
+    panel.className = 'timing-panel'; panel.id = 'timing'; panel.setAttribute('role', 'region'); panel.setAttribute('aria-label', 'Timing the words');
+    document.body.append(panel);
+    paint();
+    const pl = $('#dock .player');
+    if (S.cur !== 'a:' + id) load('a:' + id, pl.dataset.url, pl.dataset.title, pl.dataset.sub, pl.dataset.art);
+    try { audio.currentTime = 0; } catch {}
+    audio.play().then(setMedia).catch(() => toast('Tap the big button to start.'));
+    toLine(0, .45);
+    kick();
+  }
+  function paint() {
+    if (!panel || !timing) return;
+    const k = timing.times.length, a = AARTIS.find((x) => x.id === timing.id);
+    document.querySelectorAll('.words .ln.next').forEach((el) => el.classList.remove('next'));
+    if (timing.done) {
+      const ok = timing.times.length === timing.n;
+      panel.innerHTML = `<div class="tp-done">${ok
+        ? `<p>All ${timing.n} lines of ${esc(a.title)} timed. This phone now follows them; send them over to put them in for everyone.</p>
+          <div class="actions"><button class="btn primary" type="button" data-tact="copy">Copy timings</button>
+          <button class="btn" type="button" data-tact="again">Time again</button><button class="btn" type="button" data-tact="close">Close</button></div>`
+        : `<p>The song ended with ${timing.n - k} of ${timing.n} lines still to tap.</p>
+          <div class="actions"><button class="btn primary" type="button" data-tact="again">Time again</button><button class="btn" type="button" data-tact="close">Close</button></div>`}</div>`;
+      return;
+    }
+    const el = lineEl(k);
+    if (el) el.classList.add('next');
+    const txt = el ? el.querySelector('.main').textContent || (el.querySelector('.sub') || {}).textContent || '' : '';
+    panel.innerHTML = `<div class="tp-head"><span class="tp-count num">Line ${k + 1} of ${timing.n}</span><span class="tp-clock num">0:00</span>
+        <button type="button" data-tact="undo"${k ? '' : ' disabled'}>Undo</button><button type="button" data-tact="stop">Stop</button></div>
+      <button class="tp-tap" type="button" data-tact="tap"><small>Tap as this line begins</small><span>${esc(txt)}</span></button>`;
+  }
+  function tap() {
+    if (!timing || timing.done || S.cur !== 'a:' + timing.id) return;
+    if (audio.paused) { audio.play().catch(() => {}); return; }
+    const k = timing.times.length, t = Math.round(audio.currentTime * 100) / 100;
+    timing.times.push(Math.max(t, k ? timing.times[k - 1] : 0));
+    light(k);
+    const btn = panel.querySelector('.tp-tap'); if (btn) { btn.classList.add('hit'); setTimeout(() => btn.classList.remove('hit'), 120); }
+    if (timing.times.length === timing.n) finish();
+    else { paint(); toLine(k + 1, .45); }
+  }
+  function undo() {
+    if (!timing || timing.done || !timing.times.length) return;
+    const back = timing.times.pop(), k = timing.times.length;
+    light(k - 1);
+    try { audio.currentTime = Math.max(0, back - 4); } catch {}
+    paint(); toLine(k, .45);
+  }
+  function finish() {
+    timing.done = true;
+    if (timing.times.length === timing.n) put('times:' + timing.id, { audio: timing.audio, times: timing.times, at: Date.now() });
+    paint();
+  }
+  function stopTiming(quiet) {
+    if (!timing) return;
+    timing = null;
+    if (panel) { panel.remove(); panel = null; }
+    document.documentElement.classList.remove('timing-on');
+    const w = $('#words'); if (w) w.classList.remove('timing');
+    document.querySelectorAll('.words .ln.next').forEach((el) => el.classList.remove('next'));
+    cur = -2; follow = true;
+    if (!quiet) kick();
+  }
+  const timingsText = (id) => {
+    const m = get('times:' + id, null), a = AARTIS.find((x) => x.id === id);
+    return m ? `Aarti timings · ${id} · ${a.audio} · ${m.times.length} lines\n${JSON.stringify(m.times)}` : '';
+  };
+  async function copy(id) {
+    const text = timingsText(id);
+    if (!text) return;
+    try { await navigator.clipboard.writeText(text); toast('Timings copied'); }
+    catch {
+      if (panel) { const ta = document.createElement('textarea'); ta.readOnly = true; ta.value = text; panel.querySelector('.tp-done').append(ta); ta.select(); }
+      toast('Select the text and copy it');
+    }
+  }
+  document.addEventListener('pointerdown', (e) => {
+    const t = e.target.closest && e.target.closest('[data-tact="tap"]');
+    if (t) { e.preventDefault(); tap(); }
+  });
+  document.addEventListener('click', (e) => {
+    const t = e.target.closest && e.target.closest('[data-tact]');
+    if (!t || !timing) return;
+    const k = t.dataset.tact;
+    if (k === 'undo') undo();
+    else if (k === 'stop') { stopTiming(); audio.pause(); toast('Timing stopped'); }
+    else if (k === 'copy') copy(timing.id);
+    else if (k === 'again') beginTiming(timing.id);
+    else if (k === 'close') { stopTiming(); }
+  });
+  document.addEventListener('keydown', (e) => {
+    if (!timing || e.target.closest('input, textarea')) return;
+    if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); if (!e.repeat) tap(); }
+    else if (e.key === 'Backspace') { e.preventDefault(); undo(); }
+    else if (e.key === 'Escape') { stopTiming(); audio.pause(); }
+  });
+  audio.addEventListener('ended', () => { if (timing && !timing.done) finish(); });
+
+  // Settings, on G's phones: time each aarti
+  function ownerHtml() {
+    if (!owner()) return '';
+    const rows = AARTIS.filter((a) => a.audio).map((a) => {
+      const n = C.lineCount(a), mine = get('times:' + a.id, null), local = mine && mine.audio === a.audio && C.timesOk(mine.times, n);
+      const state = local ? 'Timed on this phone' : C.timesOk(a.times, n) ? 'Timed for everyone' : 'Not timed yet';
+      return `<li><span>${esc(a.title)}<small>${n} lines · ${state}</small></span><span class="row-btns">
+        ${local ? `<button class="mini" type="button" data-act="copyTimes" data-id="${a.id}">Copy</button>` : ''}
+        <button class="mini" type="button" data-act="timeWords" data-id="${a.id}">Time</button></span></li>`;
+    }).join('');
+    return `<h3>Time the words</h3><p>Plays the aarti from the start. Tap the big button as each line begins; Undo steps back a line. On a computer, the space bar taps.</p>
+      <ul class="list">${rows}</ul>`;
+  }
+  function afterRender() {
+    cur = -2; follow = true; chip(false);
+    if (timing && (!aarti() || aarti().id !== timing.id)) stopTiming(true);
+    if (S.pendingTiming && aarti() && aarti().id === S.pendingTiming) { const id = S.pendingTiming; S.pendingTiming = null; setTimeout(() => beginTiming(id), 350); }
+    kick();
+  }
+  return { kick, afterRender, beginTiming, ownerHtml, copy, get timing() { return !!timing; } };
+})();
+
 /* ---------- Visits: a note to G on Telegram each time Aarti is opened ----------
    One message per visit, kept up to date while it lasts: when it was opened, how long it was on screen (time in the
    background doesn't count), where they went and what they did, roughly where they are (the town their internet
-   connection is in, from a free lookup) and the phone. It goes through G's own Apps Script, which holds the bot's token;
+   connection is in, from a free lookup) and what kind of phone or computer (Android, iPhone, Mac, Windows). It goes through G's own Apps Script, which holds the bot's token;
    nothing secret is in this page. Off until API (top of the script) has the web app address.
    G's own phones are left out: open Aarti once with #me at the end of its address, or tap "Release" in Settings
    five times. #count (or five taps again) puts a phone back in. */
@@ -2593,29 +2886,11 @@ const Visits = (() => {
       || await one('https://get.geojs.io/v1/ip/geo.json', (j) => (j && j.country ? { city: j.city || '', region: j.region || '', country: j.country, flag: '' } : null));
     if (where) put('where', { at: Date.now(), p: where });
   }
-  // the phone: model where the browser says (Android's Chrome does, iPhones don't), system and browser
-  async function device() {
-    const o = { model: '', os: '', browser: '', installed: standalone };
-    let m;
-    if ((m = /Android\s(\d+)/.exec(UA))) o.os = 'Android ' + m[1];
-    else if ((m = /(iPhone|iPad|iPod)[^)]*?OS (\d+)_(\d+)/.exec(UA))) { o.model = m[1]; o.os = 'iOS ' + m[2] + '.' + m[3]; }
-    else if (isIOS) { o.model = 'iPad'; o.os = 'iPadOS'; }
-    else if (/Windows NT/.test(UA)) o.os = 'Windows';
-    else if (/CrOS/.test(UA)) o.os = 'ChromeOS';
-    else if (/Mac OS X/.test(UA)) o.os = 'macOS';
-    else if (/Linux/.test(UA)) o.os = 'Linux';
-    for (const [re, name] of [[/SamsungBrowser\/(\d+)/, 'Samsung Internet'], [/EdgA?\/(\d+)/, 'Edge'], [/OPR\/(\d+)/, 'Opera'], [/FxiOS\/(\d+)/, 'Firefox'],
-      [/Firefox\/(\d+)/, 'Firefox'], [/CriOS\/(\d+)/, 'Chrome'], [/Chrome\/(\d+)/, 'Chrome'], [/Version\/(\d+)[\d.]* .*Safari/, 'Safari']]) {
-      if ((m = re.exec(UA))) { o.browser = name + ' ' + m[1]; break; }
-    }
-    try {
-      const h = navigator.userAgentData && navigator.userAgentData.getHighEntropyValues
-        && await navigator.userAgentData.getHighEntropyValues(['model', 'platformVersion']);
-      if (h && h.model) o.model = /^SM-/.test(h.model) ? 'Samsung ' + h.model : /^Pixel/.test(h.model) ? 'Google ' + h.model : h.model;
-      if (h && h.platform === 'Android' && h.platformVersion) o.os = 'Android ' + h.platformVersion.split('.')[0];
-      if (h && h.platform === 'Windows' && parseInt(h.platformVersion, 10) >= 13) o.os = 'Windows 11';
-    } catch {}
-    dev = o;
+  // the phone: just what kind (Android, iPhone, iPad, Mac, Windows), no model or versions
+  function device() {
+    const os = isAndroid ? 'Android' : /iPhone|iPod/.test(UA) ? 'iPhone' : isIOS ? 'iPad' : /Windows/.test(UA) ? 'Windows'
+      : /CrOS/.test(UA) ? 'Chromebook' : /Mac OS X|Macintosh/.test(UA) ? 'Mac' : /Linux/.test(UA) ? 'Linux' : '';
+    dev = { os };
   }
   function onVis() {
     if (!v) return;
@@ -2636,7 +2911,8 @@ const Visits = (() => {
     else begin();
     if (page.last) page(page.last);
     shown = document.visibilityState === 'visible' ? performance.now() : 0;
-    Promise.all([lookup(), device()]).then(() => soon(600));
+    device();
+    lookup().then(() => soon(600));
     soon(4000);
     beat = setInterval(() => { if (shown) { save(); send(true); } }, 120000);
     document.addEventListener('visibilitychange', onVis);
